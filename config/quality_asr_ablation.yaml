@@ -1,0 +1,105 @@
+paths:
+  # 显式区分不同模式对应的脚本，避免 lite 模式误用质量脚本
+  script_lite: scripts/asr_translate_tts.py
+  script_quality: scripts/quality_pipeline.py
+  # 兼容旧字段（保留）
+  script: scripts/quality_pipeline.py
+  whisperx_model_dir: assets/models/whisperx
+  tts_home: assets/models/tts
+  outputs_root: outputs
+
+defaults:
+  # 基于 quality.yaml 的默认配置，但将 4 个 ASR 增强开关改为默认关闭，
+  # 用于做 “OFF baseline → 单开关 ON” 的可解释对比。
+  #
+  # 注意：这份配置只用于评测（ablation），不用于线上默认。
+  sample_rate: 16000
+  offline: true
+  bilingual_srt: false
+  vad_enable: true
+  vad_threshold: 0.6
+  vad_min_dur: 1.5
+  denoise: true
+  dedupe: true
+  max_sentence_len: 50
+  allow_gpu: true
+  allow_heavy_models: true
+  min_sub_duration: 1.8
+  tts_split_len: 80
+  tts_speed_max: 1.1
+
+  sentence_unit_enable: false
+  sentence_unit_min_chars: 12
+  sentence_unit_max_chars: 60
+  sentence_unit_max_segs: 3
+  sentence_unit_max_gap_s: 0.6
+  sentence_unit_boundary_punct: "。！？!?.,"
+  sentence_unit_break_words: ["但", "而", "于是", "然后", "忽然", "突然", "不过", "结果", "同时"]
+
+  entity_protect_enable: false
+  entity_protect_min_len: 2
+  entity_protect_max_len: 8
+  entity_protect_min_freq: 4
+  entity_protect_max_items: 8
+
+  # ASR 文本净化：低风险，保持默认开启（不是本轮对比对象）
+  asr_normalize_enable: true
+  asr_normalize_dict: assets/asr_normalize/asr_zh_dict.json
+
+  # --- ASR ablation targets: default OFF ---
+  asr_preprocess_enable: false
+  asr_preprocess_loudnorm: false
+  asr_preprocess_highpass: 80
+  asr_preprocess_lowpass: 8000
+  asr_preprocess_ffmpeg_extra: ""
+
+  asr_merge_short_enable: false
+  asr_merge_min_dur_s: 0.8
+  asr_merge_min_chars: 6
+  asr_merge_max_gap_s: 0.25
+  asr_merge_max_group_chars: 120
+  asr_merge_save_debug: false
+
+  asr_llm_fix_enable: false
+  asr_llm_fix_mode: suspect
+  asr_llm_fix_max_items: 60
+  asr_llm_fix_min_chars: 12
+  asr_llm_fix_save_debug: false
+  asr_llm_fix_model: ""
+
+  # 质量模式默认使用 Coqui
+  tts_backend: coqui
+  default_mode: quality
+
+  whisperx_model: medium
+  diarization: false
+
+  # MT / LLM
+  llm_endpoint: http://ollama:11434/v1
+  llm_model: qwen2.5:7b
+  llm_api_key: ""
+  llm_chunk_size: 2
+
+  qe_mode: suspect
+  qe_max_items: 200
+
+  # TTS
+  coqui_model: tts_models/en/ljspeech/tacotron2-DDC
+  coqui_device: auto
+  piper_model: assets/models/en_US-amy-low.onnx
+  piper_bin: piper
+
+presets:
+  quality:
+    label: 质量（ablation）
+    hardware_hint: "CPU/GPU 皆可；用于 ASR 单开关对比"
+    diarization: true
+    whisperx_model: medium
+    llm_model: qwen2.5:7b
+    tts_speed_max: 1.05
+
+ui:
+  api_base: http://127.0.0.1:5175
+  polling_ms: 1200
+
+

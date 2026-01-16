@@ -1,0 +1,19 @@
+body {
+  margin: 0;
+  background: #f8fafc;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.ant-layout {
+  background: #f8fafc;
+}
+
+/* Align Sider title and menu items */
+.ant-menu-inline > .ant-menu-item,
+.ant-menu-inline > .ant-menu-submenu > .ant-menu-submenu-title {
+  padding-left: 16px !important;
+}
+

@@ -1,0 +1,21 @@
+# Round 1: QE suite on golden9
+#
+# Goal: evaluate "qe_embed_enable" (sub-switch) meaningfully.
+# Baseline for this suite turns QE on, then each experiment adds one extra switch.
+baseline:
+  name: qe_base
+  overrides:
+    qe_enable: true
+    qe_mode: suspect
+
+experiments:
+  qe_embed_on:
+    overrides:
+      qe_embed_enable: true
+
+reuse:
+  freeze_asr_for_non_asr_experiments: true
+  method: baseline_asr
+
+
+

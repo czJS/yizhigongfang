@@ -1,0 +1,49 @@
+# Round 1: A-class remaining single switches (independent) on golden9
+#
+# Baseline = config/quality.yaml defaults.
+# Experiments below are single toggles (or explicit OFF) that make sense without another parent toggle.
+#
+# Reuse: freeze ASR for non-ASR experiments to reduce variance & runtime.
+baseline:
+  name: baseline
+  overrides: {}
+
+experiments:
+  # --- default-ON knobs in quality.yaml: test turning OFF (needs --no-xxx support)
+  vad_off:
+    overrides:
+      vad_enable: false
+
+  denoise_off:
+    overrides:
+      denoise: false
+
+  # --- MT stage (independent)
+  entity_protect_on:
+    overrides:
+      entity_protect_enable: true
+
+  meaning_split_on:
+    overrides:
+      meaning_split_enable: true
+
+  # NOTE: glossary_* 属于“字典/数据驱动”能力（强依赖 glossary 文件内容），
+  # 不纳入 onejob Round1 的“可复用结论”主评测；建议走交付回归/验收或专项评测（固定 glossary 版本）。
+
+  mt_json_on:
+    overrides:
+      mt_json_enable: true
+
+  mt_topic_auto_on:
+    overrides:
+      mt_topic_auto_enable: true
+
+  # NOTE: diarization（说话人分离）在当前代码版本中为“占位开关”（解析/传参但不产生实际效果），
+  # 为避免浪费计算与干扰结论，暂不纳入 onejob Round1 实验；待实现后再恢复评测。
+
+reuse:
+  freeze_asr_for_non_asr_experiments: true
+  method: baseline_asr
+
+
+

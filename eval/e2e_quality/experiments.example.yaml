@@ -1,0 +1,102 @@
+# E2E experiments example (quality mode)
+#
+# 规则：
+# - baseline 为空表示“按 base-config（quality.yaml）默认跑”
+# - 每个 experiments.<name>.overrides 只写相对 baseline 的差异
+# - reuse 用于“固定上游”做公平对比（推荐最佳实践）
+#
+# 20 段起步时的建议组合策略：
+# - 先跑单开关筛选（10~15 个关键开关）
+# - 再跑 3~6 个跨阶段组合（只挑高价值组合）
+
+baseline:
+  name: baseline
+  overrides: {}
+
+experiments:
+  # --- ASR stage
+  asr_preprocess_on:
+    overrides:
+      asr_preprocess_enable: true
+      asr_preprocess_loudnorm: true
+
+  asr_merge_short_on:
+    overrides:
+      asr_merge_short_enable: true
+
+  asr_llm_fix_on:
+    overrides:
+      asr_llm_fix_enable: true
+      asr_llm_fix_mode: suspect
+
+  # --- MT/QE stage
+  sentence_unit_on:
+    overrides:
+      sentence_unit_enable: true
+
+  entity_protect_on:
+    overrides:
+      entity_protect_enable: true
+
+  meaning_split_on:
+    overrides:
+      meaning_split_enable: true
+
+  tra_on:
+    overrides:
+      tra_enable: true
+
+  qe_on:
+    overrides:
+      qe_enable: true
+      qe_mode: suspect
+
+  # --- subtitle postprocess / delivery
+  subtitle_postprocess_on:
+    overrides:
+      subtitle_postprocess_enable: true
+      subtitle_wrap_enable: true
+      subtitle_cps_fix_enable: true
+
+  # --- TTS
+  tts_fit_on:
+    overrides:
+      tts_fit_enable: true
+
+  tts_plan_on:
+    overrides:
+      tts_plan_enable: true
+
+  # --- combos (跨阶段高价值组合)
+  combo_mt_qe:
+    overrides:
+      sentence_unit_enable: true
+      qe_enable: true
+      qe_mode: suspect
+
+  combo_subtitle_tts:
+    overrides:
+      subtitle_postprocess_enable: true
+      subtitle_wrap_enable: true
+      subtitle_cps_fix_enable: true
+      tts_script_enable: true
+      tts_fit_enable: true
+
+  combo_asr_to_mt:
+    overrides:
+      asr_preprocess_enable: true
+      asr_preprocess_loudnorm: true
+      asr_merge_short_enable: true
+      sentence_unit_enable: true
+
+reuse:
+  # 当实验不涉及 ASR 时，建议固定 ASR 输出以减少方差
+  freeze_asr_for_non_asr_experiments: true
+  # 固定方式：复用 baseline 的 audio.json/chs.srt（仅从 MT 开始跑）
+  # - 这会让“翻译/后处理/TTS”更可比
+  method: baseline_asr
+
+
+
+
+

@@ -1,0 +1,28 @@
+# Round 1: Display subtitle suite (B-class) on short3
+#
+# Display-related switches mostly affect eng_display.srt and embedding choice; they are hard to judge purely by E2E.
+# We run on 3 shortest segments for faster iteration + manual spot-check.
+baseline:
+  name: display_base
+  overrides:
+    display_srt_enable: true
+
+experiments:
+  display_use_for_embed_on:
+    overrides:
+      display_use_for_embed: true
+
+  display_merge_on:
+    overrides:
+      display_merge_enable: true
+
+  display_split_on:
+    overrides:
+      display_split_enable: true
+
+reuse:
+  freeze_asr_for_non_asr_experiments: true
+  method: baseline_asr
+
+
+

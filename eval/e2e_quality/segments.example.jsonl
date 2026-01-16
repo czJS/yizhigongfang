@@ -1,0 +1,8 @@
+{"id":"seg-0001","video":"/abs/path/to/clip1.mp4","meta":{"tag":["noisy","fast"],"note":"室外嘈杂"}}
+{"id":"seg-0002","video":"/abs/path/to/clip2.mp4","meta":{"tag":["multi_speaker"],"note":"多人对话"}}
+{"id":"seg-0003","video":"/abs/path/to/clip3.mp4","meta":{"tag":["numbers","named_entities"],"note":"大量数字/专名"}}
+
+
+
+
+

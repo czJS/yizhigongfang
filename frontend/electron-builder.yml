@@ -1,0 +1,37 @@
+appId: com.local.dubbing
+productName: YizhiStudio
+electronDownload:
+  # 国内网络建议使用镜像；避免 electron-builder 去 GitHub 拉取 electron zip 失败
+  mirror: "https://npmmirror.com/mirrors/electron/"
+directories:
+  output: dist_electron
+files:
+  - dist/**
+  - electron/**
+  - ../backend/**
+  - ../scripts/asr_translate_tts.py
+  - ../config/**
+extraResources:
+  - from: ../bin
+    to: bin
+  - from: ../assets/models
+    to: models
+  - from: ../assets
+    to: assets
+mac:
+  target:
+    - dmg
+  artifactName: "${productName}-${version}-mac.${ext}"
+  hardenedRuntime: false
+  gatekeeperAssess: false
+win:
+  target:
+    - nsis
+  artifactName: "${productName}-${version}-win.${ext}"
+nsis:
+  oneClick: false
+  perMachine: false
+  allowElevation: false
+  allowToChangeInstallationDirectory: true
+
+

@@ -1,0 +1,38 @@
+.DS_Store
+.idea/
+.vscode/
+.venv/
+.venv_fluency/
+.venv_*/
+__pycache__/
+**/__pycache__/
+*.pyc
+
+# Node / frontend
+frontend/node_modules/
+frontend/dist/
+frontend/dist_electron/
+
+# Outputs and logs
+outputs/
+*.log
+
+# Large models / caches
+assets/models/
+assets/models/whisperx/
+assets/models/tts/
+assets/models/mt/
+backend/models--*/
+backend/whisper*/
+assets/models/**/snapshots/
+
+# LLM local models
+ollama_models/
+
+# Embedded repo not intended to be committed
+VideoLingo/
+
+# Large binaries that should not be in git
+scripts/model.bin
+app_from_image/bin/ffmpeg
+

@@ -1,0 +1,31 @@
+paths:
+  script_online: scripts/online_pipeline.py
+  outputs_root: outputs
+
+defaults:
+  sample_rate: 16000
+  bilingual_srt: false
+  min_sub_duration: 1.5
+  tts_split_len: 80
+  tts_speed_max: 1.08
+
+  # Online endpoints (OpenAI-like)
+  asr_endpoint: https://api.example.com/asr    # POST file -> {"segments":[{"start":0,"end":1.2,"text":"..."}]}
+  asr_api_key: ""
+  mt_endpoint: https://api.example.com/v1/chat/completions  # OpenAI chat/completions
+  mt_model: gpt-4o-mini
+  mt_api_key: ""
+  tts_endpoint: https://api.example.com/tts   # POST {"text","voice"} -> wav bytes or JSON {"audio":base64}
+  tts_voice: en-US-amy
+  tts_api_key: ""
+
+presets:
+  online:
+    label: 在线
+    hardware_hint: "云端推理，需可用的 API Key"
+    tts_speed_max: 1.05
+
+ui:
+  api_base: http://127.0.0.1:5175
+  polling_ms: 1200
+

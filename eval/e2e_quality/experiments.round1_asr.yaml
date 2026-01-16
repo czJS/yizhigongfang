@@ -1,0 +1,42 @@
+# Round 1 (follow-up): ASR ablation on golden9
+#
+# Baseline uses config/quality_asr_ablation.yaml where ASR enhancement toggles are DEFAULT OFF.
+# Each experiment turns ON exactly one ASR knob (or a minimal pair for loudnorm) to measure OFF→ON impact.
+#
+# Output suggestion:
+#   outputs/eval/e2e_quality_golden9_asr_ablation/<run>/<seg_id>/*
+
+baseline:
+  name: asr_off_baseline
+  overrides: {}
+
+experiments:
+  # 1) ASR preprocess only (no loudnorm)
+  asr_preprocess_on:
+    overrides:
+      asr_preprocess_enable: true
+      asr_preprocess_loudnorm: false
+
+  # 2) Loudnorm effect (requires preprocess enabled)
+  asr_preprocess_loudnorm_on:
+    overrides:
+      asr_preprocess_enable: true
+      asr_preprocess_loudnorm: true
+
+  # 3) Merge too-short ASR segments
+  asr_merge_short_on:
+    overrides:
+      asr_merge_short_enable: true
+
+  # 4) Conservative ASR LLM fix (suspect-only)
+  asr_llm_fix_on:
+    overrides:
+      asr_llm_fix_enable: true
+      asr_llm_fix_mode: suspect
+
+reuse:
+  # We are evaluating ASR knobs; do NOT freeze ASR.
+  freeze_asr_for_non_asr_experiments: false
+  method: baseline_asr
+
+

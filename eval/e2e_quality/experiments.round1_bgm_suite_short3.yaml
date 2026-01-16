@@ -1,0 +1,23 @@
+# Round 1: BGM/mix suite (B-class) on short3
+#
+# Background mix is a delivery/experience feature and needs manual listening checks.
+baseline:
+  name: bgm_base
+  overrides:
+    bgm_mix_enable: true
+
+experiments:
+  bgm_duck_on:
+    overrides:
+      bgm_duck_enable: true
+
+  bgm_loudnorm_on:
+    overrides:
+      bgm_loudnorm_enable: true
+
+reuse:
+  freeze_asr_for_non_asr_experiments: true
+  method: baseline_asr
+
+
+

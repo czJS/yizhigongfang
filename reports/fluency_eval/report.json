@@ -1,0 +1,60 @@
+{
+  "说明_cn": {
+    "用途": "英文自然度/口语字幕评测（public-only 或 golden）。用于横向对比不同增强开关，并给出绝对质量与置信度。",
+    "主指标_primary_metric": "用于计算置信度 p_improve 的指标（默认 chrF）。p_improve 表示 bootstrap 抽样下，候选方案优于 baseline 的概率。",
+    "名词解释": {
+      "BLEU": "基于词 n-gram 的匹配分数（0~1），越大越接近参考译文；对同义改写比较敏感。",
+      "chrF": "基于字符 n-gram 的 F-score（0~1），对词形变化更鲁棒一些，但仍会惩罚与参考差异。",
+      "len_ratio": "候选英文 token 数 / 参考英文 token 数，越接近 1 越好（过短/过长都会扣分）。",
+      "rep3": "3-gram 重复率近似值（0~1），越大表示重复越多。",
+      "quality_score": "综合分（0~1）：0.75*chrF + 0.25*BLEU，再乘长度/重复惩罚，用于长期回归追踪。",
+      "quality_score_100": "quality_score 的 100 分制（0~100），更直观。",
+      "ref_free_score": "reference-free 自然度/可读性启发式分（0~1，不依赖参考译文，用于更贴近业务阅读）。",
+      "ref_free_score_100": "ref_free_score 的 100 分制（0~100）。",
+      "final_score_100": "最终 100 分制：以 baseline=70 为锚点，将（0.6*quality_score + 0.4*ref_free_score）映射到 0~100，便于业务阅读与回归对比。",
+      "p_improve": "置信度（0~1）：bootstrap 下 Δ(primary_metric)>0 的比例。",
+      "delta_mean": "bootstrap 下 Δ(primary_metric) 的平均值。",
+      "ci95": "Δ(primary_metric) 的 95% 置信区间。"
+    }
+  },
+  "cases": "/app/eval/fluency_en/sets/public_200.jsonl",
+  "baseline": "/app/reports/fluency_eval/baseline_run_fluency_translate.jsonl",
+  "primary_metric": "chrf",
+  "baseline_summary": {
+    "n": 200,
+    "missing_pred": 0,
+    "bleu": 0.241464,
+    "chrf": 0.480377,
+    "len_ratio": 0.948282,
+    "rep3": 0.000293,
+    "quality_score": 0.398746,
+    "ref_free_score": 0.859633,
+    "quality_score_100": 39.87,
+    "ref_free_score_100": 85.96,
+    "final_score_100": 70.0
+  },
+  "runs": {
+    "candidate": {
+      "n": 200,
+      "missing_pred": 0,
+      "bleu": 0.179046,
+      "chrf": 0.383334,
+      "len_ratio": 0.751986,
+      "rep3": 0.0,
+      "quality_score": 0.306431,
+      "ref_free_score": 0.902689,
+      "bootstrap_primary": {
+        "iters": 2000,
+        "p_improve": 0.0,
+        "delta_mean": -0.09696,
+        "ci95": [
+          -0.117669,
+          -0.076579
+        ]
+      },
+      "quality_score_100": 30.64,
+      "ref_free_score_100": 90.27,
+      "final_score_100": 67.25
+    }
+  }
+}

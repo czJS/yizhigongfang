@@ -1,0 +1,54 @@
+# P0 experiments (Round 1) for golden9 segments
+#
+# Baseline = quality.yaml defaults.
+# We intentionally focus on P0 switches that are OFF by default in quality.yaml,
+# and we enable reuse.freeze_asr to make MT/TTS comparisons fair & faster.
+#
+# Notes:
+# - Some ASR P0 switches are already default ON in config/quality.yaml (asr_preprocess/asr_merge/asr_llm_fix),
+#   so they are not included here to avoid no-op runs.
+
+baseline:
+  name: baseline
+  overrides: {}
+
+experiments:
+  # --- MT/QE P0
+  sentence_unit_on:
+    overrides:
+      sentence_unit_enable: true
+
+  tra_on:
+    overrides:
+      tra_enable: true
+
+  qe_on:
+    overrides:
+      qe_enable: true
+      qe_mode: suspect
+
+  # --- subtitle postprocess P0 (treat as one recommended bundle)
+  subtitle_postprocess_on:
+    overrides:
+      subtitle_postprocess_enable: true
+      subtitle_wrap_enable: true
+      subtitle_cps_fix_enable: true
+
+  # --- TTS P0
+  tts_script_on:
+    overrides:
+      tts_script_enable: true
+
+  tts_fit_on:
+    overrides:
+      tts_fit_enable: true
+
+  tts_plan_on:
+    overrides:
+      tts_plan_enable: true
+
+reuse:
+  freeze_asr_for_non_asr_experiments: true
+  method: baseline_asr
+
+

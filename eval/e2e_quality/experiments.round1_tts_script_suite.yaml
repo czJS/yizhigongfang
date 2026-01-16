@@ -1,0 +1,19 @@
+# Round 1: TTS-script suite on golden9
+#
+# Goal: evaluate strict clean sub-switch in a meaningful baseline context.
+baseline:
+  name: tts_script_base
+  overrides:
+    tts_script_enable: true
+
+experiments:
+  tts_script_strict_clean_on:
+    overrides:
+      tts_script_strict_clean_enable: true
+
+reuse:
+  freeze_asr_for_non_asr_experiments: true
+  method: baseline_asr
+
+
+
