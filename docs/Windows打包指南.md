@@ -1,145 +1,106 @@
-# Windows 打包指南（非开发友好）
+# Windows 打包指南（唯一保留版）
 
-## 这份文档给谁
-给需要在 **Windows 电脑**上打包、分发“译制工坊”的同学。  
-目标是：**用户不装 Python、不装模型、不装工具，直接安装即可用**。
+> 目标：在 Windows 上产出可分发的 **安装包**（`YizhiStudio-*.exe`），并配套产出/复用 **模型包**（`models_pack.zip`）与 **Ollama 包**（`ollama_pack.zip`）。
 
 ---
 
-## 你将得到什么
-- 一个 `*.exe` 安装包  
-- 安装后双击即可使用（质量模式可离线跑）
+## 0. 交付物（你最终要给别人什么）
+
+- **安装包**：`frontend/dist_electron/YizhiStudio-*.exe`
+- **模型包**：`frontend/dist_electron/models_pack.zip`（App 内导入）
+- **Ollama 包（质量模式用）**：`frontend/dist_electron/ollama_pack.zip`（App 内导入）
+
+重要约定（当前实践）：
+
+- **安装包不内置模型**（体积太大），模型走 `models_pack.zip`
+- **安装包不内置 Ollama**（避免安装极慢），Ollama 走 `ollama_pack.zip`
+- 质量模式重依赖已拆分为独立 exe：`quality_worker.exe`（会随安装包进 `resources/`）
 
 ---
 
-## 先说明白的现实
-- **包会很大**：常见 20GB～100GB+（取决于模型）
-- **必须打包后端引擎**：否则用户电脑无法运行
-- **必须把模型和工具带进安装包**：否则会报“缺模型/缺 ffmpeg”
+## 1. 打包机准备（新机器请先看）
+
+新机器 clone 后缺什么、放哪儿：请看 `docs/Windows打包机准备清单（clone后还缺什么）.md`。
 
 ---
 
-## 打包前准备（Windows 机器）
+## 2. 打包命令（官方脚本，按顺序执行）
 
-### 必备清单（只检查“是否存在”）
-- `bin/ffmpeg.exe`
-- `bin/whisper-cli.exe`（或项目内实际 whisper 可执行文件）
-- `assets/models/whisperx/`（质量模式必需）
-- `assets/models/tts/`（Piper/Coqui 模型）
-- `assets/models/mt/` 或 HF 缓存（如果要离线翻译）
-- `config/defaults.yaml`、`config/quality.yaml`
-- `scripts/`（质量模式脚本在此）
+在 **系统 PowerShell**（更稳）执行：
 
----
+```powershell
+cd D:\yizhigongfang-main\yizhigongfang-git
 
-## 哪些必须打包 / 哪些不需要
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\rebuild_backend_server_exe.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\rebuild_quality_worker_exe.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build_installer.ps1
+```
 
-### 必须打包（缺一就跑不起来）
-- **前端产物**：Electron 构建后的界面（打包时自动带）
-- **后端可执行程序**：`backend_server.exe`
-- **脚本**：`scripts/`（质量模式运行脚本）
-- **配置**：`config/`（模式默认参数）
-- **工具**：`bin/`（ffmpeg/whisper 等）
-- **模型**：`assets/models/`（WhisperX、TTS、翻译模型）
-- **离线 LLM（质量模式）**：`ollama.exe` + `ollama_models/`
+只重打安装包并跳过模型包（推荐日常迭代）：
 
-### 不需要打包（打了只会变大）
-- `outputs/`：运行产物目录
-- `reports/`、`eval/`：评测与报告
-- `docs/`：文档
-- `frontend/src/`：前端源码
-- `frontend/node_modules/`：编译已包含
-- `backend/` 源码：已被 `backend_server.exe` 替代
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build_installer.ps1 -SkipModelsPack
+```
 
-**原因（人话版）**  
-- “必须打包”的是**运行引擎 + 必需模型 + 运行配置**  
-- “不需要打包”的是**源码、文档、评测、历史产物**
+只重打模型包（不重打安装包）：
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build_installer.ps1 -SkipDist -ForceModelsPack
+```
+
+单独生成 Ollama 包（质量模式用，独立交付）：
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build_ollama_pack.ps1
+```
 
 ---
 
-## 步骤 1：把后端打成可执行程序（Windows）
-目标：生成 `backend_server.exe`，用户电脑不需要 Python。
+## 3. 产物位置（打完后你应该看到）
 
-**你要做的事情：**
-1. 用 Windows 机器安装 Python（只在打包机上）
-2. 安装后端依赖（含 WhisperX）
-3. 用 PyInstaller 打包 `backend/app.py`
-4. 验证能访问 `/api/health`
-
-**验证方法（不懂原理也能做）：**
-- 启动 `backend_server.exe`
-- 打开浏览器访问：`http://127.0.0.1:5175/api/health`
-- 看到 `ok` 即成功
+- 安装包：`frontend/dist_electron/YizhiStudio-*.exe`
+- 模型包：`frontend/dist_electron/models_pack.zip`
+- Ollama 包：`frontend/dist_electron/ollama_pack.zip`
+- 解包目录（验收用）：`frontend/dist_electron/win-unpacked/`
 
 ---
 
-## 步骤 2：让桌面 App 自动启动后端
-用户只打开一个应用，不需要手动开后端。
+## 4. 打包后“秒级自检”（强烈建议）
 
-**必须做的动作：**
-- App 启动时自动拉起 `backend_server.exe`
-- 健康检查：`/api/health` 返回 ok
-- 端口被占用时给出提示或换端口
-- 后端日志落盘（便于排错）
+不运行安装器，直接对 `win-unpacked/resources` 做快速自检：
 
----
+```powershell
+cd D:\yizhigongfang-main\yizhigongfang-git
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\verify_win_unpacked_smoke.ps1
+```
 
-## 步骤 3：内置 LLM（质量模式离线）
-质量模式依赖本地 LLM，必须随包带走。
+通过标准：
 
-**需要准备：**
-- `ollama.exe`
-- `ollama_models/`（模型文件夹）
-
-**运行时要求：**
-- 设置 `OLLAMA_MODELS=<安装包内模型目录>`
-- 自动启动 `ollama serve`
+- `backend_server.exe --self-check` 通过
+- `quality_worker.exe --self-check` 通过（尤其 `TTS/jamo.data` 等依赖项）
+- 最后输出 `[smoke] OK`
 
 ---
 
-## 步骤 4：用 Electron Builder 打包 Windows 安装包
+## 5. 交付给别人时的最小验收（推荐）
 
-**你要打进去的内容：**
-- 前端构建产物
-- `backend_server.exe`
-- `scripts/`、`config/`、`assets/`、`bin/`
-- `ollama.exe` + `ollama_models/`
+尽量用“新 Windows 用户账号/新机器”验收，避免本机已有模型缓存导致假通过：
 
-**打包完成后你会得到：**
-- `*.exe` 安装包
-
----
-
-## 步骤 5：验收（非开发也能做）
-请用“新电脑/新账号”验收，避免本机环境干扰。
-
-**验收清单：**
-- 能安装、能打开
-- 系统页显示“后端可用”
-- 导入 20~40 秒视频能跑通
-- 产物目录至少有：`chs.srt`、`eng.srt`、`output_en_sub.mp4`
-- 断网后仍能跑质量模式
+1) 安装 `YizhiStudio-*.exe`
+2) 打开 App，确认后端可用：`http://127.0.0.1:5175/api/health`
+3) 在 App 内导入 `models_pack.zip`
+4) 在 App 内导入 `ollama_pack.zip`（系统页 → Ollama 管理）
+5) 跑一个 15s 质量模式任务（项目脚本：`scripts/verify_quality_15s_local.ps1`）
 
 ---
 
-## 常见问题（最常见的三类）
+## 6. 常见失败点（按频率）
 
-### 1) 提示缺模型 / 缺工具
-- 多数是 `bin/`、`assets/` 没打进包  
-- 或路径注入失败（资源路径没传给后端）
+- **PowerShell 禁止运行脚本（ExecutionPolicy）**
+  - 用 `powershell -ExecutionPolicy Bypass -File <script.ps1>` 执行
+- **`models_pack.zip / ollama_pack.zip` “消失”**
+  - `build_installer.ps1` 会先备份到 `D:\temp\yizhistudio\build_keep`，中途失败会导致未恢复；从该目录拷回即可
+- **打包报 `Aborted` / 文件被占用**
+  - 关掉正在运行的 App/安装器/后端进程，并把仓库与缓存目录加入 Defender 排除项
 
-### 2) 质量模式无法启动
-- `ollama.exe` 未打进包  
-- 或 `OLLAMA_MODELS` 没设置到安装包内目录
-
-### 3) 打包能装但无法运行
-- 后端没打成 `backend_server.exe`
-- 或后端没有随 App 自动启动
-
----
-
-## 你只需要记住的三句话
-1. **后端必须变成 exe**  
-2. **模型和工具必须随包带走**  
-3. **前端启动时必须自动拉起后端和 LLM**
 
