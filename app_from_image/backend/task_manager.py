@@ -96,7 +96,7 @@ class TaskManager:
 
     def _build_command(self, video_path: str, work_dir: Path, cfg: Dict) -> List[str]:
         paths = self.config.get("paths", {})
-        script = self._resolve_path(paths.get("script", "scripts/asr_translate_tts.py"))
+        script = self._resolve_path(paths.get("script", "pipelines/asr_translate_tts.py"))
         whisper_bin = self._resolve_path(cfg.get("whispercpp_bin") or paths.get("whispercpp_bin", "bin/main"))
         asr_model = self._resolve_path(cfg.get("asr_model") or cfg.get("whispercpp_model") or paths.get("whispercpp_model", "assets/models/ggml-small-q5_0.bin"))
         piper_bin = cfg.get("piper_bin") or "piper"

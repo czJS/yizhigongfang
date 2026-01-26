@@ -14,6 +14,10 @@ directories:
 files:
   - dist/**
   - electron/**
+  # Prefer v2 layout
+  - ../configs/**
+  - ../pipelines/**
+  # Legacy (transition)
   - ../config/**
   - ../scripts/**
 extraResources:
@@ -23,7 +27,12 @@ extraResources:
     to: backend_server.exe
   - from: ../dist/quality_worker.exe
     to: quality_worker.exe
-  # backend_server.exe needs config/scripts on disk (not inside app.asar)
+  # backend_server.exe needs configs/pipelines on disk (not inside app.asar)
+  - from: ../configs
+    to: configs
+  - from: ../pipelines
+    to: pipelines
+  # Legacy (transition)
   - from: ../config
     to: config
   - from: ../scripts

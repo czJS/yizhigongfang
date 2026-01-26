@@ -1,6 +1,7 @@
 # -*- mode: python ; coding: utf-8 -*-
 
 from pathlib import Path
+from PyInstaller.utils.hooks import collect_submodules
 
 
 # NOTE: PyInstaller may execute this spec without defining `__file__` in the spec namespace,
@@ -22,7 +23,7 @@ a = Analysis(
     pathex=[str(_ROOT)],
     binaries=[],
     datas=[],
-    hiddenimports=[],
+    hiddenimports=collect_submodules("pipelines"),
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],

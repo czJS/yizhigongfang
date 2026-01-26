@@ -1,0 +1,39 @@
+{
+  "name": "dubbing-gui",
+  "version": "0.1.0",
+  "private": true,
+  "main": "electron/main.js",
+  "scripts": {
+    "predev": "kill-port 5173 5174 || true",
+    "dev": "concurrently \"vite --host --port 5173 --clearScreen false\" \"cross-env VITE_DEV_SERVER_URL=http://127.0.0.1:5173 electronmon electron/main.js\"",
+    "predev:renderer": "kill-port 5173 5174 || true",
+    "dev:renderer": "vite --host --port 5173 --clearScreen false",
+    "dev:docker": "vite --host --port 5174 --clearScreen false",
+    "build": "vite build",
+    "dist": "npm run build && electron-builder -c electron-builder.yml",
+    "lint": "eslint src --ext .ts,.tsx"
+  },
+  "dependencies": {
+    "antd": "^5.14.0",
+    "axios": "^1.6.8",
+    "jszip": "^3.10.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zustand": "^4.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "@types/react": "^18.3.2",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "electron": "^29.3.0",
+    "electron-builder": "^24.13.3",
+    "electronmon": "^1.0.4",
+    "eslint": "^8.57.0",
+    "kill-port": "^2.0.1",
+    "typescript": "^5.4.4",
+    "vite": "^5.2.0"
+  }
+}

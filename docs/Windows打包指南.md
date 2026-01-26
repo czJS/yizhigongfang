@@ -1,14 +1,18 @@
-# Windows 打包指南（唯一保留版）
+# Windows 打包指南（迁移提示）
 
-> 目标：在 Windows 上产出可分发的 **安装包**（`YizhiStudio-*.exe`），并配套产出/复用 **模型包**（`models_pack.zip`）与 **Ollama 包**（`ollama_pack.zip`）。
+这份文档已迁移到：
+
+- `docs/packaging/windows.md`
+
+请以新文档为准（唯一入口脚本为 `packaging/scripts/windows/build_installer.ps1`）。
 
 ---
 
 ## 0. 交付物（你最终要给别人什么）
 
-- **安装包**：`frontend/dist_electron/YizhiStudio-*.exe`
-- **模型包**：`frontend/dist_electron/models_pack.zip`（App 内导入）
-- **Ollama 包（质量模式用）**：`frontend/dist_electron/ollama_pack.zip`（App 内导入）
+- **安装包**：`apps/desktop/dist_electron/YizhiStudio-*.exe`
+- **模型包**：`apps/desktop/dist_electron/models_pack.zip`（App 内导入）
+- **Ollama 包（质量模式用）**：`apps/desktop/dist_electron/ollama_pack.zip`（App 内导入）
 
 重要约定（当前实践）：
 
@@ -31,37 +35,37 @@
 ```powershell
 cd D:\yizhigongfang-main\yizhigongfang-git
 
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\rebuild_backend_server_exe.ps1
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\rebuild_quality_worker_exe.ps1
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build_installer.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\packaging\scripts\windows\rebuild_backend_server_exe.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\packaging\scripts\windows\rebuild_quality_worker_exe.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\packaging\scripts\windows\build_installer.ps1
 ```
 
 只重打安装包并跳过模型包（推荐日常迭代）：
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build_installer.ps1 -SkipModelsPack
+powershell -NoProfile -ExecutionPolicy Bypass -File .\packaging\scripts\windows\build_installer.ps1 -SkipModelsPack
 ```
 
 只重打模型包（不重打安装包）：
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build_installer.ps1 -SkipDist -ForceModelsPack
+powershell -NoProfile -ExecutionPolicy Bypass -File .\packaging\scripts\windows\build_installer.ps1 -SkipDist -ForceModelsPack
 ```
 
 单独生成 Ollama 包（质量模式用，独立交付）：
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build_ollama_pack.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\packaging\scripts\windows\build_ollama_pack.ps1
 ```
 
 ---
 
 ## 3. 产物位置（打完后你应该看到）
 
-- 安装包：`frontend/dist_electron/YizhiStudio-*.exe`
-- 模型包：`frontend/dist_electron/models_pack.zip`
-- Ollama 包：`frontend/dist_electron/ollama_pack.zip`
-- 解包目录（验收用）：`frontend/dist_electron/win-unpacked/`
+- 安装包：`apps/desktop/dist_electron/YizhiStudio-*.exe`
+- 模型包：`apps/desktop/dist_electron/models_pack.zip`
+- Ollama 包：`apps/desktop/dist_electron/ollama_pack.zip`
+- 解包目录（验收用）：`apps/desktop/dist_electron/win-unpacked/`
 
 ---
 
@@ -71,7 +75,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build_ollama_pack.
 
 ```powershell
 cd D:\yizhigongfang-main\yizhigongfang-git
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\verify_win_unpacked_smoke.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\packaging\scripts\windows\verify_win_unpacked_smoke.ps1
 ```
 
 通过标准：

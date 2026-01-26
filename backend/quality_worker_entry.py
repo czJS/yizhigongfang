@@ -22,22 +22,10 @@ import sys
 import traceback
 from pathlib import Path
 
+from backend.runtime_paths import detect_repo_root, pick_pipelines_dir
 
 def _detect_root() -> Path:
-    # Prefer explicit override from host (Electron).
-    repo_root_env = os.environ.get("YGF_APP_ROOT", "").strip()
-    if repo_root_env:
-        return Path(repo_root_env).resolve()
-
-    # In packaged builds, sys.executable is stable (folder install); __file__ may live in _MEI temp.
-    try:
-        if getattr(sys, "frozen", False):
-            return Path(sys.executable).resolve().parent
-    except Exception:
-        pass
-
-    # Dev/runtime fallback: repo root is parent of backend/
-    return Path(__file__).resolve().parents[1]
+    return detect_repo_root()
 
 
 def _prepare_env(root: Path) -> None:
@@ -285,7 +273,7 @@ def main() -> None:
         mode = "quality"
         forwarded = []
 
-    scripts_dir = root / "scripts"
+    scripts_dir = pick_pipelines_dir(root)
     script_map = {
         "quality": scripts_dir / "quality_pipeline.py",
         # Keep compatibility if callers pass mode explicitly.

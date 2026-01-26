@@ -693,121 +693,22 @@ def _ffprobe_display_wh(p: Path) -> Optional[tuple[int, int]]:
     Return display width/height with rotation handled (ffprobe rotation tag or displaymatrix).
     This keeps PlayRes consistent with what players actually render, ensuring WYSIWYG for subtitle placement.
     """
-    def _probe_with_ffmpeg() -> Optional[tuple[int, int]]:
-        """
-        Fallback when `ffprobe` is unavailable in packaged Windows builds.
-        Parse `ffmpeg -i` stderr to extract width/height and rotation.
-        """
-        try:
-            proc = run_cmd(["ffmpeg", "-hide_banner", "-i", str(p)], check=False)
-            text = (proc.stderr or "") + "\n" + (proc.stdout or "")
-            if not text:
-                return None
-            import re as _re  # local import
-
-            # Find first video stream resolution.
-            w = h = 0
-            for line in text.splitlines():
-                if "Video:" not in line:
-                    continue
-                m = _re.search(r"(\d{2,5})x(\d{2,5})", line)
-                if m:
-                    w = int(m.group(1))
-                    h = int(m.group(2))
-                    break
-            if w <= 0 or h <= 0:
-                return None
-
-            # Rotation metadata (best-effort).
-            rot = 0
-            m2 = _re.search(r"rotate\s*:\s*([-+]?\d+)", text)
-            if not m2:
-                m2 = _re.search(r"rotation of\s*([-+]?\d+(?:\.\d+)?)\s*degrees", text)
-            if m2:
-                try:
-                    rot = int(float(m2.group(1)))
-                except Exception:
-                    rot = 0
-            rot = rot % 360
-            if rot in (90, 270):
-                return h, w
-            return w, h
-        except Exception:
-            return None
-
     try:
-        cmd = [
-            "ffprobe",
-            "-v",
-            "error",
-            "-select_streams",
-            "v:0",
-            "-show_entries",
-            "stream=width,height,side_data_list,rotation:stream_tags=rotate",
-            "-of",
-            "json",
-            str(p),
-        ]
-        out = run_cmd(cmd, check=True).stdout
-        import json as _json  # local import
+        from pipelines.lib.media_probe import ffprobe_display_wh
 
-        data = _json.loads(out or "{}")
-        st = (data.get("streams") or [{}])[0] or {}
-        w = int(st.get("width") or 0)
-        h = int(st.get("height") or 0)
-        if w <= 0 or h <= 0:
-            return None
-
-        # Detect rotation (tags.rotate or side_data displaymatrix)
-        rot = 0
-        try:
-            rot = int(st.get("tags", {}).get("rotate") or 0)
-        except Exception:
-            rot = 0
-        if rot == 0:
-            try:
-                sdl = st.get("side_data_list") or []
-                for item in sdl:
-                    if item.get("side_data_type") == "Display Matrix":
-                        rot = int(item.get("rotation", 0))
-                        break
-            except Exception:
-                rot = 0
-        rot = rot % 360
-        if rot in (90, 270):
-            return h, w
-        return w, h
+        return ffprobe_display_wh(p)
     except Exception:
-        # In Windows packaged app, we may ship ffmpeg.exe but not ffprobe.exe.
-        # Fall back to parsing `ffmpeg -i` output.
-        return _probe_with_ffmpeg()
+        return None
 
 
 def _probe_duration_s(p: Path) -> Optional[float]:
     """Best-effort duration probe: prefer ffprobe, fall back to parsing ffmpeg output."""
     try:
-        cmd = ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "json", str(p)]
-        out = run_cmd(cmd, check=True).stdout
-        import json as _json  # local import
+        from pipelines.lib.media_probe import probe_duration_s
 
-        dur = float(_json.loads(out or "{}").get("format", {}).get("duration") or 0.0)
-        return dur if dur > 0 else None
+        return probe_duration_s(p)
     except Exception:
-        try:
-            proc = run_cmd(["ffmpeg", "-hide_banner", "-i", str(p)], check=False)
-            text = (proc.stderr or "") + "\n" + (proc.stdout or "")
-            import re as _re  # local import
-
-            m = _re.search(r"Duration:\s*(\d+):(\d+):(\d+(?:\.\d+)?)", text)
-            if not m:
-                return None
-            hh = int(m.group(1))
-            mm = int(m.group(2))
-            ss = float(m.group(3))
-            dur = hh * 3600.0 + mm * 60.0 + ss
-            return dur if dur > 0 else None
-        except Exception:
-            return None
+        return None
 
 
 def ensure_tool(name: str) -> None:
@@ -1987,242 +1888,26 @@ def mux_video_audio(
     erase_subtitle_h: float = 0.22,
     erase_subtitle_blur_radius: int = 12,
 ) -> None:
-    """
-    Mux video + new audio (hearing-first).
-    - If audio is longer:
-      - sync_strategy=slow: slow down the whole video up to slow_max_ratio; if still shorter, pad last frame
-        up to tail_pad_max_s to avoid abrupt ending.
-      - sync_strategy=freeze: (deprecated) treated as "slow" with ratio=1.0 (no padding).
-    - If audio is not longer: fast path (copy video, aac audio, -shortest).
-    """
+    # v2: delegate to shared library
+    from pipelines.lib.ffmpeg_mux import mux_video_audio as _mux
 
-    def _ffprobe_duration_s(p: Path) -> Optional[float]:
-        # Prefer ffprobe; fall back to parsing ffmpeg output when ffprobe.exe isn't shipped.
-        return _probe_duration_s(p)
-
-    def _build_erase_filter() -> tuple[str, bool]:
-        if not erase_subtitle_enable:
-            return "", False
-        m = (erase_subtitle_method or "delogo").strip().lower()
-        coord = (erase_subtitle_coord_mode or "ratio").strip().lower()
-        x = float(erase_subtitle_x or 0.0)
-        y = float(erase_subtitle_y or 0.0)
-        w = float(erase_subtitle_w or 0.0)
-        h = float(erase_subtitle_h or 0.0)
-        band = int(erase_subtitle_blur_radius or 0)
-        band = max(0, min(band, 200))
-
-        if coord == "px":
-            xp = int(round(x))
-            yp = int(round(y))
-            wp = int(round(w))
-            hp = int(round(h))
-        else:
-            wh = _ffprobe_display_wh(video_path)
-            if not wh:
-                # Best-effort fallback: treat as full width, bottom band
-                return "", False
-            W, H = wh
-            xp = int(round(max(0.0, min(1.0, x)) * W))
-            yp = int(round(max(0.0, min(1.0, y)) * H))
-            wp = int(round(max(0.0, min(1.0, w)) * W))
-            hp = int(round(max(0.0, min(1.0, h)) * H))
-
-        # clamp
-        xp = max(0, xp)
-        yp = max(0, yp)
-        wp = max(2, wp)
-        hp = max(2, hp)
-        # Keep inside frame when possible
-        wh2 = _ffprobe_display_wh(video_path)
-        if wh2:
-            W, H = wh2
-            if wp > W:
-                wp = W
-                xp = 0
-            if hp > H:
-                hp = H
-                yp = 0
-            if xp + wp > W:
-                xp = max(0, W - wp)
-            if yp + hp > H:
-                yp = max(0, H - hp)
-
-        # Use a precise blur overlay so the affected region exactly matches the rectangle.
-        # This is more WYSIWYG than delogo's inpainting for users setting a box by eye.
-        if m in {"delogo", "blur", "boxblur"}:
-            radius = max(1, int(band or 8))
-            # split -> crop -> blur -> overlay back to base
-            vf = (
-                f"split=2[base][tmp];"
-                f"[tmp]crop={wp}:{hp}:{xp}:{yp},boxblur={radius}:1[blur];"
-                f"[base][blur]overlay={xp}:{yp}"
-            )
-            return vf, True
-        # Fallback to delogo if method is unknown (allow slight expansion for aggressive erase)
-        xp = int(xp - band)
-        yp = int(yp - band)
-        wp = int(wp + 2 * band)
-        hp = int(hp + 2 * band)
-        return f"delogo=x={xp}:y={yp}:w={wp}:h={hp}:show=0", False
-
-    v_dur = _ffprobe_duration_s(video_path)
-    a_dur = _ffprobe_duration_s(audio_path) or None
-
-    # Ensure inputs exist
-    if not Path(video_path).exists():
-        raise RuntimeError(f"mux failed: video not found: {video_path}")
-    if not Path(audio_path).exists():
-        raise RuntimeError(f"mux failed: audio not found: {audio_path}")
-
-    # Ensure output directory exists
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-
-    erase_vf, erase_complex = _build_erase_filter()
-
-    def _run_ffmpeg(cmd: List[str], label: str) -> subprocess.CompletedProcess:
-        """Run ffmpeg and always log the exact command; include stderr on failure."""
-        print(f"[mux] ffmpeg ({label}): {' '.join(cmd)}")
-        proc = subprocess.run(
-            cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-        )
-        if proc.returncode != 0:
-            raise RuntimeError(
-                f"ffmpeg ({label}) failed: {' '.join(cmd)}\nstdout:\n{proc.stdout}\nstderr:\n{proc.stderr}"
-            )
-        return proc
-
-    # If audio is longer, prefer slowing down video (within limit). Then pad tail a bit if needed.
-    if v_dur is not None and a_dur is not None and a_dur > v_dur + float(threshold_s):
-        strat = (sync_strategy or "slow").strip().lower()
-        max_ratio = max(1.0, float(slow_max_ratio))
-        ratio = max(1.0, float(a_dur) / max(float(v_dur), 0.001))
-
-        # Build video filter
-        vf_parts: List[str] = []
-        if erase_vf and not erase_complex:
-            vf_parts.append(erase_vf)
-        if strat == "freeze":
-            # Deprecated: keep video as-is, cut audio at video end.
-            slow_ratio = 1.0
-        else:
-            slow_ratio = min(ratio, max_ratio)
-            if slow_ratio > 1.0 + 1e-6:
-                vf_parts.append(f"setpts={slow_ratio:.6f}*PTS")
-        new_v = float(v_dur) * float(slow_ratio)
-        remain = max(float(a_dur) - new_v, 0.0)
-        tail_pad = min(float(tail_pad_max_s or 0.0), remain)
-        if tail_pad > 0.02:
-            vf_parts.append(f"tpad=stop_mode=clone:stop_duration={tail_pad:.3f}")
-
-        if erase_complex:
-            vf = erase_vf
-            if slow_ratio > 1.0 + 1e-6:
-                vf = f"{vf},setpts={slow_ratio:.6f}*PTS"
-            if tail_pad > 0.02:
-                vf = f"{vf},tpad=stop_mode=clone:stop_duration={tail_pad:.3f}"
-        else:
-            vf = ",".join(vf_parts)
-        cmd = [
-            "ffmpeg",
-            "-y",
-            "-i",
-            str(video_path),
-            "-i",
-            str(audio_path),
-            # Slow video if needed; never pad frames.
-            # If audio is still longer than (slowed) video, -shortest will cut audio at video end.
-        ]
-        if vf:
-            cmd += ["-filter:v", vf]
-        cmd += [
-            "-map",
-            "0:v",
-            "-map",
-            "1:a",
-            "-c:v",
-            "libx264",
-            "-preset",
-            "veryfast",
-            "-crf",
-            "20",
-            "-pix_fmt",
-            "yuv420p",
-            "-c:a",
-            "aac",
-            "-movflags",
-            "+faststart",
-            "-shortest",
-            str(output_path),
-        ]
-        proc = _run_ffmpeg(cmd, label="slow")
-        if not output_path.exists():
-            raise RuntimeError(
-                f"mux failed: {output_path} not created (slow path)\nstdout:\n{proc.stdout}\nstderr:\n{proc.stderr}"
-            )
-        return
-
-    # Fast path: if no erase filter, copy video stream; otherwise re-encode with filter.
-    if not erase_vf:
-        cmd2 = [
-        "ffmpeg",
-        "-y",
-        "-i",
-        str(video_path),
-        "-i",
-        str(audio_path),
-        "-map",
-        "0:v",
-        "-map",
-        "1:a",
-        "-c:v",
-        "copy",
-        "-c:a",
-        "aac",
-        "-shortest",
-        str(output_path),
-    ]
-        proc = _run_ffmpeg(cmd2, label="copy")
-        if not output_path.exists():
-            raise RuntimeError(
-                f"mux failed (copy path): {output_path} not created\nstdout:\n{proc.stdout}\nstderr:\n{proc.stderr}"
-            )
-        return
-
-    cmd2 = [
-        "ffmpeg",
-        "-y",
-        "-i",
-        str(video_path),
-        "-i",
-        str(audio_path),
-        "-filter:v",
-        erase_vf,
-        "-map",
-        "0:v",
-        "-map",
-        "1:a",
-        "-c:v",
-        "libx264",
-        "-preset",
-        "veryfast",
-        "-crf",
-        "20",
-        "-pix_fmt",
-        "yuv420p",
-        "-c:a",
-        "aac",
-        "-shortest",
-        str(output_path),
-    ]
-    proc = _run_ffmpeg(cmd2, label="filter")
-    if not output_path.exists():
-        raise RuntimeError(
-            f"mux failed (filter path): {output_path} not created\nstdout:\n{proc.stdout}\nstderr:\n{proc.stderr}"
-        )
+    return _mux(
+        video_path,
+        audio_path,
+        output_path,
+        sync_strategy=sync_strategy,
+        slow_max_ratio=slow_max_ratio,
+        threshold_s=threshold_s,
+        tail_pad_max_s=tail_pad_max_s,
+        erase_subtitle_enable=erase_subtitle_enable,
+        erase_subtitle_method=erase_subtitle_method,
+        erase_subtitle_coord_mode=erase_subtitle_coord_mode,
+        erase_subtitle_x=erase_subtitle_x,
+        erase_subtitle_y=erase_subtitle_y,
+        erase_subtitle_w=erase_subtitle_w,
+        erase_subtitle_h=erase_subtitle_h,
+        erase_subtitle_blur_radius=erase_subtitle_blur_radius,
+    )
 
 
 def burn_subtitles(
@@ -2243,167 +1928,26 @@ def burn_subtitles(
     place_w: float = 1.0,
     place_h: float = 0.22,
 ) -> None:
-    """
-    Burn subtitles into the video (hard-sub) so they are visible in common players by default.
-    Fallback: if hard-burn fails (e.g., ffmpeg without libass), embed as soft subtitle track (mov_text).
-    """
+    # v2: delegate to shared library
+    from pipelines.lib.subtitles_burn import burn_subtitles as _burn
 
-    def _escape_subtitles_filter_path(p: Path) -> str:
-        # ffmpeg filter args use ':' as option separator and '\' as escape char.
-        # Wrap with single quotes and escape quotes/backslashes/colons conservatively.
-        s = str(p.resolve()).replace("\\", "\\\\").replace(":", "\\:").replace("'", "\\'")
-        return f"'{s}'"
-
-    def _parse_srt_items(path: Path) -> List[tuple[str, str, str]]:
-        # returns (start_ass, end_ass, text)
-        raw = path.read_text(encoding="utf-8", errors="ignore").replace("\r\n", "\n")
-        blocks = [b.strip() for b in raw.split("\n\n") if b.strip()]
-        out: List[tuple[str, str, str]] = []
-
-        def _srt_ts_to_ass(ts: str) -> str:
-            # "00:00:01,230" -> "0:00:01.23"
-            ts = ts.strip()
-            if "," in ts:
-                hhmmss, ms = ts.split(",", 1)
-            else:
-                hhmmss, ms = ts, "0"
-            hh, mm, ss = [int(x) for x in hhmmss.split(":")]
-            cs = int(round(int(ms[:3].ljust(3, "0")) / 10.0))  # centiseconds
-            return f"{hh:d}:{mm:02d}:{ss:02d}.{cs:02d}"
-
-        for b in blocks:
-            lines = b.split("\n")
-            if len(lines) < 2:
-                continue
-            # skip index line
-            time_line = lines[1] if "-->" in lines[1] else (lines[0] if "-->" in lines[0] else "")
-            if "-->" not in time_line:
-                continue
-            left, right = [x.strip() for x in time_line.split("-->", 1)]
-            start = _srt_ts_to_ass(left)
-            end = _srt_ts_to_ass(right.split(" ", 1)[0].strip())
-            text_lines = lines[2:] if time_line == lines[1] else lines[1:]
-            text = "\n".join(text_lines).strip()
-            if not text:
-                continue
-            out.append((start, end, text))
-        return out
-
-    def _escape_ass_text(s: str) -> str:
-        # basic: convert newlines to \N, and avoid ASS override injection
-        s = s.replace("{", "(").replace("}", ")")
-        return s.replace("\n", r"\N")
-
-    def _write_ass_with_pos(srt_in: Path, ass_out: Path, *, cx: int, cy: int, play_w: int, play_h: int) -> None:
-        items = _parse_srt_items(srt_in)
-        font_name2 = (font_name or "Arial").replace("\n", " ").replace("\r", " ").replace("'", "")
-        outline2 = int(outline)
-        shadow2 = int(shadow)
-        fs2 = int(font_size)
-        # alignment=5 means middle-center; we will use \an5 + \pos(cx,cy) per line.
-        header = [
-            "[Script Info]",
-            "ScriptType: v4.00+",
-            f"PlayResX: {int(play_w)}",
-            f"PlayResY: {int(play_h)}",
-            "WrapStyle: 2",
-            "ScaledBorderAndShadow: yes",
-            "",
-            "[V4+ Styles]",
-            "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding",
-            f"Style: Default,{font_name2},{fs2},&H00FFFFFF,&H000000FF,&H00000000,&H64000000,0,0,0,0,100,100,0,0,1,{outline2},{shadow2},5,0,0,0,1",
-            "",
-            "[Events]",
-            "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text",
-        ]
-        lines: List[str] = []
-        for start, end, text in items:
-            t = _escape_ass_text(text)
-            # \an5 center + \pos
-            lines.append(f"Dialogue: 0,{start},{end},Default,,0,0,0,,{{\\an5\\pos({cx},{cy})}}{t}")
-        ass_out.write_text("\n".join(header + lines) + "\n", encoding="utf-8")
-
-    # 1) Try hard-burn (requires re-encoding video)
-    try:
-        # If placement box is enabled, force subtitle position to the center of the box.
-        if place_enable:
-            wh = _ffprobe_display_wh(video_path)
-            if wh:
-                W, H = wh
-                coord = (place_coord_mode or "ratio").strip().lower()
-                if coord == "px":
-                    x1 = float(place_x or 0.0)
-                    y1 = float(place_y or 0.0)
-                    w1 = float(place_w or 0.0)
-                    h1 = float(place_h or 0.0)
-                    cx = int(round(x1 + w1 / 2.0))
-                    cy = int(round(y1 + h1 / 2.0))
-                else:
-                    x1 = max(0.0, min(1.0, float(place_x or 0.0)))
-                    y1 = max(0.0, min(1.0, float(place_y or 0.0)))
-                    w1 = max(0.0, min(1.0, float(place_w or 1.0)))
-                    h1 = max(0.0, min(1.0, float(place_h or 0.22)))
-                    cx = int(round((x1 + w1 / 2.0) * W))
-                    cy = int(round((y1 + h1 / 2.0) * H))
-                cx = max(0, min(cx, W))
-                cy = max(0, min(cy, H))
-                ass_path = srt_path.with_suffix(".place.ass")
-                _write_ass_with_pos(srt_path, ass_path, cx=cx, cy=cy, play_w=W, play_h=H)
-                vf = f"subtitles={_escape_subtitles_filter_path(ass_path)}:charenc=UTF-8"
-            else:
-                # fallback to normal style if cannot probe
-                place_enable = False
-
-        if not place_enable:
-            srt_abs = srt_path.resolve()
-            font_name2 = (font_name or "Arial").replace("'", "")
-            vf = (
-                f"subtitles={_escape_subtitles_filter_path(srt_abs)}"
-                f":charenc=UTF-8"
-                f":force_style='FontName={font_name2},FontSize={int(font_size)},"
-                f"Outline={int(outline)},Shadow={int(shadow)},MarginV={int(margin_v)},Alignment={int(alignment)}'"
-            )
-        cmd = [
-            "ffmpeg",
-            "-y",
-            "-i",
-            str(video_path),
-            "-vf",
-            vf,
-            "-c:v",
-            "libx264",
-            "-preset",
-            "veryfast",
-            "-crf",
-            "20",
-            "-pix_fmt",
-            "yuv420p",
-            "-c:a",
-            "copy",
-            "-movflags",
-            "+faststart",
-            str(output_path),
-        ]
-        run_cmd(cmd, check=True)
-        return
-    except Exception as exc:
-        print(f"[warn] burn_subtitles hard-burn failed, fallback to soft subtitles: {exc}")
-
-    # 2) Fallback to soft subtitle track (may not display automatically in some players)
-    cmd2 = [
-        "ffmpeg",
-        "-y",
-        "-i",
-        str(video_path),
-        "-i",
-        str(srt_path),
-        "-c",
-        "copy",
-        "-c:s",
-        "mov_text",
-        str(output_path),
-    ]
-    run_cmd(cmd2, check=True)
+    return _burn(
+        video_path,
+        srt_path,
+        output_path,
+        font_name=font_name,
+        font_size=font_size,
+        outline=outline,
+        shadow=shadow,
+        margin_v=margin_v,
+        alignment=alignment,
+        place_enable=place_enable,
+        place_coord_mode=place_coord_mode,
+        place_x=place_x,
+        place_y=place_y,
+        place_w=place_w,
+        place_h=place_h,
+    )
 
 
 def _read_srt_texts(path: Path) -> List[str]:

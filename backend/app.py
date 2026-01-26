@@ -18,15 +18,15 @@ from backend.hardware import detect_hardware, recommended_presets
 from backend.task_manager import TaskManager
 from backend.glossary_store import load_glossary, save_glossary
 from backend.review_workflow import read_text, write_text, unified_diff, mux_video_audio, embed_subtitles, regenerate_quality_report
+from backend.runtime_paths import detect_repo_root, pick_config_dir, pick_pipelines_dir
 
 
 def create_app(config_path: Path) -> Flask:
     # In PyInstaller builds, __file__ points to a temp extraction directory (often on C:).
     # Allow the Electron app to override the effective "repo root" so relative paths resolve
     # to the packaged resources directory (process.resourcesPath).
-    repo_root_env = os.environ.get("YGF_APP_ROOT", "").strip()
-    repo_root = Path(repo_root_env).resolve() if repo_root_env else Path(__file__).resolve().parents[1]
-    defaults_path = repo_root / "config" / "defaults.yaml"
+    repo_root = detect_repo_root()
+    defaults_path = pick_config_dir(repo_root) / "defaults.yaml"
     cfg = None
     last_exc: Optional[Exception] = None
     # Docker Desktop bind mounts sometimes present a temporarily inconsistent view.
@@ -1004,25 +1004,26 @@ def create_app(config_path: Path) -> Flask:
 
 
 def main():
-    repo_root_env = os.environ.get("YGF_APP_ROOT", "").strip()
-    root = Path(repo_root_env).resolve() if repo_root_env else Path(__file__).resolve().parents[1]
+    root = detect_repo_root()
+    cfg_dir = pick_config_dir(root)
 
     # ---------------------------------------------------------
     # Self-check mode (packaging/smoke test)
     # ---------------------------------------------------------
     # Usage (packaged):
     #   set YGF_APP_ROOT=<resources>
-    #   set CONFIG_PATH=<resources>\config\quality.yaml
+    #   set CONFIG_PATH=<resources>\configs\quality.yaml
     #   backend_server.exe --self-check
     #
     # This provides a fast signal before building an installer.
     if "--self-check" in sys.argv:
         try:
+            pipelines_dir = (root / "pipelines") if (root / "pipelines").exists() else (root / "scripts")
             # Minimal filesystem checks
             required = {
-                "scripts/asr_translate_tts.py": root / "scripts" / "asr_translate_tts.py",
-                "scripts/quality_pipeline.py": root / "scripts" / "quality_pipeline.py",
-                "config/quality.yaml": root / "config" / "quality.yaml",
+                f"{pipelines_dir.name}/asr_translate_tts.py": pipelines_dir / "asr_translate_tts.py",
+                f"{pipelines_dir.name}/quality_pipeline.py": pipelines_dir / "quality_pipeline.py",
+                "configs/quality.yaml": cfg_dir / "quality.yaml",
                 "bin/ffmpeg.exe": root / "bin" / ("ffmpeg.exe" if os.name == "nt" else "ffmpeg"),
             }
             missing = [k for k, p in required.items() if not p.exists()]
@@ -1088,7 +1089,7 @@ def main():
                 # Fallback to legacy in-process runner (may fail if deps are missing).
                 pass
 
-        scripts_dir = root / "scripts"
+        scripts_dir = pick_pipelines_dir(root)
         # Ensure bundled binaries are discoverable (ffmpeg/whisper-cli, etc.).
         # Pipeline scripts often call "ffmpeg" via PATH (not an absolute path).
         bin_dir = root / "bin"
@@ -1136,13 +1137,16 @@ def main():
 
     # Allow selecting config file via env var (helps fully-local + docker setups).
     # Examples:
-    # - CONFIG_PATH=/app/config/quality.yaml
-    # - CONFIG_PATH=/app/config/defaults.yaml
+    # - CONFIG_PATH=/app/configs/quality.yaml
+    # - CONFIG_PATH=/app/configs/defaults.yaml
     raw = os.environ.get("CONFIG_PATH")
     candidates = []
     if raw:
         candidates.append(Path(raw))
     # sensible fallbacks (both in-container paths)
+    candidates.append(cfg_dir / "quality.yaml")
+    candidates.append(cfg_dir / "defaults.yaml")
+    # legacy fallbacks
     candidates.append(root / "config" / "quality.yaml")
     candidates.append(root / "config" / "defaults.yaml")
 

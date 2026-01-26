@@ -13,6 +13,14 @@ frontend/node_modules/
 frontend/dist/
 frontend/dist_electron/
 
+# Node / desktop (v2)
+apps/desktop/node_modules/
+apps/desktop/dist/
+apps/desktop/dist_electron/
+apps/desktop/.vite/
+apps/desktop/.cache/
+apps/desktop/out/
+
 # Outputs and logs
 outputs/
 *.log

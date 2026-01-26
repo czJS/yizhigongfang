@@ -118,7 +118,8 @@ def create_app(config_path: Path) -> Flask:
 
 def main():
     root = Path(__file__).resolve().parents[1]
-    config_path = root / "config" / "defaults.yaml"
+    config_dir = (root / "configs") if (root / "configs").exists() else (root / "config")
+    config_path = config_dir / "defaults.yaml"
     app = create_app(config_path)
     # 绑定到 0.0.0.0 以便容器端口映射可从宿主访问
     app.run(host="0.0.0.0", port=5175, debug=False)

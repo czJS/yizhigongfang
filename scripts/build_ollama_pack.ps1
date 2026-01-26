@@ -1,4 +1,20 @@
 param(
+  [string]$RepoRoot = "",
+  [string]$OllamaSrc = "D:\tools\ollama",
+  [switch]$Force = $false
+)
+
+$ErrorActionPreference = "Stop"
+Write-Host "[deprecated] scripts/build_ollama_pack.ps1 has moved to packaging/scripts/windows/build_ollama_pack.ps1"
+
+$repo = if ($RepoRoot) { (Resolve-Path $RepoRoot).Path } else { (Resolve-Path (Join-Path $PSScriptRoot "..")).Path }
+$target = Join-Path $repo "packaging\scripts\windows\build_ollama_pack.ps1"
+if (-not (Test-Path $target)) { throw "[ollama_pack] target script not found: $target" }
+
+& $target -RepoRoot $repo -OllamaSrc $OllamaSrc -Force:$Force
+exit $LASTEXITCODE
+
+param(
   [string]$RepoRoot = "D:\yizhigongfang-main\yizhigongfang-git",
   [string]$OllamaSrc = "D:\tools\ollama",
   [switch]$Force = $false

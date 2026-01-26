@@ -13,6 +13,7 @@ from typing import Any, Dict, List, Optional
 
 from backend.config import load_defaults
 from backend.quality_report import generate_quality_report, write_quality_report
+from backend.runtime_paths import detect_repo_root, pick_config_dir
 
 
 _HW_LIMIT_PATTERNS = [
@@ -75,12 +76,12 @@ class TaskManager:
         self.lock = threading.Lock()
         # In packaged builds (PyInstaller), __file__ is under a temp extraction dir.
         # Allow the host app (Electron) to override repo_root to a stable resources directory.
-        repo_root_env = os.environ.get("YGF_APP_ROOT", "").strip()
-        self.repo_root = Path(repo_root_env).resolve() if repo_root_env else Path(__file__).resolve().parents[1]
+        self.repo_root = detect_repo_root()
+        self._config_dir = pick_config_dir(self.repo_root)
         # Track config file mtimes to allow hot-reload without restarting the backend container.
         self._active_config_path: Optional[Path] = None
         self._active_config_mtime: Optional[float] = None
-        self._defaults_config_path: Path = self.repo_root / "config" / "defaults.yaml"
+        self._defaults_config_path: Path = self._config_dir / "defaults.yaml"
         self._defaults_config_mtime: Optional[float] = None
         self._init_config_paths()
         paths = config.get("paths", {})
@@ -97,6 +98,9 @@ class TaskManager:
         candidates: List[Path] = []
         if raw:
             candidates.append(Path(raw))
+        candidates.append(self._config_dir / "quality.yaml")
+        candidates.append(self._config_dir / "defaults.yaml")
+        # legacy fallbacks
         candidates.append(self.repo_root / "config" / "quality.yaml")
         candidates.append(self.repo_root / "config" / "defaults.yaml")
         for p in candidates:
@@ -434,12 +438,12 @@ class TaskManager:
         paths = self.config.get("paths", {})
         if mode == "lite":
             # Always use the lite pipeline script, regardless of which config file is loaded.
-            return self._resolve_path(paths.get("script_lite", "scripts/asr_translate_tts.py"))
+            return self._resolve_path(paths.get("script_lite", "pipelines/asr_translate_tts.py"))
         if mode == "quality":
             # Always use the quality pipeline script.
-            return self._resolve_path(paths.get("script_quality", "scripts/quality_pipeline.py"))
+            return self._resolve_path(paths.get("script_quality", "pipelines/quality_pipeline.py"))
         if mode == "online":
-            return self._resolve_path(paths.get("script_online", "scripts/online_pipeline.py"))
+            return self._resolve_path(paths.get("script_online", "pipelines/online_pipeline.py"))
         raise ValueError(f"未知模式: {mode}")
 
     def _build_command(self, video_path: str, work_dir: Path, cfg: Dict, mode: str, resume_from: Optional[str] = None) -> List[str]:

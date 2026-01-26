@@ -1,4 +1,10 @@
-# Windows 打包机准备清单（clone 后还缺什么）
+# Windows 打包机准备清单（迁移提示）
+
+这份文档已迁移到：
+
+- `docs/packaging/windows_prereqs.md`
+
+请以新文档为准。
 
 这份文档回答一个问题：**把仓库 clone 到一台新的 Windows 电脑后，还缺哪些东西，应该放到哪里，才能成功打包？**
 
@@ -10,9 +16,9 @@
 
 当前 Windows 交付是 3 件套：
 
-- **安装包**：`frontend/dist_electron/YizhiStudio-*.exe`（不包含模型、不包含 Ollama）
-- **模型包**：`frontend/dist_electron/models_pack.zip`（App 内导入）
-- **Ollama 包**：`frontend/dist_electron/ollama_pack.zip`（App 内导入，质量模式需要）
+- **安装包**：`apps/desktop/dist_electron/YizhiStudio-*.exe`（不包含模型、不包含 Ollama）
+- **模型包**：`apps/desktop/dist_electron/models_pack.zip`（App 内导入）
+- **Ollama 包**：`apps/desktop/dist_electron/ollama_pack.zip`（App 内导入，质量模式需要）
 
 ---
 
@@ -60,22 +66,22 @@
 
 ### 4.1 Node 路径（前端打包）
 
-脚本：`scripts/build_installer.ps1` 默认：
+脚本：`packaging/scripts/windows/build_installer.ps1` 默认：
 
 - `D:\tools\node-v20.11.1-win-x64`
 
 你需要做到其一：
 
 - 把 Node 解压到上面路径；或
-- 修改 `scripts/build_installer.ps1` 里的 `$nodeDir` 为你机器上的 Node 路径；或
+- 修改 `packaging/scripts/windows/build_installer.ps1` 里的 `$nodeDir` 为你机器上的 Node 路径；或
 - 确保系统 PATH 已包含 node/npm，并把脚本里 `$nodeDir` 逻辑改成“可选”。
 
 ### 4.2 Python venv 路径（后端打包）
 
 脚本默认 venv：
 
-- 后端：`D:\tools\venvs\yizhi-backend`（`scripts/rebuild_backend_server_exe.ps1`）
-- 质量 worker：`D:\tools\venvs\yizhi-quality`（`scripts/rebuild_quality_worker_exe.ps1`）
+- 后端：`D:\tools\venvs\yizhi-backend`（`packaging/scripts/windows/rebuild_backend_server_exe.ps1`）
+- 质量 worker：`D:\tools\venvs\yizhi-quality`（`packaging/scripts/windows/rebuild_quality_worker_exe.ps1`）
 
 如果你不想用 D 盘路径，可以直接在执行时传参（脚本支持 `-VenvPath` / `-RepoRoot`），或把脚本头部默认值改掉。
 
@@ -121,11 +127,11 @@
 
 脚本会从以下目录打包（默认约定）：
 
-- `D:\tools\ollama` → 生成 `frontend/dist_electron/ollama_pack.zip`
+- `D:\tools\ollama` → 生成 `apps/desktop/dist_electron/ollama_pack.zip`（如果没有 `apps/desktop`，会回退到 `frontend/dist_electron`）
 
 如果新机器没有这个目录：
 
-- 你需要安装/解压 Windows 版 Ollama 到此目录，或修改 `scripts/build_ollama_pack.ps1` 里的源路径。
+- 你需要安装/解压 Windows 版 Ollama 到此目录，或修改 `packaging/scripts/windows/build_ollama_pack.ps1` 里的源路径。
 
 ---
 
@@ -137,13 +143,13 @@
 cd D:\yizhigongfang-main\yizhigongfang-git
 
 # 1) 后端 exe
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\rebuild_backend_server_exe.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\packaging\scripts\windows\rebuild_backend_server_exe.ps1
 
 # 2) 质量 worker exe
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\rebuild_quality_worker_exe.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\packaging\scripts\windows\rebuild_quality_worker_exe.ps1
 
 # 3) 安装包（可先跳过模型包）
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build_installer.ps1 -SkipModelsPack
+powershell -NoProfile -ExecutionPolicy Bypass -File .\packaging\scripts\windows\build_installer.ps1 -SkipModelsPack
 ```
 
 如果 3 步都能跑通，说明“打包机环境”基本齐全。

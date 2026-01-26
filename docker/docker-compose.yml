@@ -1,0 +1,149 @@
+name: yizhi
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    restart: unless-stopped
+    ports:
+      - "11435:11434"             # 可选，对宿主暴露；若本机 11434 已被占用则改用 11435
+    volumes:
+      - ollama-data:/root/.ollama
+    environment:
+      - OLLAMA_KEEP_ALIVE=24h
+      # Reduce concurrent memory pressure on CPU-only setups (prevents runner OOM kills).
+      - OLLAMA_NUM_PARALLEL=1
+      - OLLAMA_MAX_LOADED_MODELS=1
+    command: ["serve"]
+
+  backend:
+    image: yzh-backend:quality    # 请先 docker build -t yzh-backend:quality -f docker/Dockerfile .
+    platform: linux/amd64
+    depends_on:
+      - ollama
+    ports:
+      - "5175:5175"
+    volumes:
+      # v2: configs/ + pipelines/
+      - ./configs:/app/configs:ro
+      - ./pipelines:/app/pipelines
+      # legacy (transition): still used by wrappers
+      - ./config:/app/config:ro
+      - ./scripts:/app/scripts
+      - ./backend:/app/backend
+      # 本地化运行所需二进制（包含 piper/ffmpeg 等）
+      - ./app_from_image/bin:/app/local_bin:ro
+      - ./assets:/app/assets
+      # 评测数据/说明文档（E2E/公开集/金标等）
+      - ./eval:/app/eval
+      # 文档（Round1.5 扫参脚本会从 docs/ 解析候选点）
+      - ./docs:/app/docs:ro
+      - ./outputs:/app/outputs
+      # 评测/质量报告专用目录（避免散落在 outputs 内）
+      - ./reports:/app/reports
+      # （可选）外置金标目录：你的机器上是 /Users/chengzheng/Desktop/金标准
+      # 这样容器内可用路径统一为 /app/golden_videos/*.mp4 / *.srt / *.srt_en
+      # - /Users/chengzheng/Desktop/金标准:/app/golden_videos:ro
+    environment:
+      # 如需覆盖配置，可在此设置；默认为 quality.yaml 内已指向 http://ollama:11434/v1
+      - LLM_ENDPOINT=http://ollama:11434/v1
+      - PYTHONPATH=/app
+      - CONFIG_PATH=/app/configs/quality.yaml
+      # whisper.cpp (whisper-cli) 依赖 libwhisper/libggml，位于 /app/bin；piper 依赖在 /app/local_bin/piper
+      - LD_LIBRARY_PATH=/app/bin:/app/local_bin:/app/local_bin/piper
+    # Ensure OpenCC is available for Traditional->Simplified conversion in lite mode.
+    # (Some existing local images may not include it; install only if missing.)
+    command:
+      - bash
+      - -lc
+      - |
+        python -c "import opencc" 2>/dev/null || python -m pip install --no-cache-dir opencc-python-reimplemented==0.1.7
+        exec python -m backend.app
+
+  # Long-running evaluation orchestrator (Round1 one-job).
+  # Runs fully inside Docker and will keep running even if you close your terminal/IDE.
+  onejob:
+    image: yzh-backend:quality
+    platform: linux/amd64
+    depends_on:
+      - ollama
+      - backend
+    restart: "no"
+    volumes:
+      - ./configs:/app/configs:ro
+      - ./pipelines:/app/pipelines
+      - ./config:/app/config:ro
+      - ./backend:/app/backend
+      - ./scripts:/app/scripts
+      - ./app_from_image/bin:/app/local_bin:ro
+      - ./assets:/app/assets
+      - ./eval:/app/eval
+      - ./docs:/app/docs:ro
+      - ./outputs:/app/outputs
+      - ./reports:/app/reports
+      # - /Users/chengzheng/Desktop/金标准:/app/golden_videos:ro
+    environment:
+      - LLM_ENDPOINT=http://ollama:11434/v1
+      - PYTHONPATH=/app
+      - CONFIG_PATH=/app/configs/quality.yaml
+      - LD_LIBRARY_PATH=/app/bin:/app/local_bin:/app/local_bin/piper
+    command:
+      - bash
+      - -lc
+      - |
+        PYTHONUNBUFFERED=1 python /app/scripts/run_round1_onejob.py \
+          --poll-s 60 \
+          --bootstrap-iters 2000 \
+          --retry-rounds 2 \
+          --retry-sleep-s 60 \
+          --round15-enable \
+          --progress-json /app/outputs/eval/round1_onejob_progress.json \
+          --log-file /app/outputs/eval/round1_onejob.log
+
+  # Round2 combos runner: waits for onejob to finish, then runs 5-combo full delivery on golden9 and writes report.
+  round2:
+    image: yzh-backend:quality
+    platform: linux/amd64
+    depends_on:
+      - ollama
+      - backend
+    restart: unless-stopped
+    volumes:
+      - ./configs:/app/configs:ro
+      - ./pipelines:/app/pipelines
+      - ./config:/app/config:ro
+      - ./backend:/app/backend
+      - ./scripts:/app/scripts
+      - ./app_from_image/bin:/app/local_bin:ro
+      - ./assets:/app/assets
+      - ./eval:/app/eval
+      - ./docs:/app/docs:ro
+      - ./outputs:/app/outputs
+      - ./reports:/app/reports
+      # - /Users/chengzheng/Desktop/金标准:/app/golden_videos:ro
+    environment:
+      - LLM_ENDPOINT=http://ollama:11434/v1
+      - PYTHONPATH=/app
+      - CONFIG_PATH=/app/configs/quality.yaml
+      - LD_LIBRARY_PATH=/app/bin:/app/local_bin:/app/local_bin/piper
+    command:
+      - bash
+      - -lc
+      - |
+        PYTHONUNBUFFERED=1 python /app/scripts/run_round2_combos.py \
+          --poll-s 120 \
+          --bootstrap-iters 2000
+
+  frontend:
+    image: node:20
+    # v2: frontend source moved to apps/desktop (keep docker dev aligned with packaging layout)
+    working_dir: /app/apps/desktop
+    volumes:
+      - .:/app
+    ports:
+      - "5176:5174"  # 宿主访问 http://localhost:5176
+    # 容器内不运行 Electron（需要桌面环境且依赖宿主平台二进制），只运行 Web 前端（Vite）
+    command: ["bash", "-lc", "npm install && VITE_API_BASE=http://localhost:5175 npm run dev:docker"]
+
+volumes:
+  ollama-data:
+

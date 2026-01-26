@@ -2679,9 +2679,11 @@ def main() -> None:
             min_words = int(getattr(args, "tts_fit_min_words", 1) or 1)
             src_dur_s = None
             try:
-                cmd = ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "json", str(args.video)]
-                out = subprocess.run(cmd, check=True, capture_output=True, text=True).stdout
-                src_dur_s = float(json.loads(out)["format"]["duration"])
+                from pathlib import Path as _Path
+
+                from pipelines.lib.media_probe import probe_duration_s as _probe_duration_s
+
+                src_dur_s = _probe_duration_s(_Path(str(args.video)))
             except Exception:
                 src_dur_s = None
             cap_end = None
