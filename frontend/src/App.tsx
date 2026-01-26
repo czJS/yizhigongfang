@@ -92,6 +92,7 @@ const { Title, Paragraph, Text } = Typography;
 const { Option } = Select;
 
 const DEFAULT_POLL_MS = 1200;
+const LICENSE_STORAGE_KEY = "ygf_license_ok";
 
 function uiStateFromBackend(state: TaskStatus["state"]): UiTaskState {
   if (state === "running") return "running";
@@ -193,6 +194,26 @@ function joinList(items: string[]): string {
 }
 
 const App: React.FC = () => {
+  const [licenseOk, setLicenseOk] = useState(() => localStorage.getItem(LICENSE_STORAGE_KEY) === "1");
+  const [licenseCdkey, setLicenseCdkey] = useState("");
+  const [deviceCode, setDeviceCode] = useState("UNKNOWN");
+  const [licenseLoading, setLicenseLoading] = useState(true);
+  const [licenseError, setLicenseError] = useState<string>("");
+  const [modelsReady, setModelsReady] = useState(true);
+  const [modelsRoot, setModelsRoot] = useState("");
+  const [modelsZipHint, setModelsZipHint] = useState("");
+  const [modelsLoading, setModelsLoading] = useState(true);
+  const [modelsError, setModelsError] = useState("");
+  const [modelsMissing, setModelsMissing] = useState<{ key?: string; label?: string; path?: string }[]>([]);
+  const [modelsImporting, setModelsImporting] = useState(false);
+  const [ollamaReady, setOllamaReady] = useState(false);
+  const [ollamaPortOpen, setOllamaPortOpen] = useState(false);
+  const [ollamaRoot, setOllamaRoot] = useState("");
+  const [ollamaModelsRoot, setOllamaModelsRoot] = useState("");
+  const [ollamaZipHint, setOllamaZipHint] = useState("");
+  const [ollamaLoading, setOllamaLoading] = useState(true);
+  const [ollamaError, setOllamaError] = useState("");
+  const [ollamaImporting, setOllamaImporting] = useState(false);
   const [health, setHealth] = useState<string>("unknown");
   const [config, setConfig] = useState<AppConfig | null>(null);
   const [hardware, setHardware] = useState<HardwareInfo | null>(null);
@@ -215,12 +236,15 @@ const App: React.FC = () => {
   const [cleanupIncludeDiagnostics, setCleanupIncludeDiagnostics] = useState(true);
   const [cleanupIncludeResume, setCleanupIncludeResume] = useState(false);
   const [cleanupIncludeReview, setCleanupIncludeReview] = useState(false);
-  const [savedSubtitleSettings, setSavedSubtitleSettings] = useState<{
+  type SavedSubtitleSettings = {
     source: "has" | "none";
     values: Record<string, any>;
     rect?: { x: number; y: number; w: number; h: number };
     fontSize?: number;
-  } | null>(null);
+  };
+  const [savedSubtitleSettings, setSavedSubtitleSettings] = useState<SavedSubtitleSettings | null>(null);
+  // Avoid "save then immediately next" races: keep latest saved settings in a ref.
+  const savedSubtitleSettingsRef = useRef<SavedSubtitleSettings | null>(null);
   const [siderCollapsed, setSiderCollapsed] = useState(false);
   const [wizardTasks, setWizardTasks] = useState<
     { inputName: string; inputPath: string; localPath?: string; overrides?: Record<string, any> }[]
@@ -255,6 +279,7 @@ const App: React.FC = () => {
   const regionPickerFrameRef = useRef<HTMLDivElement | null>(null);
   const regionPickerFileInputRef = useRef<HTMLInputElement | null>(null);
   const baselineHasSettingsRef = useRef<ReturnType<typeof currentHasSettingsSnapshot> | null>(null);
+  const baselineNoneSettingsRef = useRef<{ values: Record<string, any> } | null>(null);
   // Preview scale: map ASS/视频原始字号到当前预览窗口的 CSS 像素，保证“设置页预览 ≈ 成片效果（在同等缩放下）”
   const [regionPickerVideoScale, setRegionPickerVideoScale] = useState<number>(1);
   const [regionPickerVideoBox, setRegionPickerVideoBox] = useState<{ w: number; h: number; x: number; y: number }>({
@@ -265,6 +290,209 @@ const App: React.FC = () => {
   });
 
   const regionPickerActive = regionPickerOpen || (route === "wizard" && wizardStep === 1 && subtitleSource === "has");
+  const missingLabels = useMemo(() => {
+    return (modelsMissing || []).map((m) => m.label || m.key || "unknown").filter(Boolean);
+  }, [modelsMissing]);
+
+  useEffect(() => {
+    let active = true;
+    const loadDeviceCode = async () => {
+      try {
+        if (!window.bridge?.getDeviceCode) {
+          if (active) setLicenseError("未连接到主进程，请用应用启动并重启。");
+          return;
+        }
+        const code = await window.bridge.getDeviceCode();
+        if (active && code) setDeviceCode(String(code));
+      } catch {
+        if (active) setDeviceCode("UNKNOWN");
+      } finally {
+        if (active) setLicenseLoading(false);
+      }
+    };
+    loadDeviceCode();
+    return () => {
+      active = false;
+    };
+  }, []);
+  const showLicenseModal = !licenseOk && !licenseLoading;
+
+  const refreshModelsStatus = async () => {
+    setModelsError("");
+    setModelsLoading(true);
+    try {
+      if (!window.bridge?.getModelStatus) {
+        setModelsReady(false);
+        setModelsError("未连接到主进程，无法检测模型状态。");
+        return;
+      }
+      const st = await window.bridge.getModelStatus();
+      setModelsReady(!!st?.ready);
+      setModelsRoot(String(st?.root || ""));
+      setModelsZipHint(String(st?.zipHint || st?.zip || ""));
+      setModelsMissing(Array.isArray(st?.missing) ? st.missing : []);
+    } catch (err: any) {
+      setModelsReady(false);
+      setModelsError(String(err?.message || "模型检测失败"));
+    } finally {
+      setModelsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    refreshModelsStatus();
+  }, []);
+
+  const refreshOllamaStatus = async () => {
+    setOllamaError("");
+    setOllamaLoading(true);
+    try {
+      if (!window.bridge?.getOllamaStatus) {
+        setOllamaReady(false);
+        setOllamaError("未连接到主进程，无法检测 Ollama 状态。");
+        return;
+      }
+      const st = await window.bridge.getOllamaStatus();
+      setOllamaReady(!!st?.ready);
+      setOllamaPortOpen(!!st?.portOpen);
+      setOllamaRoot(String(st?.root || ""));
+      setOllamaModelsRoot(String(st?.modelsRoot || ""));
+      setOllamaZipHint(String(st?.zipHint || st?.zip || ""));
+    } catch (err: any) {
+      setOllamaReady(false);
+      setOllamaError(String(err?.message || "Ollama 状态检测失败"));
+    } finally {
+      setOllamaLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    refreshOllamaStatus();
+  }, []);
+
+  const handleExtractModels = async (zipPath?: string) => {
+    setModelsError("");
+    setModelsImporting(true);
+    const msgKey = "model-import";
+    message.loading({ content: "正在导入模型包（解压中）...", key: msgKey, duration: 0 });
+    if (!window.bridge?.extractModelPack) {
+      setModelsError("未连接到主进程，无法导入模型包。");
+      message.error({ content: "未连接到主进程，无法导入模型包。", key: msgKey });
+      setModelsImporting(false);
+      return;
+    }
+    if (!zipPath) {
+      setModelsError("请先选择模型包（models_pack.zip）。");
+      message.warning({ content: "请先选择模型包（models_pack.zip）。", key: msgKey });
+      setModelsImporting(false);
+      return;
+    }
+    try {
+      const res = await window.bridge.extractModelPack(zipPath);
+      if (!res?.ok) {
+        setModelsError(res?.error || "导入失败，请检查 models_pack.zip 是否完整");
+        message.error({ content: res?.error || "导入失败，请检查 models_pack.zip 是否完整", key: msgKey });
+        return;
+      }
+      await refreshModelsStatus();
+      if (Array.isArray(res?.missing) && res.missing.length > 0) {
+        const labels = (res.missing || []).map((m: any) => m?.label || m?.key).filter(Boolean);
+        message.warning({ content: `导入完成，但仍缺少：${labels.join("、") || "部分模型"}。请确认模型包完整。`, key: msgKey });
+      } else {
+        message.success({ content: "模型导入成功（已就绪）", key: msgKey });
+      }
+    } catch (err: any) {
+      const msg = String(err?.message || err || "导入失败");
+      setModelsError(msg);
+      message.error({ content: msg, key: msgKey });
+    } finally {
+      setModelsImporting(false);
+    }
+  };
+
+  const handlePickModels = async () => {
+    if (!window.bridge?.pickModelPack) {
+      setModelsError("未连接到主进程，无法选择模型包。");
+      return;
+    }
+    const p = await window.bridge.pickModelPack();
+    if (!p) return;
+    await handleExtractModels(p);
+  };
+
+  const handleExtractOllama = async (zipPath?: string) => {
+    setOllamaError("");
+    setOllamaImporting(true);
+    const msgKey = "ollama-import";
+    message.loading({ content: "正在导入 Ollama 包（解压中）...", key: msgKey, duration: 0 });
+    if (!window.bridge?.extractOllamaPack) {
+      setOllamaError("未连接到主进程，无法导入 Ollama 包。");
+      message.error({ content: "未连接到主进程，无法导入 Ollama 包。", key: msgKey });
+      setOllamaImporting(false);
+      return;
+    }
+    if (!zipPath) {
+      setOllamaError("请先选择 Ollama 包（ollama_pack.zip）。");
+      message.warning({ content: "请先选择 Ollama 包（ollama_pack.zip）。", key: msgKey });
+      setOllamaImporting(false);
+      return;
+    }
+    try {
+      const res = await window.bridge.extractOllamaPack(zipPath);
+      if (!res?.ok) {
+        setOllamaError(res?.error || "导入失败，请检查 ollama_pack.zip 是否完整");
+        message.error({ content: res?.error || "导入失败，请检查 ollama_pack.zip 是否完整", key: msgKey });
+        return;
+      }
+      await refreshOllamaStatus();
+      message.success({ content: "Ollama 包导入完成", key: msgKey });
+    } catch (err: any) {
+      const msg = String(err?.message || err || "导入失败");
+      setOllamaError(msg);
+      message.error({ content: msg, key: msgKey });
+    } finally {
+      setOllamaImporting(false);
+    }
+  };
+
+  const handlePickOllama = async () => {
+    if (!window.bridge?.pickOllamaPack) {
+      setOllamaError("未连接到主进程，无法选择 Ollama 包。");
+      return;
+    }
+    const p = await window.bridge.pickOllamaPack();
+    if (!p) return;
+    await handleExtractOllama(p);
+  };
+
+  const handleLicenseSubmit = async () => {
+    setLicenseError("");
+    if (!window.bridge?.verifyLicense) {
+      setLicenseError("未连接到主进程，请用应用启动并重启。");
+      return;
+    }
+    const res = await window.bridge.verifyLicense(licenseCdkey.trim());
+    const ok = !!res?.ok;
+    const nextCode = res?.deviceCode ? String(res.deviceCode) : deviceCode;
+    if (res?.deviceCode) setDeviceCode(String(res.deviceCode));
+    if (!ok) {
+      setLicenseError(`验证失败。当前设备码：${nextCode}`);
+      return;
+    }
+    localStorage.setItem(LICENSE_STORAGE_KEY, "1");
+    setLicenseOk(true);
+    message.success("验证成功");
+  };
+
+  const handleRefreshDeviceCode = async () => {
+    setLicenseError("");
+    if (!window.bridge?.getDeviceCode) {
+      setLicenseError("未连接到主进程，请用应用启动并重启。");
+      return;
+    }
+    const code = await window.bridge.getDeviceCode();
+    if (code) setDeviceCode(String(code));
+  };
 
   useEffect(() => {
     if (!regionPickerActive) return;
@@ -332,11 +560,16 @@ const App: React.FC = () => {
     const f = e.target.files?.[0];
     if (!f) return;
     try {
-      const url = URL.createObjectURL(f);
+      const localPath = String((f as any)?.path || "");
+      const localUrl = localPath ? toFileUrl(localPath) : "";
+      const url = localUrl || URL.createObjectURL(f);
       setRegionPickerVideoPath(url);
       setRegionPickerVideoReady(false);
       setRegionPickerVideoError("");
-      setRegionPickerVideoInfo({ name: f.name });
+      setRegionPickerVideoInfo({ name: f.name, localPath });
+      if (!localUrl && !localPath) {
+        message.warning("未获取到本地路径，已使用临时预览 URL。");
+      }
       message.success(`已选择预览视频：${f.name}`);
     } catch (err: any) {
       message.error(err?.message || "选择预览视频失败");
@@ -374,25 +607,35 @@ const App: React.FC = () => {
       fontSize: Math.round((Number(regionPickerSampleFontSize) || 0) * 100) / 100,
     };
   }
+  function currentNoneSettingsSnapshot() {
+    const vals = form.getFieldsValue(true) || {};
+    return {
+      values: {
+        sub_font_size: Number(vals.sub_font_size || 0),
+        sub_margin_v: Number(vals.sub_margin_v || 0),
+        sub_outline: Number(vals.sub_outline || 0),
+        sub_alignment: Number(vals.sub_alignment || 0),
+      },
+    };
+  }
   function hasUnsavedHasSettings() {
     if (subtitleSource !== "has") return false;
-    if (!savedSubtitleSettings || savedSubtitleSettings.source !== "has") {
+    const saved = savedSubtitleSettingsRef.current || savedSubtitleSettings;
+    if (!saved || saved.source !== "has") {
+      const base = baselineHasSettingsRef.current;
+      if (!base) return false;
       const current = currentHasSettingsSnapshot();
-      if (!baselineHasSettingsRef.current) {
-        baselineHasSettingsRef.current = current;
-        return false;
-      }
-      return JSON.stringify(current) !== JSON.stringify(baselineHasSettingsRef.current);
+      return JSON.stringify(current) !== JSON.stringify(base);
     }
     const current = currentHasSettingsSnapshot();
-    const savedRect = savedSubtitleSettings.rect || { x: 0, y: 0, w: 0, h: 0 };
-    const saved = {
+    const savedRect = saved.rect || { x: 0, y: 0, w: 0, h: 0 };
+    const savedSnap = {
       values: {
-        erase_subtitle_x: round3(Number(savedSubtitleSettings.values?.erase_subtitle_x || 0)),
-        erase_subtitle_y: round3(Number(savedSubtitleSettings.values?.erase_subtitle_y || 0)),
-        erase_subtitle_w: round3(Number(savedSubtitleSettings.values?.erase_subtitle_w || 0)),
-        erase_subtitle_h: round3(Number(savedSubtitleSettings.values?.erase_subtitle_h || 0)),
-        erase_subtitle_blur_radius: Number(savedSubtitleSettings.values?.erase_subtitle_blur_radius || 0),
+        erase_subtitle_x: round3(Number(saved.values?.erase_subtitle_x || 0)),
+        erase_subtitle_y: round3(Number(saved.values?.erase_subtitle_y || 0)),
+        erase_subtitle_w: round3(Number(saved.values?.erase_subtitle_w || 0)),
+        erase_subtitle_h: round3(Number(saved.values?.erase_subtitle_h || 0)),
+        erase_subtitle_blur_radius: Number(saved.values?.erase_subtitle_blur_radius || 0),
       },
       rect: {
         x: round3(Number(savedRect.x || 0)),
@@ -400,32 +643,62 @@ const App: React.FC = () => {
         w: round3(Number(savedRect.w || 0)),
         h: round3(Number(savedRect.h || 0)),
       },
-      fontSize: Math.round((Number(savedSubtitleSettings.fontSize) || 0) * 100) / 100,
+      fontSize: Math.round((Number(saved.fontSize) || 0) * 100) / 100,
     };
-    return JSON.stringify(current) !== JSON.stringify(saved);
+    return JSON.stringify(current) !== JSON.stringify(savedSnap);
+  }
+  function hasUnsavedNoneSettings() {
+    if (subtitleSource !== "none") return false;
+    const saved = savedSubtitleSettingsRef.current || savedSubtitleSettings;
+    if (!saved || saved.source !== "none") {
+      const base = baselineNoneSettingsRef.current;
+      if (!base) return false;
+      const current = currentNoneSettingsSnapshot();
+      return JSON.stringify(current) !== JSON.stringify(base);
+    }
+    const current = currentNoneSettingsSnapshot();
+    const savedVals = saved.values || {};
+    const savedSnap = {
+      values: {
+        sub_font_size: Number(savedVals.sub_font_size || 0),
+        sub_margin_v: Number(savedVals.sub_margin_v || 0),
+        sub_outline: Number(savedVals.sub_outline || 0),
+        sub_alignment: Number(savedVals.sub_alignment || 0),
+      },
+    };
+    return JSON.stringify(current) !== JSON.stringify(savedSnap);
   }
   function saveSubtitleSettings() {
     if (subtitleSource === "has") {
+      // Use current rectangle + font size as source of truth (more robust than waiting for form sync).
+      const r = {
+        x: round3(regionPickerRect.x),
+        y: round3(regionPickerRect.y),
+        w: round3(regionPickerRect.w),
+        h: round3(regionPickerRect.h),
+      };
       const vals = form.getFieldsValue(true) || {};
-      setSavedSubtitleSettings({
+      const next: SavedSubtitleSettings = {
         source: "has",
         values: {
           erase_subtitle_enable: true,
           erase_subtitle_coord_mode: "ratio",
-          erase_subtitle_x: vals.erase_subtitle_x,
-          erase_subtitle_y: vals.erase_subtitle_y,
-          erase_subtitle_w: vals.erase_subtitle_w,
-          erase_subtitle_h: vals.erase_subtitle_h,
-          erase_subtitle_blur_radius: vals.erase_subtitle_blur_radius,
+          erase_subtitle_x: r.x,
+          erase_subtitle_y: r.y,
+          erase_subtitle_w: r.w,
+          erase_subtitle_h: r.h,
+          erase_subtitle_blur_radius: Number(vals.erase_subtitle_blur_radius || 0),
         },
-        rect: { ...regionPickerRect },
+        rect: r,
         fontSize: regionPickerSampleFontSize,
-      });
+      };
+      savedSubtitleSettingsRef.current = next;
+      setSavedSubtitleSettings(next);
       message.success("已保存有字幕设置");
       return;
     }
     const vals = form.getFieldsValue(true) || {};
-    setSavedSubtitleSettings({
+    const next: SavedSubtitleSettings = {
       source: "none",
       values: {
         sub_font_size: vals.sub_font_size,
@@ -433,33 +706,76 @@ const App: React.FC = () => {
         sub_outline: vals.sub_outline,
         sub_alignment: vals.sub_alignment,
       },
-    });
+    };
+    savedSubtitleSettingsRef.current = next;
+    setSavedSubtitleSettings(next);
     message.success("已保存无字幕设置");
   }
 
   function applySavedSubtitleSettings() {
-    if (!savedSubtitleSettings) {
-      setSubtitleSource("none");
+    const saved = savedSubtitleSettingsRef.current || savedSubtitleSettings;
+    if (!saved) {
+      // If no saved settings, best-effort revert to baseline snapshot when available.
+      if (subtitleSource === "has" && baselineHasSettingsRef.current) {
+        const base = baselineHasSettingsRef.current;
+        setSubtitleSource("has");
+        form.setFieldsValue({
+          erase_subtitle_enable: true,
+          erase_subtitle_coord_mode: "ratio",
+          erase_subtitle_x: base.rect.x,
+          erase_subtitle_y: base.rect.y,
+          erase_subtitle_w: base.rect.w,
+          erase_subtitle_h: base.rect.h,
+          erase_subtitle_blur_radius: base.values.erase_subtitle_blur_radius,
+        });
+        setRegionPickerRect(base.rect);
+        setRegionPickerSampleFontSize(base.fontSize);
+        setFinalSubtitleFontSize(base.fontSize);
+        return;
+      }
+      if (subtitleSource === "none" && baselineNoneSettingsRef.current) {
+        const base = baselineNoneSettingsRef.current;
+        setSubtitleSource("none");
+        form.setFieldsValue(base.values || {});
+        return;
+      }
+      // Fallback: disable erase
       form.setFieldsValue({ erase_subtitle_enable: false });
       return;
     }
-    setSubtitleSource(savedSubtitleSettings.source);
-    form.setFieldsValue(savedSubtitleSettings.values || {});
-    if (savedSubtitleSettings.rect) setRegionPickerRect(savedSubtitleSettings.rect);
-    if (typeof savedSubtitleSettings.fontSize === "number") {
-      setRegionPickerSampleFontSize(savedSubtitleSettings.fontSize);
-      setFinalSubtitleFontSize(savedSubtitleSettings.fontSize);
+    setSubtitleSource(saved.source);
+    form.setFieldsValue(saved.values || {});
+    if (saved.rect) setRegionPickerRect(saved.rect);
+    if (typeof saved.fontSize === "number") {
+      setRegionPickerSampleFontSize(saved.fontSize);
+      setFinalSubtitleFontSize(saved.fontSize);
     }
   }
   useEffect(() => {
-    if (subtitleSource !== "has") {
-      baselineHasSettingsRef.current = null;
+    // Initialize dirty-check baselines when entering Step2, so the first "下一步" can prompt correctly.
+    if (!(route === "wizard" && wizardStep === 1)) return;
+    const saved = savedSubtitleSettingsRef.current || savedSubtitleSettings;
+    if (subtitleSource === "has") {
+      if (saved?.source === "has") {
+        baselineHasSettingsRef.current = null;
+        return;
+      }
+      if (!baselineHasSettingsRef.current) {
+        baselineHasSettingsRef.current = currentHasSettingsSnapshot();
+      }
+      baselineNoneSettingsRef.current = null;
       return;
     }
-    if (savedSubtitleSettings && savedSubtitleSettings.source === "has") {
-      baselineHasSettingsRef.current = null;
+    // none
+    if (saved?.source === "none") {
+      baselineNoneSettingsRef.current = null;
+      return;
     }
-  }, [subtitleSource, savedSubtitleSettings]);
+    if (!baselineNoneSettingsRef.current) {
+      baselineNoneSettingsRef.current = currentNoneSettingsSnapshot();
+    }
+    baselineHasSettingsRef.current = null;
+  }, [route, wizardStep, subtitleSource, savedSubtitleSettings, regionPickerRect, regionPickerSampleFontSize, form]);
   useEffect(() => {
     if (!(route === "wizard" && wizardStep === 1 && subtitleSource === "has")) return;
     const localPath = wizardTasks?.[0]?.localPath || "";
@@ -516,6 +832,10 @@ const App: React.FC = () => {
 
   const pollingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const activeBackendTaskIdRef = useRef<string>("");
+  // Auto-retry bootstrap when backend is still coming up (avoid requiring manual "重新检测").
+  const bootstrapRetryTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const bootstrapRetryUntilRef = useRef<number>(0);
+  const bootstrapRetryNotifiedRef = useRef<boolean>(false);
   const pollingMs = useMemo(() => config?.ui?.polling_ms || DEFAULT_POLL_MS, [config]);
 
   const isBuildDev = !!import.meta.env.DEV;
@@ -532,6 +852,7 @@ const App: React.FC = () => {
     }
     return () => {
       if (pollingTimer.current) clearTimeout(pollingTimer.current);
+      if (bootstrapRetryTimer.current) clearTimeout(bootstrapRetryTimer.current);
       activeBackendTaskIdRef.current = "";
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -552,7 +873,26 @@ const App: React.FC = () => {
     try {
       const prefs = loadUiPrefs();
       setUiPrefs(prefs);
-      const [cfg, hw, h] = await Promise.all([getConfig(), getHardware(), getHealth()]);
+      // On cold start, the main process may still be bringing up the backend.
+      // Retry briefly to avoid "stuck in lite-only" until manual refresh.
+      let cfg: AppConfig;
+      let hw: HardwareInfo;
+      let h: string;
+      const maxAttempts = 50; // ~45s (packaged backend cold start can be slow on some machines)
+      let lastErr: any = null;
+      for (let i = 0; i < maxAttempts; i++) {
+        try {
+          // eslint-disable-next-line no-await-in-loop
+          [cfg, hw, h] = await Promise.all([getConfig(), getHardware(), getHealth()]);
+          lastErr = null;
+          break;
+        } catch (e: any) {
+          lastErr = e;
+          // eslint-disable-next-line no-await-in-loop
+          await new Promise((r) => setTimeout(r, 900));
+        }
+      }
+      if (lastErr) throw lastErr;
       setConfig(cfg);
       setHardware(hw);
       setHealth(h);
@@ -591,7 +931,25 @@ const App: React.FC = () => {
         }
       }
     } catch (err: any) {
-      message.error(err?.message || "初始化失败");
+      const msg = String(err?.message || "初始化失败");
+      message.error(msg);
+      // Background retry: packaged backend cold start / model checks may take longer than a single attempt window.
+      const now = Date.now();
+      if (!bootstrapRetryUntilRef.current) {
+        bootstrapRetryUntilRef.current = now + 180_000; // retry up to 3 minutes
+      }
+      if (now < bootstrapRetryUntilRef.current) {
+        if (!bootstrapRetryNotifiedRef.current) {
+          bootstrapRetryNotifiedRef.current = true;
+          message.warning("后端可能仍在启动中，系统将自动重试初始化（无需手动点击“重新检测”）。");
+        }
+        if (!bootstrapRetryTimer.current) {
+          bootstrapRetryTimer.current = setTimeout(() => {
+            bootstrapRetryTimer.current = null;
+            bootstrap();
+          }, 2500);
+        }
+      }
     } finally {
       setLoadingBoot(false);
     }
@@ -643,8 +1001,16 @@ const App: React.FC = () => {
     if (!s) return "";
     if (s.startsWith("http://") || s.startsWith("https://") || s.startsWith("file://")) return s;
     // Electron dev: file:// is blocked under http origin; use custom localfile:// protocol.
-    // Expect absolute paths like /Users/...
-    return `localfile://${encodeURI(s)}`;
+    // Normalize Windows paths to file URL style (e.g. D:\a\b -> localfile:///D:/a/b).
+    let normalized = s.replace(/\\/g, "/");
+    if (/^[A-Za-z]\//.test(normalized) && !/^[A-Za-z]:\//.test(normalized)) {
+      normalized = `${normalized[0]}:/${normalized.slice(2)}`;
+    }
+    if (/^[A-Za-z]:\//.test(normalized)) {
+      return `localfile:///${encodeURI(normalized)}`;
+    }
+    // Expect absolute paths like /Users/... or UNC paths like //server/share/...
+    return `localfile://${encodeURI(normalized)}`;
   }
 
   function openRegionPicker(target: "batch" | "override", localVideoPath: string) {
@@ -1186,8 +1552,9 @@ const App: React.FC = () => {
     }
     const params = form.getFieldsValue(true) || {};
     params.review_enabled = reviewEnabled;
-    if (savedSubtitleSettings?.source === "has") {
-      const rect = savedSubtitleSettings.rect || regionPickerRect;
+    const saved = savedSubtitleSettingsRef.current || savedSubtitleSettings;
+    if (saved?.source === "has") {
+      const rect = saved.rect || regionPickerRect;
       params.erase_subtitle_enable = true;
       params.erase_subtitle_coord_mode = "ratio";
       params.erase_subtitle_x = rect.x;
@@ -1200,12 +1567,12 @@ const App: React.FC = () => {
       params.sub_place_y = rect.y;
       params.sub_place_w = rect.w;
       params.sub_place_h = rect.h;
-      if (typeof savedSubtitleSettings.fontSize === "number") {
-        params.sub_font_size = savedSubtitleSettings.fontSize;
+      if (typeof saved.fontSize === "number") {
+        params.sub_font_size = saved.fontSize;
       }
-    } else if (savedSubtitleSettings?.source === "none") {
+    } else if (saved?.source === "none") {
       params.erase_subtitle_enable = false;
-      Object.assign(params, savedSubtitleSettings.values || {});
+      Object.assign(params, saved.values || {});
     } else {
       params.erase_subtitle_enable = false;
     }
@@ -2133,12 +2500,12 @@ const App: React.FC = () => {
                   <Button
                     type="primary"
                     onClick={() => {
-                      if (hasUnsavedHasSettings()) {
+                      if (hasUnsavedHasSettings() || hasUnsavedNoneSettings()) {
                         Modal.confirm({
-                          title: "应用有字幕配置？",
-                          content: "检测到有字幕设置已修改但未保存。是否应用当前配置继续？",
+                          title: "保存字幕相关设置？",
+                          content: "检测到设置已修改但未保存。是否保存后继续？",
                           okText: "应用并继续",
-                          cancelText: "不应用",
+                          cancelText: "不保存",
                           centered: true,
                           onOk: () => {
                             saveSubtitleSettings();
@@ -2276,18 +2643,7 @@ const App: React.FC = () => {
                               openTaskDrawer(b.tasks.findIndex((x) => x.index === t.index), "quality");
                             }}
                           >
-                            查看原因
-                          </Button>
-                          <Button
-                            size="small"
-                            type="link"
-                            onClick={() => {
-                              setActiveBatchId(b.id);
-                              const taskIndex = b.tasks.findIndex((x) => x.index === t.index);
-                              setTimeout(() => resumeTaskInPlace(taskIndex, "mt"), 0);
-                            }}
-                          >
-                            从上次继续
+                            原因
                           </Button>
                         </>
                       ) : null}
@@ -2559,6 +2915,8 @@ const App: React.FC = () => {
           ].map((m) => {
             const available = availableModes.includes(m.key);
             const selected = mode === m.key;
+            const reasons = (config as any)?.available_modes_detail?.[m.key]?.reasons as string[] | undefined;
+            const reasonText = Array.isArray(reasons) && reasons.length > 0 ? reasons.join("\n") : "";
             return (
               <Col key={m.key} span={8}>
                 <Card
@@ -2585,7 +2943,14 @@ const App: React.FC = () => {
                         <Text strong>{m.title}</Text>
                       </Space>
                       {selected && <Tag color="blue">当前</Tag>}
-                      {!available && <Tag>不可用</Tag>}
+                      {!available &&
+                        (reasonText ? (
+                          <Tooltip title={<pre style={{ margin: 0, whiteSpace: "pre-wrap" }}>{reasonText}</pre>}>
+                            <Tag>不可用</Tag>
+                          </Tooltip>
+                        ) : (
+                          <Tag>不可用</Tag>
+                        ))}
                     </Space>
                     <Text type="secondary">{m.desc}</Text>
               </Space>
@@ -3701,6 +4066,59 @@ const App: React.FC = () => {
           )}
         </Card>
 
+        <Card title="模型管理" extra={<Text type="secondary">导入/检测本地模型</Text>}>
+          <Space direction="vertical" size="small" style={{ width: "100%" }}>
+            <Space align="center" wrap>
+              <Tag color={modelsReady ? "green" : "red"}>{modelsReady ? "模型就绪" : "模型缺失"}</Tag>
+              {!!modelsRoot && <Text type="secondary">目录：{modelsRoot}</Text>}
+            </Space>
+            {!!modelsZipHint && <Text type="secondary">已发现模型包：{modelsZipHint}</Text>}
+            {!modelsReady && missingLabels.length > 0 && (
+              <Text type="danger">缺失：{missingLabels.join("、")}</Text>
+            )}
+            {!!modelsError && <Text type="danger">{modelsError}</Text>}
+            <Space wrap>
+              <Button type="primary" loading={modelsImporting} onClick={handlePickModels}>
+                选择模型包并导入
+              </Button>
+            </Space>
+          </Space>
+        </Card>
+
+        <Card title="Ollama 管理" extra={<Text type="secondary">用于质量模式（本地 LLM），可独立导入</Text>}>
+          <Space direction="vertical" size="small" style={{ width: "100%" }}>
+            <Space align="center" wrap>
+              <Tag color={ollamaReady ? "green" : "red"}>{ollamaReady ? "Ollama 已安装" : "Ollama 未安装"}</Tag>
+              <Tag color={ollamaPortOpen ? "green" : "default"}>{ollamaPortOpen ? "服务已启动(11434)" : "服务未启动"}</Tag>
+            </Space>
+            {!!ollamaRoot && <Text type="secondary">程序目录：{ollamaRoot}</Text>}
+            {!!ollamaModelsRoot && <Text type="secondary">模型目录：{ollamaModelsRoot}</Text>}
+            {!!ollamaZipHint && <Text type="secondary">已发现 Ollama 包：{ollamaZipHint}</Text>}
+            {!!ollamaError && <Text type="danger">{ollamaError}</Text>}
+            <Space wrap>
+              <Button type="primary" loading={ollamaImporting} onClick={handlePickOllama}>
+                选择 Ollama 包并导入
+              </Button>
+              <Button
+                disabled={!ollamaRoot || !window.bridge?.openPath}
+                onClick={async () => {
+                  try {
+                    await window.bridge?.openPath?.(ollamaRoot);
+                  } catch {}
+                }}
+              >
+                打开目录
+              </Button>
+              <Button icon={<ReloadOutlined />} loading={ollamaLoading} onClick={refreshOllamaStatus}>
+                刷新状态
+              </Button>
+            </Space>
+            <Text type="secondary">
+              提示：导入后，重新打开应用或稍等几秒，系统会自动拉起本地 Ollama 服务；质量模式会使用本地 11434 端口。
+            </Text>
+          </Space>
+        </Card>
+
         <Card title="系统" extra={<Text type="secondary">默认设置会在下次打开时自动生效</Text>}>
           <Form layout="vertical">
             <Form.Item label="默认预设（随模式变化）" extra="不同模式支持的预设不同；这里会自动过滤为当前模式可用的预设。">
@@ -4397,6 +4815,55 @@ const App: React.FC = () => {
           </Text>
         </div>
       </Modal>
+      <Modal
+        open={showLicenseModal}
+        title="设备授权"
+        closable={false}
+        maskClosable={false}
+        keyboard={false}
+        footer={null}
+      >
+        <Space direction="vertical" style={{ width: "100%" }}>
+          <Text>请输入 CDKEY 以解锁使用。</Text>
+          <Input
+            placeholder="CDKEY"
+            value={licenseCdkey}
+            onChange={(e) => setLicenseCdkey(e.target.value)}
+            onPressEnter={handleLicenseSubmit}
+          />
+          <Space>
+            <Button type="primary" onClick={handleLicenseSubmit}>
+              验证
+            </Button>
+            <Button onClick={handleRefreshDeviceCode}>刷新设备码</Button>
+          </Space>
+          <Text type="secondary">当前设备码：{deviceCode}</Text>
+          {!!licenseError && <Text type="danger">{licenseError}</Text>}
+        </Space>
+      </Modal>
+      <Modal
+        open={!modelsReady && !modelsLoading}
+        title="模型未就绪"
+        closable={false}
+        maskClosable={false}
+        keyboard={false}
+        footer={null}
+      >
+        <Space direction="vertical" style={{ width: "100%" }}>
+          <Text>未检测到本地模型。请手动选择并导入模型包（models_pack.zip）。</Text>
+          {!!modelsZipHint && <Text type="secondary">已发现模型包：{modelsZipHint}</Text>}
+          {!modelsReady && missingLabels.length > 0 && (
+            <Text type="danger">缺失：{missingLabels.join("、")}</Text>
+          )}
+          <Space>
+            <Button type="primary" loading={modelsImporting} onClick={handlePickModels}>
+              选择模型包并导入
+            </Button>
+          </Space>
+          {!!modelsRoot && <Text type="secondary">模型目录：{modelsRoot}</Text>}
+          {!!modelsError && <Text type="danger">{modelsError}</Text>}
+        </Space>
+      </Modal>
     </Layout>
   );
 };
@@ -4535,63 +5002,60 @@ function TaskDrawerContent(props: {
                     message={(qualityReport?.passed ?? t.qualityPassed) ? "通过：可交付" : "未通过：建议先处理问题再交付"}
                   />
 
-                  <Card size="small" title="结论与建议">
-                    <Space direction="vertical" size={4} style={{ width: "100%" }}>
-                      <Text>
-                        {(qualityReport?.passed ?? t.qualityPassed)
-                          ? "结论：质量检查已通过，建议交付。"
-                          : "结论：存在影响交付的问题，建议先处理后再交付。"}
-                      </Text>
-                      <Text type="secondary">建议：优先处理「主要问题」，再查看「风险提示」。</Text>
-                    </Space>
-                  </Card>
+                  <Divider orientation="left">结论与建议</Divider>
+                  <Space direction="vertical" size={4} style={{ width: "100%" }}>
+                    <Text>
+                      {(qualityReport?.passed ?? t.qualityPassed)
+                        ? "结论：质量检查已通过，建议交付。"
+                        : "结论：存在影响交付的问题，建议先处理后再交付。"}
+                    </Text>
+                    <Text type="secondary">建议：优先处理「主要问题」，再查看「风险提示」。</Text>
+                  </Space>
 
+                  <Divider orientation="left">主要问题（需要处理）</Divider>
                   {(qualityReport?.errors || t.qualityErrors) && (qualityReport?.errors || t.qualityErrors).length > 0 ? (
-                    <Card size="small" title="主要问题（需要处理）">
-                      <List
-                        size="small"
-                        dataSource={(qualityReport?.errors || t.qualityErrors).slice(0, 10)}
-                        renderItem={(x) => {
-                          const tag = issueTag(x);
-                          return (
-                            <List.Item>
-                              <Space direction="vertical" size={2}>
-                                <Space wrap>
-                                  <Tag color={tag.color}>{tag.label}</Tag>
-                                  <Text>{x}</Text>
-                                </Space>
-                                <Text type="secondary">{suggestForIssue(x)}</Text>
+                    <List
+                      size="small"
+                      dataSource={(qualityReport?.errors || t.qualityErrors).slice(0, 10)}
+                      renderItem={(x) => {
+                        const tag = issueTag(x);
+                        return (
+                          <List.Item>
+                            <Space direction="vertical" size={2}>
+                              <Space wrap>
+                                <Tag color={tag.color}>{tag.label}</Tag>
+                                <Text>{x}</Text>
                               </Space>
-                            </List.Item>
-                          );
-                        }}
-                      />
-                    </Card>
+                              <Text type="secondary">{suggestForIssue(x)}</Text>
+                            </Space>
+                          </List.Item>
+                        );
+                      }}
+                    />
                   ) : (
                     <Text type="secondary">主要问题：无</Text>
                   )}
 
+                  <Divider orientation="left">风险提示（可交付但建议关注）</Divider>
                   {(qualityReport?.warnings || t.qualityWarnings) && (qualityReport?.warnings || t.qualityWarnings).length > 0 ? (
-                    <Card size="small" title="风险提示（可交付但建议关注）">
-                      <List
-                        size="small"
-                        dataSource={(qualityReport?.warnings || t.qualityWarnings).slice(0, 10)}
-                        renderItem={(x) => {
-                          const tag = issueTag(x);
-                          return (
-                            <List.Item>
-                              <Space direction="vertical" size={2}>
-                                <Space wrap>
-                                  <Tag color={tag.color}>{tag.label}</Tag>
-                                  <Text>{x}</Text>
-                                </Space>
-                                <Text type="secondary">{suggestForIssue(x)}</Text>
+                    <List
+                      size="small"
+                      dataSource={(qualityReport?.warnings || t.qualityWarnings).slice(0, 10)}
+                      renderItem={(x) => {
+                        const tag = issueTag(x);
+                        return (
+                          <List.Item>
+                            <Space direction="vertical" size={2}>
+                              <Space wrap>
+                                <Tag color={tag.color}>{tag.label}</Tag>
+                                <Text>{x}</Text>
                               </Space>
-                            </List.Item>
-                          );
-                        }}
-                      />
-                    </Card>
+                              <Text type="secondary">{suggestForIssue(x)}</Text>
+                            </Space>
+                          </List.Item>
+                        );
+                      }}
+                    />
                   ) : (
                     <Text type="secondary">风险提示：无</Text>
                   )}

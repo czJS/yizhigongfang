@@ -8,6 +8,14 @@ contextBridge.exposeInMainWorld("bridge", {
   openPath: (targetPath) => ipcRenderer.invoke("open-path", targetPath),
   ensureDir: (baseDir, relativeDir) => ipcRenderer.invoke("ensure-dir", baseDir, relativeDir),
   writeFile: (baseDir, relativePath, bytes) => ipcRenderer.invoke("write-file", { baseDir, relativePath, bytes }),
+  getDeviceCode: () => ipcRenderer.invoke("get-device-code"),
+  verifyLicense: (cdkey) => ipcRenderer.invoke("verify-license", cdkey),
+  getModelStatus: () => ipcRenderer.invoke("get-model-status"),
+  pickModelPack: () => ipcRenderer.invoke("pick-model-pack"),
+  extractModelPack: (zipPath) => ipcRenderer.invoke("extract-model-pack", zipPath),
+  getOllamaStatus: () => ipcRenderer.invoke("get-ollama-status"),
+  pickOllamaPack: () => ipcRenderer.invoke("pick-ollama-pack"),
+  extractOllamaPack: (zipPath) => ipcRenderer.invoke("extract-ollama-pack", zipPath),
 });
 
 

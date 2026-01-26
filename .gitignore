@@ -36,3 +36,17 @@ VideoLingo/
 scripts/model.bin
 app_from_image/bin/ffmpeg
 
+# Local build artifacts
+build/
+dist/
+
+# Local tool binaries (package scripts can copy from elsewhere)
+bin/*.exe
+
+# Local test media
+test_*.mp4
+*_15s.mp4
+
+# Local packs (very large)
+pack/
+

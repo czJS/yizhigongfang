@@ -16,15 +16,21 @@ from typing import Any, Dict, List, Optional
 
 import requests
 
+# Ensure prints are flushed when stdout/stderr are piped (e.g. spawned by backend).
+# Without this, progress/log streaming can appear stuck at 0% until the process exits.
+try:  # pragma: no cover
+    sys.stdout.reconfigure(line_buffering=True)  # type: ignore[attr-defined]
+    sys.stderr.reconfigure(line_buffering=True)  # type: ignore[attr-defined]
+except Exception:
+    try:
+        os.environ["PYTHONUNBUFFERED"] = "1"
+    except Exception:
+        pass
+
 try:
     import torch  # type: ignore
 except Exception:  # pragma: no cover
     torch = None  # type: ignore
-
-try:
-    import whisperx  # type: ignore
-except Exception:
-    whisperx = None  # type: ignore
 
 # 复用轻量版的音频/视频/tts 工具
 
@@ -58,8 +64,11 @@ def check_dep():
     missing = []
     if torch is None:
         missing.append("torch 缺失：pip install torch --extra-index-url https://download.pytorch.org/whl/cu121")
-    if whisperx is None:
-        missing.append("whisperx 缺失：pip install -U whisperx torchaudio")
+    # We still use WhisperX for alignment (load_align_model + align).
+    try:
+        import whisperx  # type: ignore  # noqa: F401
+    except Exception as exc:  # pragma: no cover
+        missing.append(f"whisperx 缺失或导入失败（用于对齐）：{exc}")
     return missing
 
 
@@ -216,9 +225,13 @@ def translate_segments_llm(
                 print(f"[warn] LLM request failed (attempt {attempt+1}/4): {exc}. Retrying in {sleep_s:.1f}s")
                 time.sleep(sleep_s)
         raise RuntimeError(
-            "LLM request failed repeatedly. This may be due to Ollama runner crashes (OOM/CPU pressure).\n"
+            "LLM request failed repeatedly.\n"
+            "This can happen when the local Ollama service is not started yet, or the runner crashes under memory pressure.\n"
             f"- endpoint: {endpoint}\n- model: {body.get('model')}\n"
-            "Check Ollama logs: `docker logs yzh-ollama-1 --tail 200`.\n"
+            "Standalone app note:\n"
+            "- In this project, Ollama may be loaded/started manually via the desktop app UI.\n"
+            "- Please ensure the Ollama service is running and the model is loaded, then verify:\n"
+            f"  curl.exe {endpoint}/models\n"
             f"Last error: {last_exc}"
         )
 
@@ -1490,8 +1503,37 @@ def run_whisperx(
     vad_thold: Optional[float] = None,
     vad_min_sil_s: Optional[float] = None,
 ) -> List[Segment]:
-    if whisperx is None:
-        raise RuntimeError("whisperx 未安装。")
+    # Import WhisperX lazily to avoid importing whisperx.asr/vads (pyannote/speechbrain) at module import time.
+    # We only use WhisperX for alignment (load_align_model + align).
+    try:
+        import whisperx  # type: ignore
+    except Exception as exc:
+        raise RuntimeError(f"whisperx 未安装或导入失败（用于对齐）：{exc}") from exc
+    # PyTorch 2.6+ defaults torch.load(weights_only=True). Pyannote's bundled VAD checkpoint
+    # (whisperx/assets/pytorch_model.bin) contains OmegaConf objects, which are blocked by default
+    # and cause `_pickle.UnpicklingError: Unsupported global ... omegaconf.*Config`.
+    # We ship this checkpoint with the app, so it's a trusted source: allowlist the needed classes.
+    try:
+        if torch is not None:
+            import typing
+            import collections
+
+            ser = getattr(torch, "serialization", None)
+            add = getattr(ser, "add_safe_globals", None) if ser is not None else None
+            if callable(add):
+                # Pyannote checkpoints may embed OmegaConf metadata objects.
+                # With PyTorch 2.6+, torch.load defaults to weights_only=True and blocks unpickling
+                # of non-allowlisted globals, raising `_pickle.UnpicklingError`.
+                from omegaconf import DictConfig, ListConfig  # type: ignore
+                from omegaconf.base import ContainerMetadata  # type: ignore
+
+                # Also allowlist common builtins/types seen in pyannote checkpoints.
+                # - typing.Any: seen in some checkpoints
+                # - list: some checkpoints reference bare `list` and get blocked under weights_only=True
+                add([DictConfig, ListConfig, ContainerMetadata, typing.Any, list, collections.defaultdict])
+    except Exception:
+        # Best-effort: if this fails, torch/pyannote will surface the original error.
+        pass
     # Treat env offline flags as authoritative (TaskManager sets these in fully-local mode).
     env_offline = os.environ.get("HF_HUB_OFFLINE") == "1" or os.environ.get("TRANSFORMERS_OFFLINE") == "1"
     def resolve_local_snapshot(root: Optional[Path], repo_id: str, required_files: Optional[List[str]] = None) -> Optional[Path]:
@@ -1505,10 +1547,19 @@ def run_whisperx(
         if not root:
             return None
         repo_dir = root / ("models--" + repo_id.replace("/", "--"))
+        # Compatibility:
+        # Some packs store the CTranslate2 model directly under repo_dir
+        # (repo_dir/model.bin + repo_dir/config.json) without HF-style snapshots/.
+        # In that case, repo_dir itself is a valid local model folder for whisperx.load_model(...).
+        required = required_files or ["model.bin", "config.json"]
+        try:
+            if repo_dir.exists() and all((repo_dir / f).exists() for f in required):
+                return repo_dir
+        except Exception:
+            pass
         snap_root = repo_dir / "snapshots"
         if not snap_root.exists():
             return None
-        required = required_files or ["model.bin", "config.json"]
         candidates: list[Path] = []
         for snap in sorted(snap_root.iterdir()):
             if not snap.is_dir():
@@ -1527,7 +1578,7 @@ def run_whisperx(
     device = "cuda" if device == "cuda" and torch and torch.cuda.is_available() else "cpu"
     compute_type = "float16" if device == "cuda" else "float32"
 
-    print("  [2/7][1/4] Loading WhisperX model...")
+    print("  [2/7][1/4] Loading ASR model (faster-whisper)...")
     # Prefer loading from local snapshot folder to avoid any online HF lookup.
     model_to_load = model_id
     local_files_only = False
@@ -1587,20 +1638,28 @@ def run_whisperx(
         print(f"        使用 WhisperX 模型ID：{model_to_load}")
     t0 = time.time()
     try:
-        model = whisperx.load_model(
-            model_to_load,
-            device=device,
+        from faster_whisper import WhisperModel  # type: ignore
+
+        # NOTE:
+        # We intentionally avoid whisperx.load_model() here because whisperx.asr imports `whisperx.vads`
+        # at import time, which pulls in pyannote + speechbrain. That stack is brittle in PyInstaller(onefile)
+        # and can fail with FileNotFoundError / recursion within speechbrain importutils.
+        #
+        # For ASR we can use faster-whisper directly (and still run WhisperX alignment later via
+        # whisperx.load_align_model + whisperx.align).
+        inner = WhisperModel(
+            str(model_to_load),
+            device=device if device in ["cuda", "cpu"] else "auto",
             compute_type=compute_type,
             download_root=str(model_dir) if model_dir else None,
             local_files_only=local_files_only,
         )
-    except RuntimeError as exc:  # noqa: PIE786
+    except Exception as exc:
         msg = str(exc)
-        if "model.bin" in msg:
+        if "model.bin" in msg or "config.json" in msg:
             raise RuntimeError(
-                f"WhisperX 模型缺失：{msg}\n"
-                f"请确认 {model_dir or '默认缓存目录'} 下存在 model.bin，或联网后重试。\n"
-                f"可用镜像示例：HF_ENDPOINT=https://hf-mirror.com python3 -c \"import whisperx; whisperx.load_model('{model_id}', device='{device}', compute_type='{compute_type}', download_root='{model_dir}')\""
+                f"faster-whisper 模型缺失：{msg}\n"
+                f"请确认 {model_dir or '默认缓存目录'} 下存在对应的 model.bin/config.json（CT2 模型快照），或联网后重试。"
             ) from exc
         raise
     print(f"  [2/7][1/4] 模型加载完成，用时 {time.time() - t0:.1f}s")
@@ -1608,55 +1667,95 @@ def run_whisperx(
     print("  [2/7][2/4] 转录中...")
     t1 = time.time()
     # VAD support note:
-    # - whisperx.asr.FasterWhisperPipeline.transcribe() does NOT accept vad_* kwargs (it has a fixed signature)
-    # - the underlying faster-whisper WhisperModel.transcribe() DOES support vad_filter/vad_parameters
-    # We prefer calling the inner model for *all* runs to get finer segments than the pipeline's chunked output.
-    inner = getattr(model, "model", None)
-    result = None
-    if inner is not None and hasattr(inner, "transcribe"):
+    # - faster-whisper WhisperModel.transcribe() supports vad_filter/vad_parameters (Silero VAD assets).
+    # We always call faster-whisper directly to avoid WhisperX's VAD stack entirely.
+    vad_options = None
+    if vad_enable:
         try:
-            vad_options = None
-            if vad_enable:
+            from faster_whisper.vad import VadOptions  # type: ignore
+            import inspect
+
+            def _make_vad_options() -> Any:
+                """
+                faster-whisper VadOptions signature varies across versions.
+                Build kwargs by probing supported parameter names.
+                """
                 try:
-                    from faster_whisper.vad import VadOptions  # type: ignore
-                    params = {}
-                    # This repo's faster-whisper uses VadOptions(onset/offset/..., min_silence_duration_ms=...)
-                    if vad_thold is not None:
-                        onset = float(vad_thold)
-                        params["onset"] = onset
-                        # Keep offset lower than onset to avoid cutting off trailing speech.
-                        params["offset"] = max(0.1, min(0.35, onset - 0.15))
-                    if vad_min_sil_s is not None:
-                        params["min_silence_duration_ms"] = int(float(vad_min_sil_s) * 1000)
-                    vad_options = VadOptions(**params) if params else VadOptions()
-                except Exception as exc:
-                    print(f"[warn] Failed to build VadOptions; continuing without VAD: {exc}")
-                    vad_options = None
-            seg_iter, info = inner.transcribe(  # type: ignore[attr-defined]
-                str(audio_path),
-                language="zh",
-                task="transcribe",
-                vad_filter=bool(vad_enable),
-                vad_parameters=vad_options,
-            )
-            segments_raw = []
-            for s in seg_iter:
-                segments_raw.append(
-                    {
-                        "start": float(getattr(s, "start", 0.0)),
-                        "end": float(getattr(s, "end", 0.0)),
-                        "text": str(getattr(s, "text", "")).strip(),
-                    }
-                )
-            result = {"segments": segments_raw, "language": getattr(info, "language", "zh")}
-            print(f"  [2/7][2/4] 原始分段数：{len(segments_raw)} (vad={'on' if vad_enable else 'off'})")
+                    sig = inspect.signature(VadOptions)  # class callable
+                except Exception:
+                    sig = inspect.signature(VadOptions.__init__)  # type: ignore[misc]
+                names = set(sig.parameters.keys())
+                names.discard("self")
+
+                kw: Dict[str, Any] = {}
+                onset = None
+                if vad_thold is not None:
+                    onset = float(vad_thold)
+                    for k in ["onset", "vad_onset", "threshold", "speech_threshold"]:
+                        if k in names:
+                            kw[k] = onset
+                            break
+                    off = max(0.1, min(0.35, (onset - 0.15))) if onset is not None else None
+                    if off is not None:
+                        for k in ["offset", "vad_offset"]:
+                            if k in names:
+                                kw[k] = off
+                                break
+
+                if vad_min_sil_s is not None:
+                    ms = int(float(vad_min_sil_s) * 1000)
+                    for k in ["min_silence_duration_ms", "min_silence_ms", "min_silence_duration"]:
+                        if k in names:
+                            kw[k] = ms
+                            break
+
+                return VadOptions(**kw) if kw else VadOptions()
+
+            vad_options = _make_vad_options()
         except Exception as exc:
-            print(f"[warn] WhisperX inner transcribe failed; falling back to pipeline: {exc}")
-            result = None
-    if result is None:
-        if vad_enable:
-            print("[warn] VAD enabled but whisperx pipeline does not expose VAD; running without VAD.")
-        result = model.transcribe(str(audio_path), language="zh")
+            print(f"[warn] Failed to build VadOptions; continuing without VAD: {exc}")
+            vad_options = None
+
+    seg_iter, info = inner.transcribe(  # type: ignore[attr-defined]
+        str(audio_path),
+        language="zh",
+        task="transcribe",
+        vad_filter=bool(vad_enable),
+        vad_parameters=vad_options,
+    )
+    segments_raw = []
+    for s in seg_iter:
+        segments_raw.append(
+            {
+                "start": float(getattr(s, "start", 0.0)),
+                "end": float(getattr(s, "end", 0.0)),
+                "text": str(getattr(s, "text", "")).strip(),
+            }
+        )
+    # If VAD is too aggressive and filters everything, retry once without VAD to avoid empty outputs.
+    if vad_enable and len(segments_raw) == 0:
+        print("  [warn] VAD filtered out all segments; retrying ASR without VAD...")
+        seg_iter, info = inner.transcribe(  # type: ignore[attr-defined]
+            str(audio_path),
+            language="zh",
+            task="transcribe",
+            vad_filter=False,
+            vad_parameters=None,
+        )
+        segments_raw = []
+        for s in seg_iter:
+            segments_raw.append(
+                {
+                    "start": float(getattr(s, "start", 0.0)),
+                    "end": float(getattr(s, "end", 0.0)),
+                    "text": str(getattr(s, "text", "")).strip(),
+                }
+            )
+        vad_enable = False
+        vad_options = None
+
+    result = {"segments": segments_raw, "language": getattr(info, "language", "zh")}
+    print(f"  [2/7][2/4] 原始分段数：{len(segments_raw)} (vad={'on' if vad_enable else 'off'})")
     print(f"  [2/7][2/4] 转录完成，用时 {time.time() - t1:.1f}s")
 
     segments_raw = result["segments"]
@@ -1677,7 +1776,7 @@ def run_whisperx(
             align_required = [
                 "config.json",
                 "preprocessor_config.json",
-                "tokenizer_config.json",
+                # tokenizer_config.json is optional for some Wav2Vec2 checkpoints
                 "pytorch_model.bin",
                 "vocab.json",
                 "special_tokens_map.json",
@@ -1961,7 +2060,7 @@ def main() -> None:
         except Exception:
             audio_total_ms = None
 
-        print("[2/7] Running ASR (WhisperX)...")
+        print("[2/7] Running ASR (faster-whisper)...")
         segments = run_whisperx(
             audio_path=audio_pcm,
             model_id=args.whisperx_model,

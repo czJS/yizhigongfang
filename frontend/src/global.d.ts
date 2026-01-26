@@ -13,6 +13,44 @@ declare global {
         relativePath: string,
         bytes: Uint8Array,
       ) => Promise<{ ok: boolean; path: string; size: number }>;
+      getDeviceCode?: () => Promise<string>;
+      verifyLicense?: (cdkey: string) => Promise<{ ok: boolean; deviceCode?: string }>;
+
+      getModelStatus?: () => Promise<{
+        ready: boolean;
+        root: string;
+        zip?: string;
+        zipHint?: string;
+        missing?: { key?: string; label?: string; path?: string }[];
+      }>;
+      pickModelPack?: () => Promise<string>;
+      extractModelPack?: (zipPath: string) => Promise<{
+        ok: boolean;
+        root?: string;
+        zip?: string;
+        zipHint?: string;
+        missing?: { key?: string; label?: string; path?: string }[];
+        error?: string;
+      }>;
+
+      getOllamaStatus?: () => Promise<{
+        ready: boolean;
+        root: string;
+        modelsRoot: string;
+        portOpen: boolean;
+        zip?: string;
+        zipHint?: string;
+      }>;
+      pickOllamaPack?: () => Promise<string>;
+      extractOllamaPack?: (zipPath: string) => Promise<{
+        ok: boolean;
+        root?: string;
+        modelsRoot?: string;
+        zip?: string;
+        zipHint?: string;
+        portOpen?: boolean;
+        error?: string;
+      }>;
     };
   }
 }

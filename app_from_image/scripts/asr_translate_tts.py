@@ -732,6 +732,20 @@ def synthesize_segments_coqui(
 def build_coqui_tts(model_name: str, device: str = "auto"):
     """构建 Coqui TTS 接口，按需启用 GPU。"""
     try:
+        # In some PyInstaller(onefile) builds, `gruut` may miss its `VERSION` file.
+        # Create it proactively to avoid import-time crash inside `gruut/__init__.py`.
+        try:
+            import sys
+
+            mei = getattr(sys, "_MEIPASS", None)
+            if mei:
+                vp = Path(mei) / "gruut" / "VERSION"
+                if not vp.exists():
+                    vp.parent.mkdir(parents=True, exist_ok=True)
+                    vp.write_text("0.0.0", encoding="utf-8")
+        except Exception:
+            pass
+
         from TTS.api import TTS as CoquiTTS  # type: ignore
     except ImportError as exc:  # pragma: no cover - runtime guard
         raise SystemExit("Coqui TTS not installed. Please `pip install TTS`.") from exc

@@ -15,6 +15,31 @@ from backend.config import load_defaults
 from backend.quality_report import generate_quality_report, write_quality_report
 
 
+_HW_LIMIT_PATTERNS = [
+    re.compile(p, re.IGNORECASE)
+    for p in [
+        r"out of memory",
+        r"cuda out of memory",
+        r"memoryerror",
+        r"\boom\b",
+        r"killed",
+        r"requires more system memory",
+        r"cublas.*alloc",
+        r"cuda error: out of memory",
+    ]
+]
+
+
+def _log_has_hw_limit(log_path: Path) -> bool:
+    if not log_path.exists():
+        return False
+    try:
+        tail = log_path.read_text(encoding="utf-8", errors="ignore")[-8000:]
+    except Exception:
+        return False
+    return any(p.search(tail) for p in _HW_LIMIT_PATTERNS)
+
+
 StageNames = {
     1: "音频提取",
     2: "ASR (whisper.cpp)",
@@ -48,7 +73,10 @@ class TaskManager:
         self.config = config
         self.tasks: Dict[str, TaskStatus] = {}
         self.lock = threading.Lock()
-        self.repo_root = Path(__file__).resolve().parents[1]
+        # In packaged builds (PyInstaller), __file__ is under a temp extraction dir.
+        # Allow the host app (Electron) to override repo_root to a stable resources directory.
+        repo_root_env = os.environ.get("YGF_APP_ROOT", "").strip()
+        self.repo_root = Path(repo_root_env).resolve() if repo_root_env else Path(__file__).resolve().parents[1]
         # Track config file mtimes to allow hot-reload without restarting the backend container.
         self._active_config_path: Optional[Path] = None
         self._active_config_mtime: Optional[float] = None
@@ -147,7 +175,13 @@ class TaskManager:
                     return str(rp)
         except Exception:
             pass
-        host_arch = (os.uname().machine or "").lower()
+        # os.uname() is not available on Windows; use platform.machine() when needed.
+        try:
+            host_arch = (os.uname().machine or "").lower()  # type: ignore[attr-defined]
+        except Exception:
+            import platform
+
+            host_arch = (platform.machine() or "").lower()
         expected_emachine = 62 if host_arch in {"x86_64", "amd64"} else 183 if host_arch in {"aarch64", "arm64"} else None
 
         def _elf_emachine(path: Path) -> Optional[int]:
@@ -335,8 +369,32 @@ class TaskManager:
         replace_existing: bool = False,
     ) -> None:
         env = self._build_env(effective)
+        # On Windows, spawning a console-subsystem executable from a GUI (windowed) parent can
+        # flash a console window briefly. Hide it to keep the UX clean in the Electron app.
+        creationflags = 0
+        startupinfo = None
+        stdin = None
+        if os.name == "nt":
+            creationflags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
+            try:
+                si = subprocess.STARTUPINFO()
+                si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+                si.wShowWindow = 0  # SW_HIDE
+                startupinfo = si
+            except Exception:
+                startupinfo = None
+            stdin = subprocess.DEVNULL
 
-        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, env=env)
+        proc = subprocess.Popen(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            env=env,
+            stdin=stdin,
+            creationflags=creationflags,
+            startupinfo=startupinfo,
+        )
 
         status = TaskStatus(id=task_id, video=video_path, work_dir=work_dir, log_path=log_path, mode=mode)
         status.proc = proc
@@ -346,8 +404,24 @@ class TaskManager:
             else:
                 self.tasks[task_id] = status
 
-        t = threading.Thread(target=self._watch_process, args=(task_id, proc), daemon=True)
+        t = threading.Thread(target=self._watch_process, args=(task_id, proc, cmd), daemon=True)
         t.start()
+
+    def _is_packaged_exe(self) -> bool:
+        """
+        Detect whether we are running under the packaged backend executable.
+        Relying on sys.frozen is usually correct, but in some launch contexts it may be missing.
+        We also check the executable name to avoid spawning another Flask server by mistake.
+        """
+        try:
+            if getattr(sys, "frozen", False):
+                return True
+        except Exception:
+            pass
+        try:
+            return Path(sys.executable).name.lower() == "backend_server.exe"
+        except Exception:
+            return False
 
     def _merge_config(self, params: Dict, preset: Optional[str]) -> Dict:
         defaults = self.config.get("defaults", {})
@@ -394,9 +468,7 @@ class TaskManager:
         hf_cache_rel = paths.get("hf_cache") or "assets/models/hf"
         mt_cache_dir = self._resolve_path(hf_cache_rel)
 
-        cmd: List[str] = [
-            sys.executable,
-            str(script),
+        args: List[str] = [
             "--video",
             str(video_path),
             "--output-dir",
@@ -417,139 +489,145 @@ class TaskManager:
             str(cfg.get("sample_rate", 16000)),
         ]
         if resume_from:
-            cmd += ["--resume-from", resume_from]
+            args += ["--resume-from", resume_from]
         if cfg.get("chs_override_srt"):
-            cmd += ["--chs-override-srt", str(cfg["chs_override_srt"])]
+            args += ["--chs-override-srt", str(cfg["chs_override_srt"])]
         if cfg.get("eng_override_srt"):
-            cmd += ["--eng-override-srt", str(cfg["eng_override_srt"])]
+            args += ["--eng-override-srt", str(cfg["eng_override_srt"])]
         if cfg.get("chs_override_srt"):
-            cmd += ["--chs-override-srt", str(cfg["chs_override_srt"])]
+            args += ["--chs-override-srt", str(cfg["chs_override_srt"])]
         if cfg.get("eng_override_srt"):
-            cmd += ["--eng-override-srt", str(cfg["eng_override_srt"])]
+            args += ["--eng-override-srt", str(cfg["eng_override_srt"])]
         if cfg.get("offline"):
-            cmd.append("--offline")
+            args.append("--offline")
         if cfg.get("whispercpp_threads"):
-            cmd += ["--whispercpp-threads", str(cfg["whispercpp_threads"])]
+            args += ["--whispercpp-threads", str(cfg["whispercpp_threads"])]
         # whisper.cpp VAD requires a separate VAD model file; only enable when provided.
         vad_model_cfg = cfg.get("vad_model") or paths.get("vad_model")
         vad_model_path = self._resolve_path(vad_model_cfg) if vad_model_cfg else None
         if cfg.get("vad_enable") and vad_model_path and vad_model_path.exists():
-            cmd.append("--vad-enable")
-            cmd += ["--vad-model", str(vad_model_path)]
+            args.append("--vad-enable")
+            args += ["--vad-model", str(vad_model_path)]
             if cfg.get("vad_threshold"):
-                cmd += ["--vad-thold", str(cfg["vad_threshold"])]
+                args += ["--vad-thold", str(cfg["vad_threshold"])]
             if cfg.get("vad_min_dur"):
-                cmd += ["--vad-min-dur", str(cfg["vad_min_dur"])]
+                args += ["--vad-min-dur", str(cfg["vad_min_dur"])]
         if cfg.get("denoise"):
-            cmd.append("--denoise")
+            args.append("--denoise")
             if cfg.get("denoise_model"):
-                cmd += ["--denoise-model", str(self._resolve_path(cfg["denoise_model"]))]
+                args += ["--denoise-model", str(self._resolve_path(cfg["denoise_model"]))]
         if cfg.get("bilingual_srt"):
-            cmd.append("--bilingual-srt")
+            args.append("--bilingual-srt")
 
         # TTS (lite): default piper; allow coqui as an override.
         if tts_backend not in {"piper", "coqui"}:
             tts_backend = "piper"
-        cmd += ["--tts-backend", tts_backend]
+        args += ["--tts-backend", tts_backend]
         if tts_backend == "piper":
-            cmd += ["--piper-model", str(self._resolve_path(piper_model))]
-            cmd += ["--piper-bin", str(piper_bin)]
+            args += ["--piper-model", str(self._resolve_path(piper_model))]
+            args += ["--piper-bin", str(piper_bin)]
         else:
-            cmd += [
+            args += [
                 "--coqui-model",
                 coqui_model,
                 "--coqui-device",
                 cfg.get("tts_device", cfg.get("coqui_device", "auto")),
             ]
             if cfg.get("coqui_speaker"):
-                cmd += ["--coqui-speaker", cfg["coqui_speaker"]]
+                args += ["--coqui-speaker", cfg["coqui_speaker"]]
             if cfg.get("coqui_language"):
-                cmd += ["--coqui-language", cfg["coqui_language"]]
+                args += ["--coqui-language", cfg["coqui_language"]]
 
         if cfg.get("en_polish_model"):
-            cmd += ["--en-polish-model", cfg["en_polish_model"], "--en-polish-device", cfg.get("en_polish_device", "auto")]
+            args += ["--en-polish-model", cfg["en_polish_model"], "--en-polish-device", cfg.get("en_polish_device", "auto")]
         if cfg.get("lt_enable"):
-            cmd.append("--lt-enable")
+            args.append("--lt-enable")
         if cfg.get("replacements"):
-            cmd += ["--replacements", str(self._resolve_path(cfg["replacements"]))]
+            args += ["--replacements", str(self._resolve_path(cfg["replacements"]))]
         if cfg.get("skip_tts"):
-            cmd.append("--skip-tts")
+            args.append("--skip-tts")
         if cfg.get("min_sub_duration"):
-            cmd += ["--min-sub-dur", str(cfg["min_sub_duration"])]
+            args += ["--min-sub-dur", str(cfg["min_sub_duration"])]
         if cfg.get("tts_split_len"):
-            cmd += ["--tts-split-len", str(cfg["tts_split_len"])]
+            args += ["--tts-split-len", str(cfg["tts_split_len"])]
         if cfg.get("tts_speed_max"):
-            cmd += ["--tts-speed-max", str(cfg["tts_speed_max"])]
+            args += ["--tts-speed-max", str(cfg["tts_speed_max"])]
         if str(cfg.get("tts_align_mode", "") or "").strip():
-            cmd += ["--tts-align-mode", str(cfg.get("tts_align_mode")).strip()]
+            args += ["--tts-align-mode", str(cfg.get("tts_align_mode")).strip()]
         # ASR normalization (low-risk). Pass through only when enabled.
         if cfg.get("asr_normalize_enable"):
-            cmd.append("--asr-normalize-enable")
+            args.append("--asr-normalize-enable")
             if cfg.get("asr_normalize_dict"):
-                cmd += ["--asr-normalize-dict", str(self._resolve_path(cfg["asr_normalize_dict"]))]
+                args += ["--asr-normalize-dict", str(self._resolve_path(cfg["asr_normalize_dict"]))]
 
         # ----------------------------
         # P2-ASR: ASR enhancements (audio preprocess / merge-short / LLM fix)
         # ----------------------------
         if cfg.get("asr_preprocess_enable"):
-            cmd.append("--asr-preprocess-enable")
+            args.append("--asr-preprocess-enable")
             if cfg.get("asr_preprocess_loudnorm"):
-                cmd.append("--asr-preprocess-loudnorm")
+                args.append("--asr-preprocess-loudnorm")
             if cfg.get("asr_preprocess_highpass") is not None:
-                cmd += ["--asr-preprocess-highpass", str(int(cfg.get("asr_preprocess_highpass", 80) or 80))]
+                args += ["--asr-preprocess-highpass", str(int(cfg.get("asr_preprocess_highpass", 80) or 80))]
             if cfg.get("asr_preprocess_lowpass") is not None:
-                cmd += ["--asr-preprocess-lowpass", str(int(cfg.get("asr_preprocess_lowpass", 8000) or 8000))]
+                args += ["--asr-preprocess-lowpass", str(int(cfg.get("asr_preprocess_lowpass", 8000) or 8000))]
             if str(cfg.get("asr_preprocess_ffmpeg_extra", "") or "").strip():
-                cmd += ["--asr-preprocess-ffmpeg-extra", str(cfg.get("asr_preprocess_ffmpeg_extra")).strip()]
+                args += ["--asr-preprocess-ffmpeg-extra", str(cfg.get("asr_preprocess_ffmpeg_extra")).strip()]
         if cfg.get("asr_merge_short_enable"):
-            cmd.append("--asr-merge-short-enable")
-            cmd += ["--asr-merge-min-dur-s", str(float(cfg.get("asr_merge_min_dur_s", 0.8) or 0.8))]
-            cmd += ["--asr-merge-min-chars", str(int(cfg.get("asr_merge_min_chars", 6) or 6))]
-            cmd += ["--asr-merge-max-gap-s", str(float(cfg.get("asr_merge_max_gap_s", 0.25) or 0.25))]
-            cmd += ["--asr-merge-max-group-chars", str(int(cfg.get("asr_merge_max_group_chars", 120) or 120))]
+            args.append("--asr-merge-short-enable")
+            args += ["--asr-merge-min-dur-s", str(float(cfg.get("asr_merge_min_dur_s", 0.8) or 0.8))]
+            args += ["--asr-merge-min-chars", str(int(cfg.get("asr_merge_min_chars", 6) or 6))]
+            args += ["--asr-merge-max-gap-s", str(float(cfg.get("asr_merge_max_gap_s", 0.25) or 0.25))]
+            args += ["--asr-merge-max-group-chars", str(int(cfg.get("asr_merge_max_group_chars", 120) or 120))]
             if cfg.get("asr_merge_save_debug"):
-                cmd.append("--asr-merge-save-debug")
+                args.append("--asr-merge-save-debug")
         if cfg.get("asr_llm_fix_enable"):
-            cmd.append("--asr-llm-fix-enable")
+            args.append("--asr-llm-fix-enable")
             if str(cfg.get("asr_llm_fix_mode", "") or "").strip():
-                cmd += ["--asr-llm-fix-mode", str(cfg.get("asr_llm_fix_mode")).strip()]
+                args += ["--asr-llm-fix-mode", str(cfg.get("asr_llm_fix_mode")).strip()]
             if cfg.get("asr_llm_fix_max_items") is not None:
-                cmd += ["--asr-llm-fix-max-items", str(int(cfg.get("asr_llm_fix_max_items", 60) or 60))]
+                args += ["--asr-llm-fix-max-items", str(int(cfg.get("asr_llm_fix_max_items", 60) or 60))]
             if cfg.get("asr_llm_fix_min_chars") is not None:
-                cmd += ["--asr-llm-fix-min-chars", str(int(cfg.get("asr_llm_fix_min_chars", 12) or 12))]
+                args += ["--asr-llm-fix-min-chars", str(int(cfg.get("asr_llm_fix_min_chars", 12) or 12))]
             if cfg.get("asr_llm_fix_save_debug"):
-                cmd.append("--asr-llm-fix-save-debug")
+                args.append("--asr-llm-fix-save-debug")
             if str(cfg.get("asr_llm_fix_model", "") or "").strip():
-                cmd += ["--asr-llm-fix-model", str(cfg.get("asr_llm_fix_model")).strip()]
+                args += ["--asr-llm-fix-model", str(cfg.get("asr_llm_fix_model")).strip()]
         # Sentence-unit merge (min-risk). Pass through only when enabled.
         if cfg.get("sentence_unit_enable"):
-            cmd.append("--sentence-unit-enable")
-            cmd += ["--sentence-unit-min-chars", str(cfg.get("sentence_unit_min_chars", 12))]
-            cmd += ["--sentence-unit-max-chars", str(cfg.get("sentence_unit_max_chars", 60))]
-            cmd += ["--sentence-unit-max-segs", str(cfg.get("sentence_unit_max_segs", 3))]
-            cmd += ["--sentence-unit-max-gap-s", str(cfg.get("sentence_unit_max_gap_s", 0.6))]
-            cmd += ["--sentence-unit-boundary-punct", str(cfg.get("sentence_unit_boundary_punct", "。！？!?.,"))]
+            args.append("--sentence-unit-enable")
+            args += ["--sentence-unit-min-chars", str(cfg.get("sentence_unit_min_chars", 12))]
+            args += ["--sentence-unit-max-chars", str(cfg.get("sentence_unit_max_chars", 60))]
+            args += ["--sentence-unit-max-segs", str(cfg.get("sentence_unit_max_segs", 3))]
+            args += ["--sentence-unit-max-gap-s", str(cfg.get("sentence_unit_max_gap_s", 0.6))]
+            args += ["--sentence-unit-boundary-punct", str(cfg.get("sentence_unit_boundary_punct", "。！？!?.,"))]
             bw = cfg.get("sentence_unit_break_words")
             if isinstance(bw, list) and bw:
-                cmd += ["--sentence-unit-break-words", ",".join([str(x) for x in bw if str(x).strip()])]
+                args += ["--sentence-unit-break-words", ",".join([str(x) for x in bw if str(x).strip()])]
             elif isinstance(bw, str) and bw.strip():
-                cmd += ["--sentence-unit-break-words", bw.strip()]
+                args += ["--sentence-unit-break-words", bw.strip()]
 
         # Auto entity protection (optional)
         if cfg.get("entity_protect_enable"):
-            cmd.append("--entity-protect-enable")
-            cmd += ["--entity-protect-min-len", str(cfg.get("entity_protect_min_len", 2))]
-            cmd += ["--entity-protect-max-len", str(cfg.get("entity_protect_max_len", 6))]
-            cmd += ["--entity-protect-min-freq", str(cfg.get("entity_protect_min_freq", 2))]
-            cmd += ["--entity-protect-max-items", str(cfg.get("entity_protect_max_items", 30))]
-        return cmd
+            args.append("--entity-protect-enable")
+            args += ["--entity-protect-min-len", str(cfg.get("entity_protect_min_len", 2))]
+            args += ["--entity-protect-max-len", str(cfg.get("entity_protect_max_len", 6))]
+            args += ["--entity-protect-min-freq", str(cfg.get("entity_protect_min_freq", 2))]
+            args += ["--entity-protect-max-items", str(cfg.get("entity_protect_max_items", 30))]
+
+        # In packaged builds, sys.executable points to backend_server.exe, not python.exe.
+        # Use backend_server.exe's special entry: `--run-pipeline lite` to execute the script.
+        if self._is_packaged_exe():
+            return [sys.executable, "--run-pipeline", "lite", *args]
+        return [sys.executable, str(script), *args]
 
     def _build_cmd_quality(self, video_path: str, work_dir: Path, cfg: Dict, resume_from: Optional[str] = None) -> List[str]:
         script = self._select_script("quality", cfg)
         paths = self.config.get("paths", {})
         gates = self.config.get("quality_gates", {}) or {}
         whisperx_model = cfg.get("whisperx_model", "large-v3")
-        whisperx_dir = self._resolve_path(cfg.get("whisperx_model_dir", "assets/models/whisperx"))
+        # Prefer paths.whisperx_model_dir (may be overridden by app via YGF_MODELS_ROOT -> user_data/models/whisperx).
+        whisperx_dir = self._resolve_path(paths.get("whisperx_model_dir") or cfg.get("whisperx_model_dir") or "assets/models/whisperx")
         # Product decision: coqui-only (do not expose / run piper via backend API).
         coqui_model = cfg.get("coqui_model") or "tts_models/en/ljspeech/tacotron2-DDC"
 
@@ -836,6 +914,17 @@ class TaskManager:
                 cmd.append("--tra-json-enable")
             if cfg.get("tra_auto_enable"):
                 cmd.append("--tra-auto-enable")
+        if self._is_packaged_exe():
+            # Prefer a dedicated quality worker executable when available (dependency isolation).
+            # This avoids conflicts between WhisperX heavy deps and the main backend runtime.
+            try:
+                worker = Path(sys.executable).resolve().with_name("quality_worker.exe")
+                if worker.exists():
+                    return [str(worker), "--run-pipeline", "quality", *cmd[2:]]
+            except Exception:
+                pass
+            # Fallback: run pipelines via backend_server.exe runner entry.
+            return [sys.executable, "--run-pipeline", "quality", *cmd[2:]]
         return cmd
 
     def _build_cmd_online(self, video_path: str, work_dir: Path, cfg: Dict) -> List[str]:
@@ -872,9 +961,11 @@ class TaskManager:
             cmd += ["--mt-api-key", cfg["mt_api_key"]]
         if cfg.get("tts_api_key"):
             cmd += ["--tts-api-key", cfg["tts_api_key"]]
+        if self._is_packaged_exe():
+            return [sys.executable, "--run-pipeline", "online", *cmd[2:]]
         return cmd
 
-    def _watch_process(self, task_id: str, proc: subprocess.Popen) -> None:
+    def _watch_process(self, task_id: str, proc: subprocess.Popen, cmd: List[str]) -> None:
         status = self.tasks[task_id]
         log_path = status.log_path
         log_path.parent.mkdir(parents=True, exist_ok=True)
@@ -885,6 +976,10 @@ class TaskManager:
 
         with log_path.open("w", encoding="utf-8") as log_file:
             log_file.write(f"[task] started_at: {_ts(status.started_at)}\n")
+            try:
+                log_file.write(f"[task] cmd: {' '.join([str(x) for x in (cmd or [])])}\n")
+            except Exception:
+                pass
             log_file.flush()
             if proc.stdout is None:
                 proc.wait()
@@ -912,6 +1007,9 @@ class TaskManager:
                     else:
                         st.state = "completed" if proc.returncode == 0 else "failed"
                         st.message = "Done" if proc.returncode == 0 else f"Exited with {proc.returncode}"
+                        if st.state == "failed":
+                            if proc.returncode in {9, 137} or _log_has_hw_limit(log_path):
+                                st.message = "硬件性能不足导致任务失败，请使用轻量模式（lite）重试。"
             # Append timing footer after status updated
             log_file.write(f"[task] ended_at:   {_ts(status.ended_at or time.time())}\n")
             if status.ended_at is not None:

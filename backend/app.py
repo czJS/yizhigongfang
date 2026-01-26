@@ -3,6 +3,8 @@ import subprocess
 import os
 import json
 import time
+import sys
+import runpy
 from pathlib import Path
 from typing import Any, Dict, Optional
 
@@ -19,7 +21,11 @@ from backend.review_workflow import read_text, write_text, unified_diff, mux_vid
 
 
 def create_app(config_path: Path) -> Flask:
-    repo_root = Path(__file__).resolve().parents[1]
+    # In PyInstaller builds, __file__ points to a temp extraction directory (often on C:).
+    # Allow the Electron app to override the effective "repo root" so relative paths resolve
+    # to the packaged resources directory (process.resourcesPath).
+    repo_root_env = os.environ.get("YGF_APP_ROOT", "").strip()
+    repo_root = Path(repo_root_env).resolve() if repo_root_env else Path(__file__).resolve().parents[1]
     defaults_path = repo_root / "config" / "defaults.yaml"
     cfg = None
     last_exc: Optional[Exception] = None
@@ -58,11 +64,67 @@ def create_app(config_path: Path) -> Flask:
             cfg = deep_merge(base, override)
         except Exception as exc:
             print(f"[warn] Failed to merge base defaults.yaml: {exc}. Proceeding with {config_path} only.")
+    # Allow app to override outputs root (avoid writing into installed Program Files/resources).
+    outputs_root_env = os.environ.get("YGF_OUTPUTS_ROOT", "").strip()
+    if outputs_root_env:
+        paths = cfg.setdefault("paths", {})
+        paths["outputs_root"] = outputs_root_env
+
+    # Allow app to override models root (e.g. userData\models in packaged app)
+    models_root = os.environ.get("YGF_MODELS_ROOT", "").strip()
+    if models_root:
+        paths = cfg.setdefault("paths", {})
+        paths["models_root"] = models_root
+        paths["tts_home"] = str(Path(models_root) / "tts")
+        paths["hf_cache"] = str(Path(models_root) / "hf")
+        # Quality mode specific overrides
+        paths["whisperx_model_dir"] = str(Path(models_root) / "whisperx")
+
+    # Reduce noisy warnings in packaged app (does not affect functionality):
+    # - HF symlink warning on Windows (caching still works without symlinks).
+    os.environ.setdefault("HF_HUB_DISABLE_SYMLINKS_WARNING", "1")
+
+    # Keep Matplotlib cache off C: and stable across runs.
+    # Electron sets TEMP/TMP to user_data/tmp for packaged runs; reuse it when available.
+    try:
+        base_tmp = os.environ.get("TMP") or os.environ.get("TEMP") or ""
+        if base_tmp:
+            mpl_dir = Path(base_tmp) / "matplotlib"
+            mpl_dir.mkdir(parents=True, exist_ok=True)
+            os.environ.setdefault("MPLCONFIGDIR", str(mpl_dir))
+    except Exception:
+        pass
+
+    # Allow packaged app to override local LLM endpoint without modifying quality.yaml used by Docker dev.
+    llm_endpoint_env = os.environ.get("YGF_LLM_ENDPOINT", "").strip()
+    if llm_endpoint_env:
+        defaults = cfg.setdefault("defaults", {})
+        defaults["llm_endpoint"] = llm_endpoint_env
+
     app = Flask(__name__)
     CORS(app)
 
     manager = TaskManager(cfg)
     glossary_path = repo_root / "assets" / "glossary" / "glossary.json"
+
+    def _runtime_info() -> Dict[str, Any]:
+        # Keep this minimal and safe: helps frontend/main process verify it is talking to
+        # the correct backend instance (not a stale one still bound to 5175).
+        try:
+            exe_name = Path(sys.executable).name
+        except Exception:
+            exe_name = str(sys.executable)
+        return {
+            "pid": os.getpid(),
+            "cwd": str(Path.cwd()),
+            "repo_root": str(repo_root),
+            "config_path": str(config_path),
+            "sys_executable": str(sys.executable),
+            "sys_executable_name": exe_name,
+            "is_frozen": bool(getattr(sys, "frozen", False)),
+            "YGF_APP_ROOT": os.environ.get("YGF_APP_ROOT", ""),
+            "CONFIG_PATH": os.environ.get("CONFIG_PATH", ""),
+        }
 
     def _is_media_file(path: Path) -> tuple[bool, str]:
         """
@@ -128,18 +190,118 @@ def create_app(config_path: Path) -> Flask:
             return False, f"failed to validate media file: {exc}"
 
     def available_modes() -> list[str]:
-        modes = ["lite"]
-        quality_script = repo_root / "scripts" / "quality_pipeline.py"
-        if quality_script.exists():
-            modes.append("quality")
-        online_script = repo_root / "scripts" / "online_pipeline.py"
-        if online_script.exists():
-            modes.append("online")
-        return modes
+        """
+        Compute which modes are usable in the *current runtime*.
+
+        Packaged Windows builds rely on real files under `process.resourcesPath`
+        (Electron sets YGF_APP_ROOT to that path). If a previous version is still
+        running during install, the installer may fail to overwrite some locked
+        files, causing mode resources to be missing. We therefore:
+        - check multiple plausible locations (resources/scripts and app.asar.unpacked/scripts)
+        - provide structured reasons via /api/config so UI can explain "why not quality".
+        """
+
+        # Lite is always available (minimal deps).
+        return [m for m, d in available_modes_detail().items() if d.get("available")]
+
+    def available_modes_detail() -> Dict[str, Dict[str, Any]]:
+        """
+        Return per-mode availability and reasons.
+        Schema:
+          {
+            "<mode>": {
+              "available": bool,
+              "reasons": [str, ...],   # non-empty when unavailable
+              "paths_checked": { "<name>": "<path>", ... },
+            },
+            ...
+          }
+        """
+        details: Dict[str, Dict[str, Any]] = {}
+
+        def _exists_any(paths: list[Path]) -> Optional[Path]:
+            for p in paths:
+                try:
+                    if p.exists():
+                        return p
+                except Exception:
+                    continue
+            return None
+
+        # Detect packaged backend exe (PyInstaller onefile / installed app).
+        try:
+            is_packaged_backend = bool(getattr(sys, "frozen", False)) or Path(sys.executable).name.lower() == "backend_server.exe"
+        except Exception:
+            is_packaged_backend = False
+
+        # lite
+        details["lite"] = {
+            "available": True,
+            "reasons": [],
+            "paths_checked": {},
+        }
+
+        # quality
+        q_script_candidates = [
+            repo_root / "scripts" / "quality_pipeline.py",
+            repo_root / "app.asar.unpacked" / "scripts" / "quality_pipeline.py",
+        ]
+        q_script = _exists_any(q_script_candidates)
+        q_worker_candidates: list[Path] = []
+        try:
+            exe = Path(sys.executable).resolve()
+            q_worker_candidates = [
+                exe.with_name("quality_worker.exe"),
+                repo_root / "quality_worker.exe",
+                repo_root / "app.asar.unpacked" / "quality_worker.exe",
+            ]
+        except Exception:
+            q_worker_candidates = [repo_root / "quality_worker.exe"]
+        q_worker = _exists_any(q_worker_candidates)
+
+        q_reasons: list[str] = []
+        if not q_script:
+            q_reasons.append("缺少质量模式脚本：scripts/quality_pipeline.py（可能是安装时程序未退出导致资源未更新）")
+        if is_packaged_backend and not q_worker:
+            q_reasons.append("缺少质量模式 worker：quality_worker.exe（安装包应包含该文件）")
+        details["quality"] = {
+            "available": (len(q_reasons) == 0),
+            "reasons": q_reasons,
+            "paths_checked": {
+                "quality_script_candidates": "; ".join([str(p) for p in q_script_candidates]),
+                "quality_worker_candidates": "; ".join([str(p) for p in q_worker_candidates]),
+                "quality_script_found": str(q_script) if q_script else "",
+                "quality_worker_found": str(q_worker) if q_worker else "",
+                "is_packaged_backend": str(bool(is_packaged_backend)),
+                "repo_root": str(repo_root),
+                "sys_executable": str(sys.executable),
+            },
+        }
+
+        # online
+        o_script_candidates = [
+            repo_root / "scripts" / "online_pipeline.py",
+            repo_root / "app.asar.unpacked" / "scripts" / "online_pipeline.py",
+        ]
+        o_script = _exists_any(o_script_candidates)
+        o_reasons: list[str] = []
+        if not o_script:
+            o_reasons.append("缺少在线模式脚本：scripts/online_pipeline.py")
+        details["online"] = {
+            "available": (len(o_reasons) == 0),
+            "reasons": o_reasons,
+            "paths_checked": {
+                "online_script_candidates": "; ".join([str(p) for p in o_script_candidates]),
+                "online_script_found": str(o_script) if o_script else "",
+            },
+        }
+
+        return details
 
     @app.get("/api/health")
     def health():
-        return {"status": "ok"}
+        # Explicit jsonify to ensure Content-Type=application/json (PowerShell Invoke-RestMethod parsing).
+        return jsonify({"status": "ok", "runtime": _runtime_info()})
 
     # -----------------------
     # Video helpers (preview/probe) for "hard subtitle erase" UX
@@ -278,10 +440,25 @@ def create_app(config_path: Path) -> Flask:
         preset = payload.get("preset")
         default_mode = cfg.get("default_mode") or cfg.get("defaults", {}).get("default_mode") or "lite"
         mode = payload.get("mode") or default_mode
-        available = cfg.get("available_modes") or []
-        # 如传入的模式不在可用列表，退回默认
-        if available and mode not in available:
-            mode = default_mode or (available[0] if available else "lite")
+        # Use runtime-derived availability (not YAML), so UI and backend agree.
+        available = available_modes()
+        if mode not in available:
+            # Do NOT silently downgrade; return a clear reason so the user can fix installation/resources.
+            detail = available_modes_detail().get(str(mode), {})
+            reasons = detail.get("reasons") or []
+            return (
+                jsonify(
+                    {
+                        "error": f"mode not available: {mode}",
+                        "mode": mode,
+                        "available_modes": available,
+                        "reasons": reasons,
+                        "paths_checked": detail.get("paths_checked") or {},
+                        "hint": "若你确认安装包是“质量包”，请先完全退出程序后重新安装（安装器检测到正在运行会导致资源未更新）。",
+                    }
+                ),
+                400,
+            )
         # 尊重前端显式选择的 mode；不要因为默认是 quality 就强制覆盖用户选择。
 
         # 质量模式：剥离轻量参数，避免传递 whispercpp 等无效参数
@@ -770,8 +947,12 @@ def create_app(config_path: Path) -> Flask:
             pass
         # Return the TaskManager's live config so hot-reloaded YAML changes are reflected in UI.
         cfg_with_modes = dict(manager.config)
-        cfg_with_modes["available_modes"] = available_modes()
-        return cfg_with_modes
+        modes_detail = available_modes_detail()
+        cfg_with_modes["available_modes"] = [m for m, d in modes_detail.items() if d.get("available")]
+        cfg_with_modes["available_modes_detail"] = modes_detail
+        cfg_with_modes["runtime"] = _runtime_info()
+        # Explicit jsonify to ensure Content-Type=application/json (PowerShell Invoke-RestMethod parsing).
+        return jsonify(cfg_with_modes)
 
     # -----------------------
     # Glossary (P1-1 公共能力)
@@ -823,7 +1004,136 @@ def create_app(config_path: Path) -> Flask:
 
 
 def main():
-    root = Path(__file__).resolve().parents[1]
+    repo_root_env = os.environ.get("YGF_APP_ROOT", "").strip()
+    root = Path(repo_root_env).resolve() if repo_root_env else Path(__file__).resolve().parents[1]
+
+    # ---------------------------------------------------------
+    # Self-check mode (packaging/smoke test)
+    # ---------------------------------------------------------
+    # Usage (packaged):
+    #   set YGF_APP_ROOT=<resources>
+    #   set CONFIG_PATH=<resources>\config\quality.yaml
+    #   backend_server.exe --self-check
+    #
+    # This provides a fast signal before building an installer.
+    if "--self-check" in sys.argv:
+        try:
+            # Minimal filesystem checks
+            required = {
+                "scripts/asr_translate_tts.py": root / "scripts" / "asr_translate_tts.py",
+                "scripts/quality_pipeline.py": root / "scripts" / "quality_pipeline.py",
+                "config/quality.yaml": root / "config" / "quality.yaml",
+                "bin/ffmpeg.exe": root / "bin" / ("ffmpeg.exe" if os.name == "nt" else "ffmpeg"),
+            }
+            missing = [k for k, p in required.items() if not p.exists()]
+            # Packaged Windows best-practice: quality_worker should exist alongside backend_server.exe
+            try:
+                is_packaged = bool(getattr(sys, "frozen", False)) or Path(sys.executable).name.lower() == "backend_server.exe"
+            except Exception:
+                is_packaged = False
+            if is_packaged:
+                worker = Path(sys.executable).resolve().with_name("quality_worker.exe")
+                if not worker.exists():
+                    missing.append("quality_worker.exe")
+
+            payload = {
+                "ok": len(missing) == 0,
+                "missing": missing,
+                "root": str(root),
+                "sys_executable": str(sys.executable),
+                "is_packaged": bool(is_packaged),
+                "YGF_APP_ROOT": os.environ.get("YGF_APP_ROOT", ""),
+                "CONFIG_PATH": os.environ.get("CONFIG_PATH", ""),
+            }
+            print(json.dumps(payload, ensure_ascii=False, indent=2))
+            raise SystemExit(0 if payload["ok"] else 2)
+        except SystemExit:
+            raise
+        except Exception as exc:
+            try:
+                print(json.dumps({"ok": False, "error": str(exc)}, ensure_ascii=False, indent=2))
+            finally:
+                raise SystemExit(3)
+
+    # ---------------------------------------------------------
+    # Packaged-task runner mode (PyInstaller-friendly)
+    # ---------------------------------------------------------
+    # In packaged builds, TaskManager spawns pipelines using `sys.executable`.
+    # Under PyInstaller, `sys.executable` is backend_server.exe, so attempting to run
+    # `sys.executable scripts/xxx.py ...` will just start another Flask server, causing
+    # tasks to "stall" at 0% with only Flask startup logs.
+    #
+    # We provide a dedicated entry to run the pipeline scripts inside a separate process:
+    #   backend_server.exe --run-pipeline <lite|quality|online> <script-args...>
+    if "--run-pipeline" in sys.argv:
+        try:
+            idx = sys.argv.index("--run-pipeline")
+            mode = (sys.argv[idx + 1] if idx + 1 < len(sys.argv) else "").strip() or "lite"
+            forwarded = sys.argv[idx + 2 :]
+        except Exception:
+            mode = "lite"
+            forwarded = []
+
+        # Best practice: in packaged Windows builds, the "quality" pipeline is executed by a
+        # separate worker executable (dependency isolation). If present, delegate immediately.
+        if mode == "quality":
+            try:
+                worker = Path(sys.executable).resolve().with_name("quality_worker.exe")
+                if worker.exists():
+                    proc = subprocess.run([str(worker), "--run-pipeline", "quality", *forwarded])
+                    raise SystemExit(proc.returncode)
+            except SystemExit:
+                raise
+            except Exception:
+                # Fallback to legacy in-process runner (may fail if deps are missing).
+                pass
+
+        scripts_dir = root / "scripts"
+        # Ensure bundled binaries are discoverable (ffmpeg/whisper-cli, etc.).
+        # Pipeline scripts often call "ffmpeg" via PATH (not an absolute path).
+        bin_dir = root / "bin"
+        if bin_dir.exists():
+            os.environ["PATH"] = str(bin_dir) + os.pathsep + os.environ.get("PATH", "")
+            # Some subprocess resolution on Windows depends on PATHEXT.
+            # In certain packaged environments it can be missing, making `ffmpeg` fail to resolve to `ffmpeg.exe`.
+            if os.name == "nt" and not os.environ.get("PATHEXT"):
+                os.environ["PATHEXT"] = ".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC"
+            # Help libs that probe ffmpeg at import-time (e.g. pydub).
+            ffmpeg_exe = bin_dir / "ffmpeg.exe"
+            if ffmpeg_exe.exists():
+                os.environ.setdefault("FFMPEG_BINARY", str(ffmpeg_exe))
+
+        script_map = {
+            "lite": scripts_dir / "asr_translate_tts.py",
+            "quality": scripts_dir / "quality_pipeline.py",
+            "online": scripts_dir / "online_pipeline.py",
+        }
+        script_path = script_map.get(mode, script_map["lite"])
+        if not script_path.exists():
+            raise FileNotFoundError(f"pipeline script not found for mode={mode}: {script_path}")
+
+        # Ensure repo root is importable for `from scripts import ...` imports
+        if str(root) not in sys.path:
+            sys.path.insert(0, str(root))
+
+        # Run the script as __main__, forwarding the original CLI args.
+        sys.argv = [str(script_path), *forwarded]
+        try:
+            runpy.run_path(str(script_path), run_name="__main__")
+        except SystemExit as exc:
+            # Preserve script failures.
+            # - sys.exit(int): keep the code
+            # - sys.exit(str): print message to stderr and return non-zero
+            if isinstance(exc.code, int):
+                raise SystemExit(exc.code)
+            if exc.code is None:
+                raise SystemExit(0)
+            try:
+                print(str(exc.code), file=sys.stderr)
+            finally:
+                raise SystemExit(1)
+        return
+
     # Allow selecting config file via env var (helps fully-local + docker setups).
     # Examples:
     # - CONFIG_PATH=/app/config/quality.yaml

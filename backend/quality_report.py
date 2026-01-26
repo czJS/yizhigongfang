@@ -10,6 +10,33 @@ from typing import Any, Dict, List, Optional, Tuple
 
 _CJK_RE = re.compile(r"[\u3400-\u4dbf\u4e00-\u9fff\u3000-\u303f\uff00-\uffef]+")
 _BULLET_OR_NUMBER_RE = re.compile(r"^\s*([-–•]+|\d+\s*[\.\)\-:])\s*")
+_HW_LIMIT_PATTERNS = [
+    re.compile(p, re.IGNORECASE)
+    for p in [
+        r"out of memory",
+        r"cuda out of memory",
+        r"memoryerror",
+        r"\boom\b",
+        r"killed",
+        r"requires more system memory",
+        r"cublas.*alloc",
+        r"cuda error: out of memory",
+    ]
+]
+
+
+def _detect_hw_limit_reason(work_dir: Path) -> Optional[str]:
+    log_path = work_dir / "run.log"
+    if not log_path.exists():
+        return None
+    try:
+        tail = log_path.read_text(encoding="utf-8", errors="ignore")[-8000:]
+    except Exception:
+        return None
+    for pat in _HW_LIMIT_PATTERNS:
+        if pat.search(tail):
+            return "硬件性能不足导致任务失败，请使用轻量模式（lite）或更小模型重试。"
+    return None
 
 
 @dataclass
@@ -249,7 +276,12 @@ def generate_quality_report(
         "missing_expected": missing_expected,
     }
     if missing_required:
-        fail(f"缺少关键产物：{missing_required}（未生成英文字幕，通常表示流程在翻译前失败）")
+        hw_reason = _detect_hw_limit_reason(work_dir)
+        if hw_reason:
+            fail(hw_reason)
+            warn(f"缺少关键产物：{missing_required}（未生成英文字幕，通常表示流程在翻译前失败）")
+        else:
+            fail(f"缺少关键产物：{missing_required}（未生成英文字幕，通常表示流程在翻译前失败）")
     if missing_expected:
         warn(f"未生成部分交付产物：{missing_expected}（可能是选项/模式导致，也可能是任务中途失败）")
 

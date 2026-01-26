@@ -1,5 +1,11 @@
 appId: com.local.dubbing
 productName: YizhiStudio
+icon: build/icon.ico
+#
+# NSIS 安装器在包含大体积资源（如 ollama pack / 模型等）时，
+# 默认压缩（LZMA）会导致安装阶段长时间“看起来卡住”。
+# 这里改为 store（等价 NSIS: SetCompress off），避免二次压缩，显著加快安装/解压速度。
+compression: store
 electronDownload:
   # 国内网络建议使用镜像；避免 electron-builder 去 GitHub 拉取 electron zip 失败
   mirror: "https://npmmirror.com/mirrors/electron/"
@@ -8,16 +14,25 @@ directories:
 files:
   - dist/**
   - electron/**
-  - ../backend/**
-  - ../scripts/asr_translate_tts.py
   - ../config/**
+  - ../scripts/**
 extraResources:
   - from: ../bin
     to: bin
-  - from: ../assets/models
-    to: models
+  - from: ../dist/backend_server.exe
+    to: backend_server.exe
+  - from: ../dist/quality_worker.exe
+    to: quality_worker.exe
+  # backend_server.exe needs config/scripts on disk (not inside app.asar)
+  - from: ../config
+    to: config
+  - from: ../scripts
+    to: scripts
   - from: ../assets
     to: assets
+    filter:
+      - "**/*"
+      - "!models/**"
 mac:
   target:
     - dmg
@@ -27,11 +42,17 @@ mac:
 win:
   target:
     - nsis
-  artifactName: "${productName}-${version}-win.${ext}"
+  # Use timestamp to avoid "output file is locked" when rebuilding while an older installer is open.
+  # BUILD_TS is set by scripts/build_installer.ps1.
+  artifactName: "${productName}-${version}-win-${env.BUILD_TS}.${ext}"
+  signAndEditExecutable: false
+  verifyUpdateCodeSignature: false
+  icon: build/icon.ico
 nsis:
   oneClick: false
   perMachine: false
   allowElevation: false
   allowToChangeInstallationDirectory: true
+  include: build/installer.nsh
 
 

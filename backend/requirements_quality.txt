@@ -1,0 +1,20 @@
+# Quality worker dependencies (isolated from backend_server.exe).
+#
+# IMPORTANT:
+# - Keep this separate from backend/requirements.txt because WhisperX pulls a heavy ML stack
+#   with versions that conflict with the main backend's dependencies.
+# - This is intended to be installed into a dedicated venv used ONLY for building quality_worker.exe.
+#
+# Notes (Windows):
+# - PyAV (av) must be installed from a prebuilt wheel; building from source requires FFmpeg dev libs.
+
+requests==2.32.3
+pyyaml==6.0.1
+psutil==5.9.8
+pydub==0.25.1
+pysubs2==1.6.0
+opencc-python-reimplemented==0.1.7
+
+# WhisperX stack (pin to a known-working set)
+whisperx==3.7.4
+

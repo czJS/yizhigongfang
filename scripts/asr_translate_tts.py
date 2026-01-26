@@ -667,17 +667,23 @@ def run_cmd(
     input_text: Optional[str] = None,
 ) -> subprocess.CompletedProcess:
     """运行子进程命令，失败时抛出详细日志，便于排查。"""
+    # Use Windows-friendly quoting for human-readable error messages.
+    try:
+        pretty = subprocess.list2cmdline(cmd) if os.name == "nt" else " ".join(cmd)
+    except Exception:
+        pretty = " ".join(str(x) for x in cmd)
     proc = subprocess.run(
         cmd,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
+        errors="replace",
         env=env,
         input=input_text,
     )
     if check and proc.returncode != 0:
         raise RuntimeError(
-            f"Command failed: {' '.join(cmd)}\nstdout:\n{proc.stdout}\nstderr:\n{proc.stderr}"
+            f"Command failed (rc={proc.returncode}): {pretty}\nstdout:\n{proc.stdout}\nstderr:\n{proc.stderr}"
         )
     return proc
 
@@ -687,6 +693,48 @@ def _ffprobe_display_wh(p: Path) -> Optional[tuple[int, int]]:
     Return display width/height with rotation handled (ffprobe rotation tag or displaymatrix).
     This keeps PlayRes consistent with what players actually render, ensuring WYSIWYG for subtitle placement.
     """
+    def _probe_with_ffmpeg() -> Optional[tuple[int, int]]:
+        """
+        Fallback when `ffprobe` is unavailable in packaged Windows builds.
+        Parse `ffmpeg -i` stderr to extract width/height and rotation.
+        """
+        try:
+            proc = run_cmd(["ffmpeg", "-hide_banner", "-i", str(p)], check=False)
+            text = (proc.stderr or "") + "\n" + (proc.stdout or "")
+            if not text:
+                return None
+            import re as _re  # local import
+
+            # Find first video stream resolution.
+            w = h = 0
+            for line in text.splitlines():
+                if "Video:" not in line:
+                    continue
+                m = _re.search(r"(\d{2,5})x(\d{2,5})", line)
+                if m:
+                    w = int(m.group(1))
+                    h = int(m.group(2))
+                    break
+            if w <= 0 or h <= 0:
+                return None
+
+            # Rotation metadata (best-effort).
+            rot = 0
+            m2 = _re.search(r"rotate\s*:\s*([-+]?\d+)", text)
+            if not m2:
+                m2 = _re.search(r"rotation of\s*([-+]?\d+(?:\.\d+)?)\s*degrees", text)
+            if m2:
+                try:
+                    rot = int(float(m2.group(1)))
+                except Exception:
+                    rot = 0
+            rot = rot % 360
+            if rot in (90, 270):
+                return h, w
+            return w, h
+        except Exception:
+            return None
+
     try:
         cmd = [
             "ffprobe",
@@ -730,7 +778,36 @@ def _ffprobe_display_wh(p: Path) -> Optional[tuple[int, int]]:
             return h, w
         return w, h
     except Exception:
-        return None
+        # In Windows packaged app, we may ship ffmpeg.exe but not ffprobe.exe.
+        # Fall back to parsing `ffmpeg -i` output.
+        return _probe_with_ffmpeg()
+
+
+def _probe_duration_s(p: Path) -> Optional[float]:
+    """Best-effort duration probe: prefer ffprobe, fall back to parsing ffmpeg output."""
+    try:
+        cmd = ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "json", str(p)]
+        out = run_cmd(cmd, check=True).stdout
+        import json as _json  # local import
+
+        dur = float(_json.loads(out or "{}").get("format", {}).get("duration") or 0.0)
+        return dur if dur > 0 else None
+    except Exception:
+        try:
+            proc = run_cmd(["ffmpeg", "-hide_banner", "-i", str(p)], check=False)
+            text = (proc.stderr or "") + "\n" + (proc.stdout or "")
+            import re as _re  # local import
+
+            m = _re.search(r"Duration:\s*(\d+):(\d+):(\d+(?:\.\d+)?)", text)
+            if not m:
+                return None
+            hh = int(m.group(1))
+            mm = int(m.group(2))
+            ss = float(m.group(3))
+            dur = hh * 3600.0 + mm * 60.0 + ss
+            return dur if dur > 0 else None
+        except Exception:
+            return None
 
 
 def ensure_tool(name: str) -> None:
@@ -1028,6 +1105,8 @@ def extract_audio(
     denoise_model: Optional[Path] = None,
 ) -> None:
     # 统一转单声道、16k 采样，提升 ASR 稳定性；可选简单去噪
+    if not video_path.exists():
+        raise FileNotFoundError(f"Input video not found: {video_path}")
     audio_path.parent.mkdir(parents=True, exist_ok=True)
     cmd = [
         "ffmpeg",
@@ -1815,6 +1894,65 @@ def synthesize_segments_coqui(
 def build_coqui_tts(model_name: str, device: str = "auto"):
     """构建 Coqui TTS 接口，按需启用 GPU。"""
     try:
+        # In PyInstaller(onefile), Python sources are packed into an archive and TorchScript can fail
+        # when it tries to inspect source code (inspect.getsourcelines) for scripting.
+        # Disable JIT to avoid:
+        #   OSError: TorchScript requires source access... make sure original .py files are available.
+        os.environ.setdefault("PYTORCH_JIT", "0")
+        os.environ.setdefault("TORCH_JIT", "0")
+        try:
+            import torch  # type: ignore
+
+            try:
+                torch.jit._state.disable()  # type: ignore[attr-defined]
+            except Exception:
+                pass
+        except Exception:
+            pass
+
+        # In some PyInstaller(onefile) builds, `gruut` is present but its `VERSION` data file
+        # is missing from the bundle, causing:
+        #   FileNotFoundError: ...\_MEIxxxx\gruut\VERSION
+        # Create it proactively so Coqui TTS import can proceed.
+        try:
+            import sys
+
+            mei = getattr(sys, "_MEIPASS", None)
+            if mei:
+                vp = Path(mei) / "gruut" / "VERSION"
+                if not vp.exists():
+                    vp.parent.mkdir(parents=True, exist_ok=True)
+                    vp.write_text("0.0.0", encoding="utf-8")
+        except Exception:
+            pass
+
+        # Coqui's text normalization stack pulls in `inflect`, which (newer versions) uses `typeguard`
+        # decorators that instrument functions by calling `inspect.getsource()`. In PyInstaller(onefile),
+        # source code may be unavailable, causing:
+        #   OSError: could not get source code
+        # Workaround: monkey-patch typeguard's decorator to a no-op before importing TTS/inflect.
+        try:
+            def _no_typechecked(*args, **kwargs):  # type: ignore[no-untyped-def]
+                # supports both @typechecked and @typechecked(...)
+                if args and callable(args[0]) and len(args) == 1 and not kwargs:
+                    return args[0]
+                def _deco(fn):  # type: ignore[no-untyped-def]
+                    return fn
+                return _deco
+
+            try:
+                import typeguard  # type: ignore
+                setattr(typeguard, "typechecked", _no_typechecked)
+            except Exception:
+                pass
+            try:
+                import typeguard._decorators as _tg_decorators  # type: ignore
+                setattr(_tg_decorators, "typechecked", _no_typechecked)
+            except Exception:
+                pass
+        except Exception:
+            pass
+
         from TTS.api import TTS as CoquiTTS  # type: ignore
     except ImportError as exc:  # pragma: no cover - runtime guard
         raise SystemExit("Coqui TTS not installed. Please `pip install TTS`.") from exc
@@ -1859,15 +1997,8 @@ def mux_video_audio(
     """
 
     def _ffprobe_duration_s(p: Path) -> Optional[float]:
-        try:
-            cmd = ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "json", str(p)]
-            out = run_cmd(cmd, check=True).stdout
-            import json as _json  # local import
-
-            dur = float(_json.loads(out)["format"]["duration"])
-            return dur if dur > 0 else None
-        except Exception:
-            return None
+        # Prefer ffprobe; fall back to parsing ffmpeg output when ffprobe.exe isn't shipped.
+        return _probe_duration_s(p)
 
     def _build_erase_filter() -> tuple[str, bool]:
         if not erase_subtitle_enable:
@@ -2407,6 +2538,38 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--min-sub-dur", type=float, default=1.5, help="Minimum subtitle duration (seconds); will extend short segments")
     p.add_argument("--tts-split-len", type=int, default=80, help="Max characters per TTS chunk before splitting")
     p.add_argument("--tts-speed-max", type=float, default=1.08, help="Max speed-up factor when aligning audio")
+    p.add_argument(
+        "--tts-align-mode",
+        choices=["atempo", "resample"],
+        default="resample",
+        help="How to align TTS to time budget: atempo=better pitch preservation (recommended), resample=faster but may change timbre",
+    )
+
+    # ------------------------------------------------------------
+    # P2-ASR (experimental in lite): accept flags for compatibility
+    # ------------------------------------------------------------
+    # These flags are used by quality.yaml defaults and by TaskManager pass-through.
+    # The lite pipeline currently does NOT implement these enhancements; we accept
+    # the args to avoid hard failures and will print a warning when enabled.
+    p.add_argument("--asr-preprocess-enable", action="store_true", help="(compat) enable ASR audio preprocess (NOT implemented in lite)")
+    p.add_argument("--asr-preprocess-loudnorm", action="store_true", help="(compat) loudnorm during ASR preprocess (NOT implemented in lite)")
+    p.add_argument("--asr-preprocess-highpass", type=int, default=None, help="(compat) highpass Hz for preprocess (NOT implemented in lite)")
+    p.add_argument("--asr-preprocess-lowpass", type=int, default=None, help="(compat) lowpass Hz for preprocess (NOT implemented in lite)")
+    p.add_argument("--asr-preprocess-ffmpeg-extra", type=str, default="", help="(compat) extra ffmpeg filter args (NOT implemented in lite)")
+
+    p.add_argument("--asr-merge-short-enable", action="store_true", help="(compat) merge very short ASR segments (NOT implemented in lite)")
+    p.add_argument("--asr-merge-min-dur-s", type=float, default=0.8, help="(compat) min dur for merge-short (NOT implemented in lite)")
+    p.add_argument("--asr-merge-min-chars", type=int, default=6, help="(compat) min chars for merge-short (NOT implemented in lite)")
+    p.add_argument("--asr-merge-max-gap-s", type=float, default=0.25, help="(compat) max gap for merge-short (NOT implemented in lite)")
+    p.add_argument("--asr-merge-max-group-chars", type=int, default=120, help="(compat) max group chars for merge-short (NOT implemented in lite)")
+    p.add_argument("--asr-merge-save-debug", action="store_true", help="(compat) save debug files for merge-short (NOT implemented in lite)")
+
+    p.add_argument("--asr-llm-fix-enable", action="store_true", help="(compat) enable ASR typo fix via LLM (NOT implemented in lite)")
+    p.add_argument("--asr-llm-fix-mode", type=str, default="suspect", help="(compat) LLM fix mode (NOT implemented in lite)")
+    p.add_argument("--asr-llm-fix-max-items", type=int, default=60, help="(compat) LLM fix max items (NOT implemented in lite)")
+    p.add_argument("--asr-llm-fix-min-chars", type=int, default=12, help="(compat) LLM fix min chars (NOT implemented in lite)")
+    p.add_argument("--asr-llm-fix-save-debug", action="store_true", help="(compat) save LLM fix debug (NOT implemented in lite)")
+    p.add_argument("--asr-llm-fix-model", type=str, default="", help="(compat) LLM model id/name (NOT implemented in lite)")
     # Subtitle burn-in style (hard-sub)
     p.add_argument("--sub-font-name", default="Arial", help="Subtitle font name for hard-burn (best-effort)")
     p.add_argument("--sub-font-size", type=int, default=18, help="Subtitle font size for hard-burn")
@@ -2424,6 +2587,14 @@ def main() -> None:
     if mode in {"quality", "online"}:
         raise SystemExit(f"Mode '{mode}' not supported in this pipeline. Use lite or select another pipeline.")
     ensure_tool("ffmpeg")
+
+    # Compatibility warnings (do not fail the run).
+    if getattr(args, "asr_preprocess_enable", False):
+        print("[warn] lite pipeline: --asr-preprocess-* flags are accepted for compatibility but are NOT implemented; ignoring.")
+    if getattr(args, "asr_merge_short_enable", False):
+        print("[warn] lite pipeline: --asr-merge-short-* flags are accepted for compatibility but are NOT implemented; ignoring.")
+    if getattr(args, "asr_llm_fix_enable", False):
+        print("[warn] lite pipeline: --asr-llm-fix-* flags are accepted for compatibility but are NOT implemented; ignoring.")
     resume_from = getattr(args, "resume_from", None)
     need_asr = resume_from is None or resume_from == "asr"
     need_tts = (not args.skip_tts) and (resume_from is None or resume_from in {"asr", "mt", "tts"})
@@ -2630,6 +2801,7 @@ def main() -> None:
                 allow_speed_change=True,
                 split_len=args.tts_split_len,
                 max_speed=args.tts_speed_max,
+                align_mode=getattr(args, "tts_align_mode", "resample"),
                 pad_to_ms=audio_total_ms,
             )
         else:
@@ -2643,6 +2815,7 @@ def main() -> None:
                 language=args.coqui_language,
                 split_len=args.tts_split_len,
                 max_speed=args.tts_speed_max,
+                align_mode=getattr(args, "tts_align_mode", "resample"),
                 pad_to_ms=audio_total_ms,
             )
         save_audio(combined_audio, tts_wav, sample_rate=args.sample_rate)

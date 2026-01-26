@@ -40,7 +40,7 @@ services:
       - ./reports:/app/reports
       # （可选）外置金标目录：你的机器上是 /Users/chengzheng/Desktop/金标准
       # 这样容器内可用路径统一为 /app/golden_videos/*.mp4 / *.srt / *.srt_en
-      - /Users/chengzheng/Desktop/金标准:/app/golden_videos:ro
+      # - /Users/chengzheng/Desktop/金标准:/app/golden_videos:ro
     environment:
       # 如需覆盖配置，可在此设置；默认为 quality.yaml 内已指向 http://ollama:11434/v1
       - LLM_ENDPOINT=http://ollama:11434/v1
@@ -76,7 +76,7 @@ services:
       - ./docs:/app/docs:ro
       - ./outputs:/app/outputs
       - ./reports:/app/reports
-      - /Users/chengzheng/Desktop/金标准:/app/golden_videos:ro
+      # - /Users/chengzheng/Desktop/金标准:/app/golden_videos:ro
     environment:
       - LLM_ENDPOINT=http://ollama:11434/v1
       - PYTHONPATH=/app
@@ -113,7 +113,7 @@ services:
       - ./docs:/app/docs:ro
       - ./outputs:/app/outputs
       - ./reports:/app/reports
-      - /Users/chengzheng/Desktop/金标准:/app/golden_videos:ro
+      # - /Users/chengzheng/Desktop/金标准:/app/golden_videos:ro
     environment:
       - LLM_ENDPOINT=http://ollama:11434/v1
       - PYTHONPATH=/app
