@@ -1,0 +1,160 @@
+version: 1
+
+# Round1 registry: define all suites in ONE place to remove duplicated boilerplate
+# across many experiments.round1_*.yaml files.
+#
+# Each suite is materialized into a "run_quality_e2e experiments.yaml" on demand by
+# `pipelines/tools/run_round1_onejob_impl.py`.
+#
+# Schema for each suite:
+# - segments: path to datasets jsonl
+# - baseline: {name, overrides}
+# - experiments: {exp_name: {overrides}}
+# - reuse: {freeze_asr_for_non_asr_experiments, method}
+
+suites:
+  asr_ablation_golden9:
+    label_cn: "ASR 单开关消融（golden9，全流程）"
+    segments: /app/eval/suites/e2e_quality/datasets/segments_golden_9.docker.jsonl
+    baseline:
+      name: asr_off_baseline
+      overrides:
+        asr_preprocess_enable: false
+        asr_preprocess_loudnorm: false
+        asr_merge_short_enable: false
+        asr_llm_fix_enable: false
+    experiments:
+      asr_preprocess_on:
+        overrides:
+          asr_preprocess_enable: true
+          asr_preprocess_loudnorm: false
+      asr_preprocess_loudnorm_on:
+        overrides:
+          asr_preprocess_enable: true
+          asr_preprocess_loudnorm: true
+      asr_merge_short_on:
+        overrides:
+          asr_merge_short_enable: true
+      asr_llm_fix_on:
+        overrides:
+          asr_llm_fix_enable: true
+          asr_llm_fix_mode: suspect
+    reuse:
+      freeze_asr_for_non_asr_experiments: false
+      method: baseline_asr
+
+  a_independent_golden9:
+    label_cn: "A类剩余单开关（golden9）"
+    segments: /app/eval/suites/e2e_quality/datasets/segments_golden_9.docker.jsonl
+    baseline:
+      name: baseline
+      overrides: {}
+    experiments:
+      vad_off:
+        overrides: {vad_enable: false}
+      denoise_off:
+        overrides: {denoise: false}
+      entity_protect_on:
+        overrides: {entity_protect_enable: true}
+      meaning_split_on:
+        overrides: {meaning_split_enable: true}
+      mt_json_on:
+        overrides: {mt_json_enable: true}
+      mt_topic_auto_on:
+        overrides: {mt_topic_auto_enable: true}
+    reuse:
+      freeze_asr_for_non_asr_experiments: true
+      method: baseline_asr
+
+  qe_suite_golden9:
+    label_cn: "QE 套件（qe_base + 子开关）"
+    segments: /app/eval/suites/e2e_quality/datasets/segments_golden_9.docker.jsonl
+    baseline:
+      name: qe_base
+      overrides:
+        qe_enable: true
+        qe_mode: suspect
+    experiments:
+      qe_embed_on:
+        overrides: {qe_embed_enable: true}
+    reuse:
+      freeze_asr_for_non_asr_experiments: true
+      method: baseline_asr
+
+  tra_suite_golden9:
+    label_cn: "TRA 套件（tra_qe_base + 子开关）"
+    segments: /app/eval/suites/e2e_quality/datasets/segments_golden_9.docker.jsonl
+    baseline:
+      name: tra_qe_base
+      overrides:
+        tra_enable: true
+        qe_enable: true
+        qe_mode: suspect
+    experiments:
+      tra_json_on:
+        overrides: {tra_json_enable: true}
+      tra_auto_on:
+        overrides: {tra_auto_enable: true}
+    reuse:
+      freeze_asr_for_non_asr_experiments: true
+      method: baseline_asr
+
+  tts_script_suite_golden9:
+    label_cn: "TTS 朗读稿套件（tts_script_base + strict_clean）"
+    segments: /app/eval/suites/e2e_quality/datasets/segments_golden_9.docker.jsonl
+    baseline:
+      name: tts_script_base
+      overrides:
+        tts_script_enable: true
+    experiments:
+      tts_script_strict_clean_on:
+        overrides: {tts_script_strict_clean_enable: true}
+    reuse:
+      freeze_asr_for_non_asr_experiments: true
+      method: baseline_asr
+
+  display_suite_short3:
+    label_cn: "B类：展示字幕（short3）"
+    segments: /app/eval/suites/e2e_quality/datasets/segments_short3.docker.jsonl
+    baseline:
+      name: display_base
+      overrides: {display_srt_enable: true}
+    experiments:
+      display_use_for_embed_on:
+        overrides: {display_use_for_embed: true}
+      display_merge_on:
+        overrides: {display_merge_enable: true}
+      display_split_on:
+        overrides: {display_split_enable: true}
+    reuse:
+      freeze_asr_for_non_asr_experiments: true
+      method: baseline_asr
+
+  bgm_suite_short3:
+    label_cn: "B类：混音/BGM（short3）"
+    segments: /app/eval/suites/e2e_quality/datasets/segments_short3.docker.jsonl
+    baseline:
+      name: bgm_base
+      overrides: {bgm_mix_enable: true}
+    experiments:
+      bgm_duck_on:
+        overrides: {bgm_duck_enable: true}
+      bgm_loudnorm_on:
+        overrides: {bgm_loudnorm_enable: true}
+    reuse:
+      freeze_asr_for_non_asr_experiments: true
+      method: baseline_asr
+
+  erase_suite_short3:
+    label_cn: "B类：硬字幕擦除（short3）"
+    segments: /app/eval/suites/e2e_quality/datasets/segments_short3.docker.jsonl
+    baseline:
+      name: baseline
+      overrides: {}
+    experiments:
+      erase_subtitle_on:
+        overrides: {erase_subtitle_enable: true}
+    reuse:
+      freeze_asr_for_non_asr_experiments: true
+      method: baseline_asr
+

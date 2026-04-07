@@ -1,0 +1,86 @@
+# Round 2: 3 candidates for the FINAL "Super Quality" combo (full delivery) on golden9
+#
+# Notes / 说明：
+# - “全流程”指 ASR→MT→字幕→TTS→封装产物完整产出。
+# - 你当前的 Round2 目标是：选出“最终唯一组合”（超级质量），因此这里的 3 组不是不同方向，
+#   而是同一目标下的 3 个候选版本（强度/风险不同），最后只保留 1 个。
+baseline:
+  name: baseline
+  overrides: {}
+
+experiments:
+  # Candidate-1: 超级质量（稳健版）——尽量降低失败面，作为“最终组合”保底候选
+  # 口径：不开回译审计/不做显示字幕/不做混音；但把翻译修复链路与交付可读性兜底拉起来。
+  super_quality_v1:
+    overrides:
+      # --- MT / context
+      mt_context_window: 1
+      sentence_unit_enable: true
+      # --- QE / TRA
+      qe_enable: true
+      qe_mode: suspect
+      qe_embed_enable: true
+      tra_enable: true
+      tra_auto_enable: true
+      # --- delivery readability
+      subtitle_postprocess_enable: true
+      subtitle_wrap_enable: true
+      subtitle_cps_fix_enable: true
+      # --- TTS deliverability
+      tts_script_enable: true
+      tts_fit_enable: true
+
+  # Candidate-2: 超级质量（增强版）——在 v1 上增强“文本质量上限”（更强修复、更强长句处理）
+  # 口径：全量 QE + 语义切句；仍不启用回译审计（太贵且更容易放大不稳定）。
+  super_quality_v2:
+    overrides:
+      # inherit v1 core knobs (explicit for readability)
+      mt_context_window: 1
+      sentence_unit_enable: true
+      meaning_split_enable: true
+      qe_enable: true
+      qe_mode: all
+      qe_embed_enable: true
+      tra_enable: true
+      tra_auto_enable: true
+      subtitle_postprocess_enable: true
+      subtitle_wrap_enable: true
+      subtitle_cps_fix_enable: true
+      tts_script_enable: true
+      tts_fit_enable: true
+      # delivery: rhythm planning
+      tts_plan_enable: true
+
+  # Candidate-3: 超级质量（极限版）——在 v2 上打开“最重链路”与“交付观感增强”
+  # 口径：回译审计 + 显示字幕链路 + 更严格的口播清洗 + 混音增强（失败面最大，用于验证是否值得作为最终唯一组合）。
+  super_quality_v3:
+    overrides:
+      mt_context_window: 1
+      sentence_unit_enable: true
+      meaning_split_enable: true
+      qe_enable: true
+      qe_mode: all
+      qe_embed_enable: true
+      qe_backtranslate_enable: true
+      tra_enable: true
+      tra_auto_enable: true
+      subtitle_postprocess_enable: true
+      subtitle_wrap_enable: true
+      subtitle_cps_fix_enable: true
+      # display subtitles for best on-screen readability
+      display_srt_enable: true
+      display_use_for_embed: true
+      display_merge_enable: true
+      display_split_enable: true
+      # TTS
+      tts_script_enable: true
+      tts_script_strict_clean_enable: true
+      tts_fit_enable: true
+      tts_plan_enable: true
+      # mix
+      bgm_mix_enable: true
+      bgm_duck_enable: true
+      bgm_loudnorm_enable: true
+
+
+
