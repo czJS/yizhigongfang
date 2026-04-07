@@ -1,22 +1,70 @@
-import axios from "axios";
-import type { AppConfig, HardwareInfo, TaskStatus, LogResponse, Artifact, QualityReport, GlossaryDoc } from "./types";
+import axios, { AxiosHeaders } from "axios";
+import type {
+  AppConfig,
+  HardwareInfo,
+  TaskStatus,
+  LogResponse,
+  Artifact,
+  QualityReport,
+  GlossaryDoc,
+  RulesetDoc,
+  RulesetTemplate,
+  RulesetTemplateInfo,
+} from "./types";
 
-export const apiBase = import.meta.env.VITE_API_BASE || "http://127.0.0.1:5175";
+// Prefer runtime-provided apiBase (Electron main process) over build-time env.
+// This avoids "connected to wrong port" issues when the backend port/base changes.
+export const apiBase =
+  (typeof window !== "undefined" ? (window as any)?.bridge?.apiBase : "") ||
+  (import.meta as any)?.env?.VITE_API_BASE ||
+  "http://127.0.0.1:5175";
 
 export const client = axios.create({
   baseURL: apiBase,
   timeout: 15000,
 });
 
+// Automatically attach local API token in Electron packaged runs (or any environment that sets it).
+// This is opt-in on backend side (YGF_API_TOKEN); keeping it here is backward-compatible.
+client.interceptors.request.use((config) => {
+  try {
+    const token = (import.meta as any)?.env?.VITE_API_TOKEN || (window as any)?.bridge?.apiToken || "";
+    const cloudToken = typeof window !== "undefined" ? localStorage.getItem("ygf_auth_token") || "" : "";
+    if (token) {
+      const headers = AxiosHeaders.from(config.headers);
+      headers.set("X-YGF-Token", token);
+      if (cloudToken) headers.set("X-YGF-Cloud-Token", cloudToken);
+      config.headers = headers;
+    } else if (cloudToken) {
+      const headers = AxiosHeaders.from(config.headers);
+      headers.set("X-YGF-Cloud-Token", cloudToken);
+      config.headers = headers;
+    }
+  } catch {
+    // ignore
+  }
+  return config;
+});
+
 function extractApiError(err: any): string {
   // Axios error shape: err.response.data may contain {error, log}
+  const status = err?.response?.status;
   const data = err?.response?.data;
-  if (typeof data === "string" && data.trim()) return data;
+  if (typeof data === "string" && data.trim()) {
+    const s = data.trim();
+    // Some environments return an HTML 404 page when API baseURL is wrong (e.g. pointing to a frontend server).
+    if (/<(!doctype|html)\b/i.test(s)) {
+      if (status === 404) return "后端接口不可用：可能没连上后端（地址不对或后端未启动）。";
+      return "后端返回异常页面：请检查后端是否正常运行。";
+    }
+    return s;
+  }
   if (data && typeof data === "object") {
     if (typeof data.error === "string" && data.error) return data.error;
     if (typeof data.message === "string" && data.message) return data.message;
     if (typeof data.log === "string" && data.log) return data.log;
   }
+  if (status === 404) return "后端接口不可用：可能没连上后端（地址不对或后端未启动）。";
   return err?.message || "请求失败";
 }
 
@@ -120,11 +168,11 @@ export async function downloadTaskFileBytes(taskId: string, path: string): Promi
   }
 }
 
-export async function getQualityReport(taskId: string, opts?: { regen?: boolean }): Promise<QualityReport> {
+export async function getQualityReport(taskId: string, opts?: { regen?: boolean }): Promise<QualityReport | null> {
   const { data } = await client.get<QualityReport>(`/api/tasks/${taskId}/quality_report`, {
     params: opts?.regen ? { regen: 1 } : undefined,
   });
-  return data;
+  return (data as any)?.pending ? null : data;
 }
 
 export async function resumeTask(taskId: string, payload: { resume_from: "asr" | "mt" | "tts" | "mux" }): Promise<string> {
@@ -179,6 +227,94 @@ export async function uploadGlossaryFile(file: File): Promise<GlossaryDoc> {
     headers: { "Content-Type": "multipart/form-data" },
   });
   return data;
+}
+
+export async function getGlobalRuleset(): Promise<RulesetDoc> {
+  try {
+    const { data } = await client.get<RulesetDoc>("/api/rulesets/global");
+    return data;
+  } catch (err: any) {
+    throw new Error(extractApiError(err));
+  }
+}
+
+export async function putGlobalRuleset(doc: Partial<RulesetDoc>): Promise<RulesetDoc> {
+  try {
+    const { data } = await client.put<RulesetDoc>("/api/rulesets/global", doc);
+    return data;
+  } catch (err: any) {
+    throw new Error(extractApiError(err));
+  }
+}
+
+export async function uploadRulesetFile(file: File): Promise<RulesetDoc> {
+  try {
+    const fd = new FormData();
+    fd.append("file", file);
+    const { data } = await client.post<RulesetDoc>("/api/rulesets/upload", fd, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return data;
+  } catch (err: any) {
+    throw new Error(extractApiError(err));
+  }
+}
+
+export async function listRulesetTemplates(): Promise<RulesetTemplateInfo[]> {
+  try {
+    const { data } = await client.get<{ items: RulesetTemplateInfo[] }>("/api/rulesets/templates");
+    return (data?.items || []) as any;
+  } catch (err: any) {
+    throw new Error(extractApiError(err));
+  }
+}
+
+export async function getRulesetTemplate(templateId: string): Promise<RulesetTemplate> {
+  try {
+    const { data } = await client.get<RulesetTemplate>(`/api/rulesets/templates/${encodeURIComponent(templateId)}`);
+    return data;
+  } catch (err: any) {
+    throw new Error(extractApiError(err));
+  }
+}
+
+export async function createRulesetTemplate(payload: { name: string; doc?: RulesetDoc }): Promise<RulesetTemplate> {
+  try {
+    const { data } = await client.post<RulesetTemplate>("/api/rulesets/templates", payload);
+    return data;
+  } catch (err: any) {
+    throw new Error(extractApiError(err));
+  }
+}
+
+export async function putRulesetTemplate(templateId: string, payload: { name?: string; doc?: RulesetDoc }): Promise<RulesetTemplate> {
+  try {
+    const { data } = await client.put<RulesetTemplate>(`/api/rulesets/templates/${encodeURIComponent(templateId)}`, payload);
+    return data;
+  } catch (err: any) {
+    throw new Error(extractApiError(err));
+  }
+}
+
+export async function deleteRulesetTemplate(templateId: string): Promise<void> {
+  try {
+    await client.delete(`/api/rulesets/templates/${encodeURIComponent(templateId)}`);
+  } catch (err: any) {
+    throw new Error(extractApiError(err));
+  }
+}
+
+export async function uploadRulesetTemplateFile(file: File): Promise<RulesetTemplate> {
+  try {
+    const fd = new FormData();
+    fd.append("file", file);
+    const { data } = await client.post<RulesetTemplate>("/api/rulesets/templates/upload", fd, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return data;
+  } catch (err: any) {
+    throw new Error(extractApiError(err));
+  }
 }
 
 export async function getEngSrt(taskId: string, which: "base" | "review" = "base"): Promise<{ name: string; content: string }> {
@@ -241,6 +377,17 @@ export async function getChsSrt2(taskId: string, which: "base" | "review" = "bas
 export async function putChsReviewSrt(taskId: string, content: string): Promise<{ status: string; path: string }> {
   try {
     const { data } = await client.put(`/api/tasks/${taskId}/review/chs_srt`, { content });
+    return data;
+  } catch (err: any) {
+    throw new Error(extractApiError(err));
+  }
+}
+
+export async function reextractZhPhrases(taskId: string, opts?: { timeoutMs?: number }): Promise<any> {
+  try {
+    // This endpoint may take a long time on CPU-only Ollama. Override the default axios timeout (15s).
+    const timeout = typeof opts?.timeoutMs === "number" && opts.timeoutMs > 0 ? opts.timeoutMs : 12 * 60 * 1000;
+    const { data } = await client.post(`/api/tasks/${taskId}/review/reextract_zh_phrases`, {}, { timeout });
     return data;
   } catch (err: any) {
     throw new Error(extractApiError(err));

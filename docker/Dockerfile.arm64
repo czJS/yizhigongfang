@@ -1,0 +1,54 @@
+FROM python:3.11-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    DEBIAN_FRONTEND=noninteractive \
+    PIP_EXTRA_INDEX_URL=https://download.pytorch.org/whl/cpu \
+    LD_LIBRARY_PATH=/app/bin:${LD_LIBRARY_PATH}
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ffmpeg libsndfile1 git curl build-essential unzip cmake rustc cargo patchelf \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# 仅复制依赖清单（arm64 下不要引入任何 x86_64 专用 wheel/二进制）
+COPY apps/backend/requirements.txt /app/backend/requirements.txt
+
+RUN python -m pip install --no-cache-dir -U pip \
+    # Use constraints to avoid pip backtracking on torch/torchaudio/TTS.
+    && python -c "from pathlib import Path; Path('/tmp/constraints.txt').write_text('torch==2.3.1\\ntorchaudio==2.3.1\\nTTS==0.21.3\\n', encoding='utf-8')" \
+    && python -m pip install --no-cache-dir --prefer-binary --use-deprecated=legacy-resolver -c /tmp/constraints.txt -r /app/backend/requirements.txt \
+    && python -m pip install --no-cache-dir --use-deprecated=legacy-resolver transformers==4.38.1 huggingface_hub==0.36.0 \
+    && python -m pip install --no-cache-dir --use-deprecated=legacy-resolver -c /tmp/constraints.txt whisperx==3.3.1 soundfile requests \
+    # Fix: some ctranslate2 wheels require executable stack; Docker Desktop may forbid it.
+    && python -c "import glob,subprocess; paths=glob.glob('/usr/local/lib/python3.11/site-packages/**/libctranslate2-*.so*', recursive=True); [subprocess.run(['patchelf','--clear-execstack',p], check=False) for p in paths]; print('[fix] patched libctranslate2 execstack:', len(paths))"
+
+# 准备构建所需的源码与压缩包（跨架构：从源码编译 whisper.cpp）
+COPY assets/models/build_incoming/asr/whisper.cpp-1.8.2.zip /app/
+
+# 构建后端所需可执行文件到 /app/bin
+RUN set -eux; \
+    mkdir -p /app/bin; \
+    unzip /app/whisper.cpp-1.8.2.zip -d /tmp; \
+    cd /tmp/whisper.cpp-1.8.2 && cmake -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build -j"$(nproc)"; \
+    cp /tmp/whisper.cpp-1.8.2/build/bin/whisper-cli /app/bin/whisper-cli; \
+    ln -sf /app/bin/whisper-cli /app/bin/main; \
+    cp /tmp/whisper.cpp-1.8.2/build/src/libwhisper.so /app/bin/ || true; \
+    ln -sf /app/bin/libwhisper.so /app/bin/libwhisper.so.1 || true; \
+    cp /tmp/whisper.cpp-1.8.2/build/ggml/src/libggml*.so /app/bin/ || true; \
+    ln -sf /app/bin/libggml.so /app/bin/libggml.so.1 || true; \
+    cp /tmp/whisper.cpp-1.8.2/build/ggml/src/libggml*.a /app/bin/ || true; \
+    chmod +x /app/bin/* || true; \
+    rm -rf /tmp/whisper.cpp-1.8.2 /app/whisper.cpp-1.8.2.zip
+
+# 复制项目核心代码；模型仍通过挂载提供
+COPY apps/backend/backend /app/backend
+COPY core /app/core
+COPY pipelines /app/pipelines
+COPY configs /app/configs
+
+EXPOSE 5175
+
+CMD ["python", "-m", "backend.app"]
+

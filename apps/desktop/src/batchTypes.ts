@@ -9,11 +9,16 @@ export interface BatchTask {
   taskId?: string; // backend task id
   state: UiTaskState;
   progress?: number;
+  // Backend stage number (quality: 0..8, where 0 means queued; lite/online may be null)
+  stage?: number;
   stageName?: string;
   message?: string;
   startedAt?: number;
   endedAt?: number | null;
   workDir?: string;
+  resumeFrom?: "asr" | "mt" | "tts" | "mux" | null;
+  createdAtBackend?: number | null;
+  resumedAt?: number | null;
   failureReason?: string;
   artifacts?: { name: string; path: string; size: number }[];
   qualityPassed?: boolean;
@@ -31,6 +36,7 @@ export interface BatchModel {
   id: string;
   name: string;
   createdAt: number;
+  archivedAt?: number | null;
   mode: "lite" | "quality" | "online";
   preset?: string;
   params: Record<string, any>;

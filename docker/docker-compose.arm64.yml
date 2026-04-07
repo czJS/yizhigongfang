@@ -1,0 +1,16 @@
+services:
+  backend:
+    image: yzh-backend:quality-arm64
+    pull_policy: never
+    platform: linux/arm64
+
+  onejob:
+    image: yzh-backend:quality-arm64
+    pull_policy: never
+    platform: linux/arm64
+
+  round2:
+    image: yzh-backend:quality-arm64
+    pull_policy: never
+    platform: linux/arm64
+

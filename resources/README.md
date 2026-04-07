@@ -1,6 +1,9 @@
-# resources
+# 运行资源（`resources/`）
 
-Small, git-tracked runtime resources (repo layout v2).
+用于存放**体积小、可进 git 的运行期资源**（v2 结构预留位）。
 
-Currently still stored under `assets/` (transition). Large models remain external-only.
+当前实践：
+
+- 这类“小资源”目前仍主要放在 `assets/`（过渡期）。
+- 大模型（WhisperX/TTS/翻译模型等）不进 git，通常通过 **模型包** 或 **本机缓存** 提供。
 
