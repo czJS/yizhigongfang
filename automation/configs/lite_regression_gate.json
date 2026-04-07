@@ -1,0 +1,20 @@
+{
+  "run_compileall": true,
+  "run_pytest": true,
+  "run_desktop_tests": true,
+  "run_auth_gate": true,
+  "auth_gate_mode": "regression-gate",
+  "run_smoke": true,
+  "run_resume": true,
+  "run_golden20": true,
+  "smoke_skip_tts": true,
+  "smoke_overrides_json": "{\"skip_tts\": true}",
+  "smoke_require_quality_report": true,
+  "resume_skip_tts": true,
+  "resume_require_quality_report": true,
+  "golden20_require_quality_report": true,
+  "resume_from": "tts",
+  "resume_base_overrides_json": "{\"skip_tts\": true}",
+  "golden20_skip_tts": true,
+  "golden20_overrides_json": "{\"skip_tts\": true}"
+}

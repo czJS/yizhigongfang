@@ -37,13 +37,13 @@ def main() -> None:
     ap.add_argument("--no-wait", action="store_true", help="Do not wait for round1 progress file to reach all_done.")
     ap.add_argument("--done-marker", type=Path, default=Path("/app/outputs/eval/round2_combos_done.json"))
     ap.add_argument("--out-root", type=Path, default=Path("/app/outputs/eval/e2e_quality_golden9_round2_combos"))
-    ap.add_argument("--segments", type=Path, default=Path("/app/eval/e2e_quality/segments_golden_9.docker.jsonl"))
-    ap.add_argument("--experiments", type=Path, default=Path("/app/eval/e2e_quality/experiments.round2_combos.yaml"))
-    ap.add_argument("--base-config", type=Path, default=Path("/app/config/quality.yaml"))
+    ap.add_argument("--segments", type=Path, default=Path("/app/eval/suites/e2e_quality/datasets/segments_golden_9.docker.jsonl"))
+    ap.add_argument("--experiments", type=Path, default=Path("/app/eval/suites/e2e_quality/experiments/experiments.round2_combos.yaml"))
+    ap.add_argument("--base-config", type=Path, default=Path("/app/configs/quality.yaml"))
     ap.add_argument("--jobs", type=int, default=1)
     ap.add_argument("--bootstrap-iters", type=int, default=2000)
-    ap.add_argument("--report-json", type=Path, default=Path("/app/reports/e2e_quality/report_golden9_round2_combos.json"))
-    ap.add_argument("--report-md", type=Path, default=Path("/app/reports/e2e_quality/report_golden9_round2_combos.md"))
+    ap.add_argument("--report-json", type=Path, default=Path("/app/eval/reports/e2e_quality/report_golden9_round2_combos.json"))
+    ap.add_argument("--report-md", type=Path, default=Path("/app/eval/reports/e2e_quality/report_golden9_round2_combos.md"))
     args = ap.parse_args()
 
     # If already done, stay idle to avoid restart loops (compose restart unless-stopped).
@@ -67,7 +67,7 @@ def main() -> None:
     rc = _run(
         [
             sys.executable,
-            "/app/scripts/run_quality_e2e.py",
+            "/app/pipelines/tools/run_quality_e2e_impl.py",
             "--segments",
             str(args.segments),
             "--experiments",
@@ -86,7 +86,7 @@ def main() -> None:
     _ = _run(
         [
             sys.executable,
-            "/app/scripts/eval_quality_e2e_golden_suite.py",
+            "/app/pipelines/tools/eval_quality_e2e_golden_suite_impl.py",
             "--segments",
             str(args.segments),
             "--baseline",

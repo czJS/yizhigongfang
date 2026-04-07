@@ -1,0 +1,54 @@
+# 明确保留（当前开发主仓不可删）
+#
+# 说明：
+# - 这些条目已被当前开发、回归、评测、打包或运行链路直接使用。
+# - 如需裁剪，必须先改代码/配置/脚本引用，再谈删除。
+
+apps/
+  当前真实应用源码入口：
+  - `apps/desktop/package.json`
+  - `apps/backend/backend/`
+  - `apps/worker_quality/quality_worker_entry.py`
+
+assets/
+  运行期资源和项目资产目录；桌面打包与流水线默认都在用。
+
+automation/
+  当前门禁与自动化脚本目录。
+  证据：`automation/configs/lite_release_gate.json` 启用 compileall、pytest、desktop tests、smoke、golden20。
+
+backend_server.spec
+quality_worker.spec
+  根目录稳定打包入口；内部转发到 `packaging/windows/pyinstaller/*.spec`。
+
+bin/
+  本地工具二进制目录。
+  证据：`apps/desktop/electron-builder.yml` 打包 `../../bin`，`pipelines/lite_pipeline_impl.py` 默认使用 `bin/main`。
+
+configs/
+  当前唯一配置根目录。
+  证据：`core/runtime_paths.py` 明确只认 `configs/`，不回退旧 `config/`。
+
+core/
+  运行时依赖；`docker/docker-compose.yml` 直接挂载。
+
+docker/
+  开发/评测容器编排与镜像定义入口。
+
+packaging/
+  现行打包脚本与 PyInstaller 规范文件目录。
+
+pipelines/
+  当前流水线实现目录。
+  证据：PyInstaller 和 Docker 都直接依赖该目录。
+
+resources/
+  虽然当前内容很少，但属于打包后资源目录约定的一部分，不应现在删除。
+  证据：`apps/backend/backend/app.py` 明确保留对 `resources/...` 路径的运行时探测逻辑。
+
+scripts/
+  开发和回归工具脚本目录，例如 `scripts/run_lite_e2e.py`。
+
+tests/
+  即使当前内容可能较少，也属于开发主链路保留目录。
+  证据：`automation/configs/lite_release_gate.json` 开启 `run_pytest`。

@@ -3,16 +3,16 @@
 """
 Round1.5：可调参数扫参（short3），按“降本”策略自动执行：
 
-- S1：两点快筛（baseline vs A），覆盖 4.5.2 清单里的全部“可三点扫参”项
+- S1：两点快筛（baseline vs A），覆盖实验评测附录里的全部“可三点扫参”项
 - S2：入围 Top-K 做复核（baseline vs P + baseline vs A）
 
-候选点来源（单一事实来源）：docs/质量模式配置项测试流程.md -> 4.5.2
+候选点来源（单一事实来源）：docs/质量模式/实验评测.md -> 4.5.2
 
 输出：
 - outputs/eval/e2e_quality_short3_round15_s1/  (baseline + s1_* runs)
 - outputs/eval/e2e_quality_short3_round15_s2/  (baseline + s2_* runs)
-- reports/e2e_quality/report_short3_round15_s1.{json,md}
-- reports/e2e_quality/report_short3_round15_s2.{json,md}
+- eval/reports/e2e_quality/report_short3_round15_s1.{json,md}
+- eval/reports/e2e_quality/report_short3_round15_s2.{json,md}
 
 备注：
 - baseline 默认只使用 --base-config（不额外开启任何开关）。某些参数在对应功能未开启时会“无效果”，这是预期现象。
@@ -32,7 +32,11 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import yaml
 
-from scripts.eval_quality_e2e_suite import bootstrap_prob_improve, e2e_score_from_quality_report
+repo_root = Path(__file__).resolve().parents[2]
+if str(repo_root) not in sys.path:
+    sys.path.insert(0, str(repo_root))
+
+from pipelines.lib.eval.eval_quality_e2e_suite import bootstrap_prob_improve, e2e_score_from_quality_report
 
 
 def _read_jsonl(p: Path) -> List[Dict[str, Any]]:
@@ -109,7 +113,7 @@ def load_candidates_from_doc(doc_path: Path) -> List[ParamCandidate]:
     txt = doc_path.read_text(encoding="utf-8", errors="ignore")
     m = re.search(r"#### 4\.5\.2[\s\S]*?(?=#### 4\.5\.3)", txt)
     if not m:
-        raise SystemExit("Cannot find section 4.5.2 in docs/质量模式配置项测试流程.md")
+        raise SystemExit("Cannot find section 4.5.2 in docs/质量模式/实验评测.md")
     sec = m.group(0)
 
     stage = "UNKNOWN"
@@ -141,7 +145,7 @@ def load_candidates_from_doc(doc_path: Path) -> List[ParamCandidate]:
         out.append(ParamCandidate(key=key, desc_cn=desc, cli=cli, stage=stage, points=points))
 
     if not out:
-        raise SystemExit("Parsed 0 candidates from doc section 4.5.2 (format mismatch).")
+        raise SystemExit("Parsed 0 candidates from doc section 4.5.2 in docs/质量模式/实验评测.md (format mismatch).")
     return out
 
 
@@ -230,9 +234,9 @@ def write_md(path: Path, *, title: str, baseline: Dict[str, Any], rows: List[Dic
 
 def main() -> None:
     ap = argparse.ArgumentParser(description="Round1.5 parameter sweep (short3) with cost-reduction strategy.")
-    ap.add_argument("--doc", type=Path, default=Path("/app/docs/质量模式配置项测试流程.md"))
-    ap.add_argument("--segments", type=Path, default=Path("/app/eval/e2e_quality/segments_short3.docker.jsonl"))
-    ap.add_argument("--base-config", type=Path, default=Path("/app/config/quality.yaml"))
+    ap.add_argument("--doc", type=Path, default=Path("/app/docs/质量模式/实验评测.md"))
+    ap.add_argument("--segments", type=Path, default=Path("/app/eval/suites/e2e_quality/datasets/segments_short3.docker.jsonl"))
+    ap.add_argument("--base-config", type=Path, default=Path("/app/configs/quality.yaml"))
     ap.add_argument("--bootstrap-iters", type=int, default=2000)
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--top-k", type=int, default=15)
@@ -241,15 +245,15 @@ def main() -> None:
     ap.add_argument("--jobs", type=int, default=1)
     ap.add_argument("--out-root-s1", type=Path, default=Path("/app/outputs/eval/e2e_quality_short3_round15_s1"))
     ap.add_argument("--out-root-s2", type=Path, default=Path("/app/outputs/eval/e2e_quality_short3_round15_s2"))
-    ap.add_argument("--report-json-s1", type=Path, default=Path("/app/reports/e2e_quality/report_short3_round15_s1.json"))
-    ap.add_argument("--report-md-s1", type=Path, default=Path("/app/reports/e2e_quality/report_short3_round15_s1.md"))
-    ap.add_argument("--report-json-s2", type=Path, default=Path("/app/reports/e2e_quality/report_short3_round15_s2.json"))
-    ap.add_argument("--report-md-s2", type=Path, default=Path("/app/reports/e2e_quality/report_short3_round15_s2.md"))
+    ap.add_argument("--report-json-s1", type=Path, default=Path("/app/eval/reports/e2e_quality/report_short3_round15_s1.json"))
+    ap.add_argument("--report-md-s1", type=Path, default=Path("/app/eval/reports/e2e_quality/report_short3_round15_s1.md"))
+    ap.add_argument("--report-json-s2", type=Path, default=Path("/app/eval/reports/e2e_quality/report_short3_round15_s2.json"))
+    ap.add_argument("--report-md-s2", type=Path, default=Path("/app/eval/reports/e2e_quality/report_short3_round15_s2.md"))
     args = ap.parse_args()
 
     cands = load_candidates_from_doc(Path(args.doc))
     # Guardrail: exclude placeholder / non-effective keys so Round1.5 never wastes compute.
-    # NOTE: `diarization` is currently parsed/passed through but not used in `scripts/quality_pipeline.py::run_whisperx`.
+    # NOTE: `diarization` is currently parsed/passed through but not used in `pipelines/quality_pipeline_impl.py` (placeholder).
     # Also exclude dictionary/data-driven knobs (glossary/dict/path driven): they do not have stable, reusable
     # conclusions unless the data file is version-pinned and treated as part of the test input.
     EXCLUDE_KEYS = {
@@ -283,7 +287,7 @@ def main() -> None:
     subprocess.check_call(
         [
             sys.executable,
-            "/app/scripts/run_quality_e2e.py",
+            "/app/pipelines/tools/run_quality_e2e_impl.py",
             "--segments",
             str(Path(args.segments)),
             "--experiments",
@@ -379,7 +383,7 @@ def main() -> None:
     subprocess.check_call(
         [
             sys.executable,
-            "/app/scripts/run_quality_e2e.py",
+            "/app/pipelines/tools/run_quality_e2e_impl.py",
             "--segments",
             str(Path(args.segments)),
             "--experiments",

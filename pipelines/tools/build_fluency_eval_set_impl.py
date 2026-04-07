@@ -183,7 +183,12 @@ def main() -> None:
     ap.add_argument("--n", type=int, default=200, help="Number of cases (default: 200)")
     ap.add_argument("--seed", type=int, default=42, help="Random seed")
     ap.add_argument("--public-only", action="store_true", help="Only use public pairs, ignore golden even if provided")
-    ap.add_argument("--public-pairs", type=Path, default=Path("eval/fluency_en/public/pairs.jsonl"), help="Public pairs.jsonl path")
+    ap.add_argument(
+        "--public-pairs",
+        type=Path,
+        default=Path("eval/suites/fluency_en/public/pairs.jsonl"),
+        help="Public pairs.jsonl path",
+    )
     ap.add_argument("--golden-dir", type=Path, default=None, help="Golden dir containing eng.srt (and optional chs.srt)")
     ap.add_argument("--mix-golden-ratio", type=float, default=0.5, help="When mixing public+golden, golden ratio (0..1)")
     args = ap.parse_args()
@@ -201,7 +206,7 @@ def main() -> None:
 
     if args.public_only:
         if not public_items:
-            raise SystemExit("public-only 但 public-pairs 为空/不存在；请提供 eval/fluency_en/public/pairs.jsonl")
+            raise SystemExit("public-only 但 public-pairs 为空/不存在；请提供 eval/suites/fluency_en/public/pairs.jsonl")
         cases = _stratified_sample(public_items, int(args.n), rng)
     else:
         # prefer golden if exists; otherwise public

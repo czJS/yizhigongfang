@@ -41,13 +41,45 @@ def _load_yaml(p: Path) -> Dict[str, Any]:
     return data if isinstance(data, dict) else {}
 
 
+def _materialize_round1_suite_from_registry(*, suite_id: str, out_root: Path) -> Tuple[Path, Path, str]:
+    """
+    De-duplicate Round1 suite YAMLs:
+    - Keep ONE registry under eval/
+    - Materialize a standard `experiments.yaml` for run_quality_e2e_impl.py per stage.
+
+    Returns: (segments_jsonl_path, experiments_yaml_path, label_cn)
+    """
+    reg_path = Path("/app/eval/suites/e2e_quality/experiments/round1_registry.yaml")
+    reg = _load_yaml(reg_path)
+    suites = reg.get("suites") if isinstance(reg.get("suites"), dict) else {}
+    spec = suites.get(suite_id) if isinstance(suites, dict) else None
+    if not isinstance(spec, dict):
+        raise SystemExit(f"[onejob] round1 registry missing suite: {suite_id} in {reg_path}")
+
+    segments_s = str(spec.get("segments") or "").strip()
+    if not segments_s:
+        raise SystemExit(f"[onejob] suite {suite_id} missing segments in {reg_path}")
+    segments = Path(segments_s)
+    label_cn = str(spec.get("label_cn") or suite_id)
+
+    exp = {
+        "baseline": spec.get("baseline") or {},
+        "experiments": spec.get("experiments") or {},
+        "reuse": spec.get("reuse") or {},
+    }
+    out_root.mkdir(parents=True, exist_ok=True)
+    exp_path = out_root / "_experiments.materialized.yaml"
+    exp_path.write_text(yaml.safe_dump(exp, sort_keys=False, allow_unicode=True), encoding="utf-8")
+    return segments, exp_path, label_cn
+
+
 def _now_iso() -> str:
     return time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime())
 
 
 def _is_done_success(out_dir: Path) -> bool:
     """
-    Keep consistent with scripts/run_quality_e2e.py:
+    Keep consistent with pipelines/tools/run_quality_e2e_impl.py:
     done only when quality_report.json exists, passed=true, and required artifacts not missing.
     """
     rep_p = out_dir / "quality_report.json"
@@ -254,6 +286,7 @@ def _run_cmd_string_with_live_progress(
 class Stage:
     key: str
     label_cn: str
+    suite_id: str
     segments: Path
     experiments: Path
     base_config: Path
@@ -277,7 +310,7 @@ def _eval_stage(stage: Stage, *, bootstrap_iters: int, log_path: Path) -> None:
 
     cmd = [
         sys.executable,
-        "/app/scripts/eval_quality_e2e_golden_suite.py",
+        "/app/pipelines/tools/eval_quality_e2e_golden_suite_impl.py",
         "--segments",
         str(stage.segments),
         "--baseline",
@@ -371,82 +404,90 @@ def main() -> None:
         Stage(
             key="asr_ablation",
             label_cn="ASR 单开关消融（golden9，全流程）",
-            segments=Path("/app/eval/e2e_quality/segments_golden_9.docker.jsonl"),
-            experiments=Path("/app/eval/e2e_quality/experiments.round1_asr.yaml"),
-            base_config=Path("/app/config/quality_asr_ablation.yaml"),
+            suite_id="asr_ablation_golden9",
+            segments=Path("/app/eval/suites/e2e_quality/datasets/segments_golden_9.docker.jsonl"),
+            experiments=Path("/app/eval/suites/e2e_quality/experiments/round1_registry.yaml"),
+            base_config=Path("/app/configs/quality.yaml"),
             out_root=Path("/app/outputs/eval/e2e_quality_golden9_asr_ablation"),
-            report_json=Path("/app/reports/e2e_quality/report_golden9_round1_asr_ablation.json"),
-            report_md=Path("/app/reports/e2e_quality/report_golden9_round1_asr_ablation.md"),
+            report_json=Path("/app/eval/reports/e2e_quality/report_golden9_round1_asr_ablation.json"),
+            report_md=Path("/app/eval/reports/e2e_quality/report_golden9_round1_asr_ablation.md"),
         ),
         Stage(
             key="a_independent",
             label_cn="A类剩余单开关（golden9）",
-            segments=Path("/app/eval/e2e_quality/segments_golden_9.docker.jsonl"),
-            experiments=Path("/app/eval/e2e_quality/experiments.round1_a_independent.yaml"),
-            base_config=Path("/app/config/quality.yaml"),
+            suite_id="a_independent_golden9",
+            segments=Path("/app/eval/suites/e2e_quality/datasets/segments_golden_9.docker.jsonl"),
+            experiments=Path("/app/eval/suites/e2e_quality/experiments/round1_registry.yaml"),
+            base_config=Path("/app/configs/quality.yaml"),
             out_root=Path("/app/outputs/eval/e2e_quality_golden9_round1_a_independent"),
-            report_json=Path("/app/reports/e2e_quality/report_golden9_round1_a_independent.json"),
-            report_md=Path("/app/reports/e2e_quality/report_golden9_round1_a_independent.md"),
+            report_json=Path("/app/eval/reports/e2e_quality/report_golden9_round1_a_independent.json"),
+            report_md=Path("/app/eval/reports/e2e_quality/report_golden9_round1_a_independent.md"),
         ),
         Stage(
             key="qe_suite",
             label_cn="QE 套件（qe_base + 子开关）",
-            segments=Path("/app/eval/e2e_quality/segments_golden_9.docker.jsonl"),
-            experiments=Path("/app/eval/e2e_quality/experiments.round1_qe_suite.yaml"),
-            base_config=Path("/app/config/quality.yaml"),
+            suite_id="qe_suite_golden9",
+            segments=Path("/app/eval/suites/e2e_quality/datasets/segments_golden_9.docker.jsonl"),
+            experiments=Path("/app/eval/suites/e2e_quality/experiments/round1_registry.yaml"),
+            base_config=Path("/app/configs/quality.yaml"),
             out_root=Path("/app/outputs/eval/e2e_quality_golden9_round1_qe_suite"),
-            report_json=Path("/app/reports/e2e_quality/report_golden9_round1_qe_suite.json"),
-            report_md=Path("/app/reports/e2e_quality/report_golden9_round1_qe_suite.md"),
+            report_json=Path("/app/eval/reports/e2e_quality/report_golden9_round1_qe_suite.json"),
+            report_md=Path("/app/eval/reports/e2e_quality/report_golden9_round1_qe_suite.md"),
         ),
         Stage(
             key="tra_suite",
             label_cn="TRA 套件（tra_qe_base + 子开关）",
-            segments=Path("/app/eval/e2e_quality/segments_golden_9.docker.jsonl"),
-            experiments=Path("/app/eval/e2e_quality/experiments.round1_tra_suite.yaml"),
-            base_config=Path("/app/config/quality.yaml"),
+            suite_id="tra_suite_golden9",
+            segments=Path("/app/eval/suites/e2e_quality/datasets/segments_golden_9.docker.jsonl"),
+            experiments=Path("/app/eval/suites/e2e_quality/experiments/round1_registry.yaml"),
+            base_config=Path("/app/configs/quality.yaml"),
             out_root=Path("/app/outputs/eval/e2e_quality_golden9_round1_tra_suite"),
-            report_json=Path("/app/reports/e2e_quality/report_golden9_round1_tra_suite.json"),
-            report_md=Path("/app/reports/e2e_quality/report_golden9_round1_tra_suite.md"),
+            report_json=Path("/app/eval/reports/e2e_quality/report_golden9_round1_tra_suite.json"),
+            report_md=Path("/app/eval/reports/e2e_quality/report_golden9_round1_tra_suite.md"),
         ),
         Stage(
             key="tts_script_suite",
             label_cn="TTS 朗读稿套件（tts_script_base + strict_clean）",
-            segments=Path("/app/eval/e2e_quality/segments_golden_9.docker.jsonl"),
-            experiments=Path("/app/eval/e2e_quality/experiments.round1_tts_script_suite.yaml"),
-            base_config=Path("/app/config/quality.yaml"),
+            suite_id="tts_script_suite_golden9",
+            segments=Path("/app/eval/suites/e2e_quality/datasets/segments_golden_9.docker.jsonl"),
+            experiments=Path("/app/eval/suites/e2e_quality/experiments/round1_registry.yaml"),
+            base_config=Path("/app/configs/quality.yaml"),
             out_root=Path("/app/outputs/eval/e2e_quality_golden9_round1_tts_script_suite"),
-            report_json=Path("/app/reports/e2e_quality/report_golden9_round1_tts_script_suite.json"),
-            report_md=Path("/app/reports/e2e_quality/report_golden9_round1_tts_script_suite.md"),
+            report_json=Path("/app/eval/reports/e2e_quality/report_golden9_round1_tts_script_suite.json"),
+            report_md=Path("/app/eval/reports/e2e_quality/report_golden9_round1_tts_script_suite.md"),
         ),
         Stage(
             key="b_display_short3",
             label_cn="B类：展示字幕（short3）",
-            segments=Path("/app/eval/e2e_quality/segments_short3.docker.jsonl"),
-            experiments=Path("/app/eval/e2e_quality/experiments.round1_display_suite_short3.yaml"),
-            base_config=Path("/app/config/quality.yaml"),
+            suite_id="display_suite_short3",
+            segments=Path("/app/eval/suites/e2e_quality/datasets/segments_short3.docker.jsonl"),
+            experiments=Path("/app/eval/suites/e2e_quality/experiments/round1_registry.yaml"),
+            base_config=Path("/app/configs/quality.yaml"),
             out_root=Path("/app/outputs/eval/e2e_quality_short3_display_suite"),
-            report_json=Path("/app/reports/e2e_quality/report_short3_round1_display_suite.json"),
-            report_md=Path("/app/reports/e2e_quality/report_short3_round1_display_suite.md"),
+            report_json=Path("/app/eval/reports/e2e_quality/report_short3_round1_display_suite.json"),
+            report_md=Path("/app/eval/reports/e2e_quality/report_short3_round1_display_suite.md"),
         ),
         Stage(
             key="b_bgm_short3",
             label_cn="B类：混音/BGM（short3）",
-            segments=Path("/app/eval/e2e_quality/segments_short3.docker.jsonl"),
-            experiments=Path("/app/eval/e2e_quality/experiments.round1_bgm_suite_short3.yaml"),
-            base_config=Path("/app/config/quality.yaml"),
+            suite_id="bgm_suite_short3",
+            segments=Path("/app/eval/suites/e2e_quality/datasets/segments_short3.docker.jsonl"),
+            experiments=Path("/app/eval/suites/e2e_quality/experiments/round1_registry.yaml"),
+            base_config=Path("/app/configs/quality.yaml"),
             out_root=Path("/app/outputs/eval/e2e_quality_short3_bgm_suite"),
-            report_json=Path("/app/reports/e2e_quality/report_short3_round1_bgm_suite.json"),
-            report_md=Path("/app/reports/e2e_quality/report_short3_round1_bgm_suite.md"),
+            report_json=Path("/app/eval/reports/e2e_quality/report_short3_round1_bgm_suite.json"),
+            report_md=Path("/app/eval/reports/e2e_quality/report_short3_round1_bgm_suite.md"),
         ),
         Stage(
             key="b_erase_short3",
             label_cn="B类：硬字幕擦除（short3）",
-            segments=Path("/app/eval/e2e_quality/segments_short3.docker.jsonl"),
-            experiments=Path("/app/eval/e2e_quality/experiments.round1_erase_suite_short3.yaml"),
-            base_config=Path("/app/config/quality.yaml"),
+            suite_id="erase_suite_short3",
+            segments=Path("/app/eval/suites/e2e_quality/datasets/segments_short3.docker.jsonl"),
+            experiments=Path("/app/eval/suites/e2e_quality/experiments/round1_registry.yaml"),
+            base_config=Path("/app/configs/quality.yaml"),
             out_root=Path("/app/outputs/eval/e2e_quality_short3_erase_suite"),
-            report_json=Path("/app/reports/e2e_quality/report_short3_round1_erase_suite.json"),
-            report_md=Path("/app/reports/e2e_quality/report_short3_round1_erase_suite.md"),
+            report_json=Path("/app/eval/reports/e2e_quality/report_short3_round1_erase_suite.json"),
+            report_md=Path("/app/eval/reports/e2e_quality/report_short3_round1_erase_suite.md"),
         ),
     ]
 
@@ -463,6 +504,13 @@ def main() -> None:
     log_path.parent.mkdir(parents=True, exist_ok=True)
 
     for stage in stages:
+        # Materialize a standard experiments.yaml for this suite (removes duplicated YAML files).
+        segments, exp_yaml, suite_label = _materialize_round1_suite_from_registry(suite_id=stage.suite_id, out_root=stage.out_root)
+        stage.segments = segments
+        stage.experiments = exp_yaml
+        if suite_label:
+            stage.label_cn = suite_label
+
         # Wait if we detect an active run writing into the same output root.
         exp_cfg = _load_yaml(stage.experiments)
         base_name = str(((exp_cfg.get("baseline") or {}) or {}).get("name") or "baseline")
@@ -499,7 +547,7 @@ def main() -> None:
         # Run (resume automatically via run_quality_e2e's per-segment done check),
         # and keep progress.json refreshing even when a single segment takes long.
         base_cmd = (
-            f"{sys.executable} /app/scripts/run_quality_e2e.py "
+            f"{sys.executable} /app/pipelines/tools/run_quality_e2e_impl.py "
             f"--segments {stage.segments} "
             f"--experiments {stage.experiments} "
             f"--base-config {stage.base_config} "
@@ -599,7 +647,7 @@ def main() -> None:
                         "stage": "round15_param_sweep",
                         "stage_cn": "Round1.5 扫参（short3，降本：S1→S2）",
                         "status": "starting",
-                        "hint_cn": "开始执行 Round1.5 参数扫参。输出将写入 outputs/eval 与 reports/e2e_quality。",
+                        "hint_cn": "开始执行 Round1.5 参数扫参。输出将写入 outputs/eval 与 eval/reports/e2e_quality。",
                     },
                     ensure_ascii=False,
                     indent=2,
@@ -609,13 +657,13 @@ def main() -> None:
             )
             cmd = [
                 sys.executable,
-                "/app/scripts/run_round15_param_sweep.py",
+                "/app/pipelines/tools/run_round15_param_sweep_impl.py",
                 "--doc",
-                "/app/docs/质量模式配置项测试流程.md",
+                "/app/docs/质量模式/实验评测.md",
                 "--segments",
-                "/app/eval/e2e_quality/segments_short3.docker.jsonl",
+                "/app/eval/suites/e2e_quality/datasets/segments_short3.docker.jsonl",
                 "--base-config",
-                "/app/config/quality.yaml",
+                "/app/configs/quality.yaml",
                 "--bootstrap-iters",
                 str(int(getattr(args, "round15_bootstrap_iters", 2000) or 2000)),
                 "--seed",
@@ -638,7 +686,7 @@ def main() -> None:
                         "stage_cn": "Round1.5 扫参（short3，降本：S1→S2）",
                         "status": "done" if int(rc) == 0 else "done_with_failures",
                         "return_code": int(rc),
-                        "hint_cn": "Round1.5 已结束。请查看 reports/e2e_quality/report_short3_round15_s1.* 与 report_short3_round15_s2.*。",
+                        "hint_cn": "Round1.5 已结束。请查看 eval/reports/e2e_quality/report_short3_round15_s1.* 与 report_short3_round15_s2.*。",
                     },
                     ensure_ascii=False,
                     indent=2,
@@ -663,7 +711,7 @@ def main() -> None:
                 encoding="utf-8",
             )
 
-    final = {"ts": _now_iso(), "status": "all_done", "hint_cn": "全部阶段完成。可查看 reports/e2e_quality 下的报告（round1 + round1.5）。"}
+    final = {"ts": _now_iso(), "status": "all_done", "hint_cn": "全部阶段完成。可查看 eval/reports/e2e_quality 下的报告（round1 + round1.5）。"}
     progress_path.write_text(json.dumps(final, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 

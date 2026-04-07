@@ -1,22 +1,25 @@
 paths:
-  # 显式区分不同模式对应的脚本，避免 lite 模式误用质量脚本
-  script_lite: pipelines/asr_translate_tts.py
+  # 显式区分不同模式对应的脚本，避免 lite 模式误用质量脚本。
+  # 第一期开箱即用口径以 Windows 打包为主，路径命名优先与当前 v2 目录保持一致。
+  script_lite: pipelines/lite_pipeline.py
   script_quality: pipelines/quality_pipeline.py
+  # 可选：为质量主链指定一套独立 Python 运行时（用于隔离 WhisperX / Coqui / llvmlite 等重依赖）。
+  quality_runtime_python: .venv-quality39-arm64/bin/python
   # 兼容旧字段（保留）
   script: pipelines/quality_pipeline.py
-  whisperx_model_dir: assets/models/whisperx
-  tts_home: assets/models/tts
+  whisperx_model_dir: assets/models/quality_asr_whisperx
+  tts_home: assets/models/quality_tts_coqui
   outputs_root: outputs
 
 defaults:
   sample_rate: 16000
-  # 质量模式默认允许联网下载模型（首次较慢，但能自动补齐 WhisperX/HF 缓存）。
-  # 如需严格离线，请在高级设置里开启“离线模式”，并提前把模型缓存放入 assets/models/whisperx 与 assets/models/hf。
-  offline: false
-  # HuggingFace 镜像源（国内网络更稳定）；如你有内网镜像，可改为内网地址
+  # 第一期开箱即用产品口径：Windows 打包态默认按“本地资源完整、运行期不联网补模型”设计。
+  # 开发/评测若需要临时联网补齐，可通过专门的开发配置或环境变量覆盖，而不是依赖产品默认值。
+  offline: true
+  # 仅在显式关闭 offline 时才有意义；保留该地址作为开发/评测兜底。
   hf_endpoint: https://hf-mirror.com
   bilingual_srt: false
-  # P0（质量测评结论）：字幕后处理建议默认开启（见 docs/质量测评纵览.md）
+  # P0（当前产品口径）：字幕后处理建议默认开启（见 docs/质量模式/产品概览.md）
   subtitle_postprocess_enable: true
   subtitle_wrap_enable: true
   subtitle_cps_fix_enable: true
@@ -26,32 +29,29 @@ defaults:
   display_max_chars_per_line: 42
   display_max_lines: 2
   display_merge_enable: true
-  display_merge_max_gap_s: 0.25
-  display_merge_max_chars: 80
+  display_merge_max_gap_s: 0.35
+  display_merge_max_chars: 84
   display_split_enable: true
-  display_split_max_chars: 86
+  display_split_max_chars: 96
   # 朗读稿（eng_tts.srt）：根据测试会带来质量下降，默认关闭
   tts_script_enable: false
-  vad_enable: true
-  vad_threshold: 0.6
-  vad_min_dur: 1.5
   denoise: true
   dedupe: true
-  max_sentence_len: 50
+  max_sentence_len: 45
   allow_gpu: true
   allow_heavy_models: true
   # 英文配音更自然的前提：每条字幕要有足够时长（否则会被迫提速甚至“读不完”）
-  min_sub_duration: 2.2
-  tts_split_len: 80
-  # 允许轻度提速以适配时间轴；过低会导致“读不完被截断”
-  # 适当收紧：减少“长句被明显提速→像换人”的听感问题
-  tts_speed_max: 1.08
+  min_sub_duration: 2.8
+  tts_split_len: 96
+  # 允许适度提速以适配时间轴；产品默认更偏向“绝大部分句子能读完”。
+  # 配合下方 tts_plan + mux 慢放上限一起使用，尽量避免截断。
+  tts_speed_max: 1.22
   # 配音对齐变速方式：atempo=尽量不变声（推荐）；resample=改采样率（更快但更容易“变声”）
   tts_align_mode: atempo
   # 听感优先：启用“每句配音时间轴规划”（自动借空隙、尾部补停顿；最大语速受 tts_speed_max 限制）
   tts_plan_enable: true
-  tts_plan_safety_margin: 0.05
-  tts_plan_min_cap: 1.05
+  tts_plan_safety_margin: 0.02
+  tts_plan_min_cap: 1.00
   # 超预算句子更友好：用本地 LLM 把英文改写到预算内（失败则回退到规则裁剪）
   tts_trim_llm_enable: true
   tts_trim_llm_aggressive: false
@@ -60,7 +60,7 @@ defaults:
   tts_trim_llm_timeout_s: 120
   # 硬字幕烧录样式（默认更“友好”：不遮脸、字号不过大）
   sub_font_name: Arial
-  sub_font_size: 18
+  sub_font_size: 34
   sub_outline: 1
   sub_shadow: 0
   sub_margin_v: 24
@@ -69,19 +69,19 @@ defaults:
   sub_place_enable: false
   sub_place_coord_mode: ratio
   sub_place_x: 0.05
-  sub_place_y: 0.72
+  sub_place_y: 0.745
   sub_place_w: 0.9
-  sub_place_h: 0.1
+  sub_place_h: 0.22
 
   # 成片对齐策略（听感优先）：先整体慢放（更自然）。不再做尾帧定格/补帧兜底（避免时长爆炸）。
   mux_sync_strategy: slow
-  mux_slow_max_ratio: 1.10
+  mux_slow_max_ratio: 1.22
   mux_slow_threshold_s: 0.05
   # 句子单元（通用、最小风险）：默认关闭。开启后在翻译前对相邻短段做保守合并，再按比例拆回时间轴。
   sentence_unit_enable: false
   # 语义切句（仅超长段触发；失败回退）
   meaning_split_enable: true
-  meaning_split_min_chars: 60
+  meaning_split_min_chars: 48
   meaning_split_max_parts: 3
   sentence_unit_min_chars: 12
   sentence_unit_max_chars: 60
@@ -118,47 +118,94 @@ defaults:
   asr_llm_fix_min_chars: 12
   asr_llm_fix_save_debug: true
   asr_llm_fix_model: ""
-  # 质量模式默认使用 Coqui（音质/可选模型更丰富）。如保持全离线，请提前把模型缓存到 assets/models/tts。
+  # 质量模式默认使用 Coqui（音质/可选模型更丰富）。
+  # 第一期开箱即用口径要求模型在打包/导入阶段就准备完成，而不是运行期再下载。
   tts_backend: coqui
   default_mode: quality
 
   # ASR (WhisperX)
-  whisperx_model: medium
+  whisperx_model: mobiuslabsgmbh/faster-whisper-large-v3-turbo
   diarization: false
 
   # MT / LLM
-  llm_endpoint: http://ollama:11434/v1                  # 服务名方式访问 docker-compose 中的 ollama
-  llm_model: qwen2.5:7b                     # Ollama pulled model name (must exist in `ollama list`)
+  # 第一期开箱即用产品口径：质量模式依赖本机本地 Ollama 服务。
+  # 打包态 Electron 也会把 YGF_LLM_ENDPOINT 收敛到这个地址；Docker 开发环境如需改成服务名，应通过环境覆盖。
+  llm_endpoint: http://127.0.0.1:11434/v1
+  llm_model: qwen3.5:9b                     # 以实际已安装模型为准（避免 404 后再 fallback 产生额外耗时）
+  zh_phrase_llm_model: qwen3.5:9b           # 当前产品口径：质量模式整条链路统一使用 9b，不再拆分 4b 支路
   llm_api_key: ""                           # Ollama 默认无需 Key，留空
-  # 单次翻译请求包含的 ASR 段数。越小越稳定（可显著降低 Ollama runner 崩溃概率）。
-  llm_chunk_size: 2
-  # 翻译上下文窗口：为每行翻译提供前/后一行中文上下文（仅用于消歧）。建议默认 1。
-  mt_context_window: 1
+  # 单次翻译请求包含的 ASR 段数：默认稍大以提升吞吐；若你机器压力大可调小。
+  llm_chunk_size: 4
+  # 中文优化主链路：先做短语/span 检测，再做少量受约束局部修复。
+  # `review_enabled=true` 时，无论风险高低，都会在 MT 前暂停进入“审核”。
+  zh_phrase_enable: true
+  zh_post_polish_enable: true
+  zh_phrase_max_spans: 3
+  zh_phrase_max_total: 30
+  # 候选行上限：短视频通常会全量覆盖；长视频只优先检测更值得看的前若干行，控制本地时延。
+  zh_phrase_candidate_max_lines: 12
+  zh_phrase_chunk_lines: 4
+  zh_phrase_idiom_enable: true
+  zh_phrase_idiom_path: assets/zh_phrase/idioms_4char.txt
+  zh_phrase_same_pinyin_path: assets/zh_phrase/pycorrector_same_pinyin.txt
+  zh_phrase_same_stroke_path: assets/zh_phrase/pycorrector_same_stroke.txt
+  zh_repair_lexicon_path: assets/zh_phrase/chinese_xinhua_ci_2to4.txt
+  zh_repair_proper_nouns_path: assets/zh_phrase/thuocl_proper_nouns.txt
+  asr_project_confusions_path: assets/zh_phrase/asr_project_confusions.json
+  zh_phrase_force_one_per_line: false
+  zh_phrase_second_pass_enable: true
+  # 受约束局部修复预算：只修少量高价值行，避免把 P2 重新变成一条重型主链。
+  zh_post_polish_max_lines: 6
+  zh_opt_request_timeout_s: 240
+  zh_opt_request_retries: 2
+  # 开启审核后，一律在 MT 前暂停；阈值仅用于风险统计与界面展示。
+  zh_gate_min_high_risk: 1
+  zh_gate_min_total_suspects: 6
+  zh_gate_on_phrase_error: false
+  # 翻译上下文窗口：默认关闭以提升速度；仅在确实需要消歧时再打开（会强制逐行请求）。
+  mt_context_window: 0
   # 翻译风格（最佳实践：更口语/更地道/更简洁的美式日常对白）
   mt_style: "American English daily dialogue; conversational; concise"
-  # 最佳实践：两阶段提示词（默认短提示更快；仅对“异常行”使用长提示兜底）
+  # 最终主链：默认使用短提示词批量翻译，速度优先；不再做逐行长提示词补跑。
   mt_prompt_mode: short
-  mt_long_fallback_enable: true
+  mt_long_fallback_enable: false
+  # 历史字段保留为显式关闭，避免旧配置栈误触发。
+  mt_long_fallback_max_lines: 0
+  mt_long_fallback_max_ratio: 0.0
   mt_long_examples_enable: false
-  # 字幕精炼（推荐）：每行最多多少英文单词；0=不限制
+  # 提示词 profile（资产化）：位于 assets/prompts/mt/<profile>.(short|long).txt
+  mt_prompt_profile: subtitle_clean_v1
+  # 逐行二段式补跑关闭；质量收口依赖主批次契约 + 收紧后的 bounded self-check。
+  mt_two_pass_disable: true
+  # Best-effort：尝试让服务端减少推理痕迹（若不支持会被忽略）
+  mt_reasoning_effort: none
+  # 软预算：用于提示模型保持字幕简洁，但不再触发二次改写。
   mt_max_words_per_line: 18
-  # 超长行二次压缩（推荐）：当翻译结果超过上限时，再调用本地 LLM 改写到预算内（失败则保留原行，不硬截断）
-  mt_compact_enable: true
+  # 不再走“超预算二次压缩/改写”主链；保留字段仅用于兼容旧配置。
+  mt_compact_enable: false
   mt_compact_aggressive: false
   mt_compact_temperature: 0.1
   mt_compact_max_tokens: 96
-  mt_compact_timeout_s: 120
-  # 超长句压缩：仅在“超长句”触发（中文 >= 60 或 英文 >= 22），目标压缩到 <= 18 词
-  mt_long_zh_chars: 60
-  mt_long_en_words: 22
-  mt_long_target_words: 18
+  mt_compact_timeout_s: 480
+  # 质量模式 MT 主链：只走 Ollama OpenAI 兼容接口；不再保留 native /api/chat 分支。
+  # qwen3.5:9b 在弱机器/冷启动/恢复续跑后首个请求可能显著变慢，因此主 MT 预算进一步上调。
+  mt_request_timeout_s: 1200
+  mt_request_retries: 4
+  # 超长句二次压缩已退出产品主链；0 表示显式关闭旧阈值。
+  mt_long_zh_chars: 0
+  mt_long_en_words: 0
+  mt_long_target_words: 0
+  # 自检只保留极少量高风险行，避免把 self-check 重新变成主路径。
+  llm_selfcheck_max_lines: 2
+  llm_selfcheck_max_ratio: 0.05
 
   # QE（本地 LLM 评审）：默认只评审“可疑行”以降低耗时
   qe_mode: suspect
   qe_max_items: 200
 
   # TTS
-  coqui_model: tts_models/en/ljspeech/tacotron2-DDC
+  # 使用已缓存的 XTTS v2，避免 tacotron2 在线下载导致 TTS 阶段失败
+  coqui_model: tts_models/multilingual/multi-dataset/xtts_v2
   coqui_device: auto
   piper_model: assets/models/en_US-amy-low.onnx
   piper_bin: piper
@@ -168,10 +215,10 @@ presets:
     label: 质量
     hardware_hint: "GPU ≥8GB，建议16GB显存"
     diarization: false
-    whisperx_model: medium
-    llm_model: qwen2.5:7b
-    # 质量预设不再过于保守，避免英文读不完
-    tts_speed_max: 1.10
+    whisperx_model: mobiuslabsgmbh/faster-whisper-large-v3-turbo
+    llm_model: qwen3.5:9b
+    # 质量预设更偏向“读得完”，再由 atempo + mux 慢放共同兜底。
+    tts_speed_max: 1.22
     tts_align_mode: atempo
 
 ui:

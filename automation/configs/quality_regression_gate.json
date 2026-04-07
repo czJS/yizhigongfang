@@ -1,0 +1,10 @@
+{
+  "run_compileall": true,
+  "run_auth_gate": true,
+  "auth_gate_mode": "regression-gate",
+  "run_verify_models": true,
+  "run_review_gate": true,
+  "run_review_run": false,
+  "run_deliverables": false,
+  "run_resume": true
+}

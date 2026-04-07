@@ -5,13 +5,18 @@ import argparse
 import json
 import random
 import re
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-from scripts.asr_normalize import normalize_asr_zh_text
-from scripts.eval_fluency_suite import bleu4, chrf, ref_free_readability_score, repetition_ratio, quality_score
-from scripts.eval_quality_e2e_suite import e2e_score_from_quality_report, bootstrap_prob_improve
+repo_root = Path(__file__).resolve().parents[2]
+if str(repo_root) not in sys.path:
+    sys.path.insert(0, str(repo_root))
+
+from pipelines.lib.text.asr_normalize import normalize_asr_zh_text
+from pipelines.lib.eval.eval_fluency_suite import bleu4, chrf, ref_free_readability_score, repetition_ratio, quality_score
+from pipelines.lib.eval.eval_quality_e2e_suite import e2e_score_from_quality_report, bootstrap_prob_improve
 
 
 def _read_jsonl(p: Path) -> List[Dict[str, Any]]:

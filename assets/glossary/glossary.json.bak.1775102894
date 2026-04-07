@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "updated_at": 1775102894,
+  "items": [
+    {
+      "id": "a0001",
+      "src": "自动化测试-上传",
+      "tgt": "自动化测试-术语",
+      "aliases": [],
+      "forbidden": [],
+      "note": "",
+      "scope": "global"
+    }
+  ]
+}

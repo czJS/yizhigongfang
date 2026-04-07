@@ -19,8 +19,8 @@ _VIDEO_EXTS = {".mp4", ".mkv", ".mov", ".webm"}
 
 
 def _repo_root() -> Path:
-    # scripts/ -> repo root
-    return Path(__file__).resolve().parents[1]
+    # pipelines/tools/ -> repo root
+    return Path(__file__).resolve().parents[2]
 
 
 def _read_text(p: Path) -> str:
@@ -343,13 +343,13 @@ def main() -> None:
     ap.add_argument(
         "--in-dir",
         type=Path,
-        default=Path("eval/e2e_quality/golden_videos"),
+        default=Path("eval/suites/e2e_quality/golden_videos"),
         help="Input dir. Each subdir: {video.mp4, chs.srt, eng.srt}.",
     )
     ap.add_argument(
         "--out-dir",
         type=Path,
-        default=Path("eval/e2e_quality/e2e20_from_videos"),
+        default=Path("eval/suites/e2e_quality/e2e20_from_videos"),
         help="Output dir: clips/, golden_segments/, segments_20.*.jsonl, fluency_cases_20.jsonl",
     )
     ap.add_argument("--n", type=int, default=20, help="Target number of segments to generate")

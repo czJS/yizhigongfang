@@ -1,0 +1,7 @@
+{
+  "run_compileall": true,
+  "run_auth_gate": true,
+  "auth_gate_mode": "dev-smoke",
+  "run_verify_models": true,
+  "run_review_gate": true
+}

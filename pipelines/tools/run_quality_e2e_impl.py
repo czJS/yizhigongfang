@@ -50,26 +50,127 @@ def _cli_key(k: str) -> str:
     return _KEY_MAP.get(k, k)
 
 
+# Keep this tool in sync with `pipelines/quality_pipeline_impl.py` argparse.
+# Only keys in this allowlist are converted into CLI arguments.
+_SUPPORTED_KEYS = {
+    # I/O and review workflow
+    "glossary",
+    "en_replace_dict",
+    "chs_override_srt",
+    "eng_override_srt",
+    "resume_from",
+    "skip_tts",
+    # ASR / segmentation
+    "whisperx_model",
+    "whisperx_model_dir",
+    "diarization",
+    "vad_enable",
+    "vad_threshold",
+    "vad_min_dur",
+    "max_sentence_len",
+    "min_sub_duration",
+    "sample_rate",
+    "denoise",
+    "denoise_model",
+    # MT / LLM
+    "llm_endpoint",
+    "llm_model",
+    "llm_api_key",
+    "llm_chunk_size",
+    "mt_context_window",
+    "mt_style",
+    "mt_max_words_per_line",
+    "mt_prompt_mode",
+    "mt_long_fallback_enable",
+    "mt_long_examples_enable",
+    "mt_compact_enable",
+    "mt_compact_aggressive",
+    "mt_compact_temperature",
+    "mt_compact_max_tokens",
+    "mt_compact_timeout_s",
+    "mt_long_zh_chars",
+    "mt_long_en_words",
+    "mt_long_target_words",
+    # Text normalize
+    "asr_normalize_enable",
+    "asr_normalize_dict",
+    # Subtitle post-process / display subtitles
+    "subtitle_postprocess_enable",
+    "subtitle_wrap_enable",
+    "subtitle_wrap_max_lines",
+    "subtitle_max_chars_per_line",
+    "subtitle_max_cps",
+    "display_srt_enable",
+    "display_use_for_embed",
+    "display_max_chars_per_line",
+    "display_max_lines",
+    "display_merge_enable",
+    "display_merge_max_gap_s",
+    "display_merge_max_chars",
+    "display_split_enable",
+    "display_split_max_chars",
+    # Subtitle erase (feature)
+    "erase_subtitle_enable",
+    "erase_subtitle_method",
+    "erase_subtitle_coord_mode",
+    "erase_subtitle_x",
+    "erase_subtitle_y",
+    "erase_subtitle_w",
+    "erase_subtitle_h",
+    "erase_subtitle_blur_radius",
+    # TTS
+    "tts_backend",
+    "piper_model",
+    "piper_bin",
+    "coqui_model",
+    "coqui_device",
+    "tts_split_len",
+    "tts_speed_max",
+    "tts_align_mode",
+    "tts_fit_enable",
+    "tts_fit_wps",
+    "tts_fit_min_words",
+    "tts_fit_save_raw",
+    "tts_plan_enable",
+    "tts_plan_safety_margin",
+    "tts_plan_min_cap",
+    # Hard-sub styles and placement
+    "sub_font_name",
+    "sub_font_size",
+    "sub_outline",
+    "sub_shadow",
+    "sub_margin_v",
+    "sub_alignment",
+    "sub_place_enable",
+    "sub_place_coord_mode",
+    "sub_place_x",
+    "sub_place_y",
+    "sub_place_w",
+    "sub_place_h",
+    # Mux sync
+    "mux_sync_strategy",
+    "mux_slow_max_ratio",
+    "mux_slow_threshold_s",
+}
+
+
 def _overrides_to_args(overrides: Dict[str, Any]) -> List[str]:
     """
     Convert config-like overrides into quality_pipeline CLI args.
     Convention:
     - bool True  -> add flag --kebab
-    - bool False -> add flag --no-kebab (requires quality_pipeline to support --no-xxx)
+    - bool False -> omit flag (use effective config merge to disable)
     - number/str -> --kebab value
     - list[str]  -> comma-join (for sentence_unit_break_words etc.)
     """
     args: List[str] = []
     for k, v in (overrides or {}).items():
+        if str(k) not in _SUPPORTED_KEYS:
+            continue
         key = "--" + _dash(_cli_key(str(k)))
         if isinstance(v, bool):
             if v is True:
                 args.append(key)
-                continue
-            # explicit False: emit --no-xxx so experiments can disable default-on switches
-            # (later args win over base_args, so this cleanly overrides injected defaults).
-            if key.startswith("--"):
-                args.append("--no-" + key[2:])
             continue
         if isinstance(v, (int, float, str)):
             args.extend([key, str(v)])
@@ -133,7 +234,7 @@ def _run_one(
     max_runtime_s: int = 0,
 ) -> Tuple[int, float, str]:
     """
-    Run scripts/quality_pipeline.py for one segment.
+    Run pipelines/quality_pipeline.py for one segment.
     """
     t0 = time.time()
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -142,152 +243,21 @@ def _run_one(
     defaults = (base_cfg.get("defaults") or {}) if isinstance(base_cfg.get("defaults"), dict) else {}
     paths = (base_cfg.get("paths") or {}) if isinstance(base_cfg.get("paths"), dict) else {}
 
-    # Map config keys to CLI args as best-effort; we keep it minimal and rely on overrides for experiments.
-    base_args: List[str] = []
-    for k in [
-        "vad_enable",
-        "vad_threshold",
-        "vad_min_dur",
-        "denoise",
-        "tts_backend",
-        "sample_rate",
-        "max_sentence_len",
-        "min_sub_duration",
-        "tts_split_len",
-        "tts_speed_max",
-        "llm_endpoint",
-        "llm_model",
-        "llm_api_key",
-        "llm_chunk_size",
-        "whisperx_model",
-        "subtitle_postprocess_enable",
-        "subtitle_wrap_enable",
-        "subtitle_wrap_max_lines",
-        "subtitle_max_chars_per_line",
-        "subtitle_cps_fix_enable",
-        "subtitle_max_cps",
-        "subtitle_cps_safety_gap",
-        "tts_script_enable",
-        "tts_script_strict_clean_enable",
-        "display_srt_enable",
-        "display_use_for_embed",
-        "display_max_chars_per_line",
-        "display_max_lines",
-        "display_merge_enable",
-        "display_merge_max_gap_s",
-        "display_merge_max_chars",
-        "display_split_enable",
-        "display_split_max_chars",
-        "sentence_unit_enable",
-        "sentence_unit_min_chars",
-        "sentence_unit_max_chars",
-        "sentence_unit_max_segs",
-        "sentence_unit_max_gap_s",
-        "sentence_unit_boundary_punct",
-        "sentence_unit_break_words",
-        "entity_protect_enable",
-        "entity_protect_min_len",
-        "entity_protect_max_len",
-        "entity_protect_min_freq",
-        "entity_protect_max_items",
-        "meaning_split_enable",
-        "meaning_split_min_chars",
-        "meaning_split_max_parts",
-        "erase_subtitle_enable",
-        "erase_subtitle_method",
-        "erase_subtitle_coord_mode",
-        "erase_subtitle_x",
-        "erase_subtitle_y",
-        "erase_subtitle_w",
-        "erase_subtitle_h",
-        "erase_subtitle_blur_radius",
-        "tts_fit_enable",
-        "tts_fit_wps",
-        "tts_fit_min_words",
-        "tts_plan_enable",
-        "tts_plan_safety_margin",
-        "tts_plan_min_cap",
-        "bgm_mix_enable",
-        "bgm_separate_method",
-        "bgm_duck_enable",
-        "bgm_gain_db",
-        "tts_gain_db",
-        "bgm_loudnorm_enable",
-        "bgm_sample_rate",
-        "tra_enable",
-        "tra_auto_enable",
-        "tra_json_enable",
-        "qe_enable",
-        "qe_threshold",
-        "qe_mode",
-        "qe_max_items",
-        "qe_save_report",
-        "qe_time_budget_s",
-        "qe_embed_enable",
-        "qe_embed_model",
-        "qe_embed_threshold",
-        "qe_embed_max_segs",
-        "qe_backtranslate_enable",
-        "qe_backtranslate_model",
-        "qe_backtranslate_max_items",
-        "qe_backtranslate_overlap_threshold",
-        "glossary_prompt_enable",
-        "glossary_placeholder_enable",
-        "glossary_placeholder_max",
-        "mt_context_window",
-        "mt_topic",
-        "mt_topic_auto_enable",
-        "mt_topic_auto_max_segs",
-        "asr_preprocess_enable",
-        "asr_preprocess_loudnorm",
-        "asr_preprocess_highpass",
-        "asr_preprocess_lowpass",
-        "asr_preprocess_ffmpeg_extra",
-        "asr_merge_short_enable",
-        "asr_merge_min_dur_s",
-        "asr_merge_min_chars",
-        "asr_merge_max_gap_s",
-        "asr_merge_max_group_chars",
-        "asr_llm_fix_enable",
-        "asr_llm_fix_mode",
-        "asr_llm_fix_max_items",
-        "asr_llm_fix_min_chars",
-        "asr_llm_fix_model",
-        "asr_normalize_enable",
-        "asr_normalize_dict",
-    ]:
-        if k not in defaults:
-            continue
-        base_args.extend(_overrides_to_args({k: defaults.get(k)}))
-
-    # paths
-    if "whisperx_model_dir" in paths:
-        base_args.extend(["--whisperx-model-dir", str(paths["whisperx_model_dir"])])
-
-    # LLM endpoint/model naming differences
-    if "llm_endpoint" in defaults:
-        base_args.extend(["--llm-endpoint", str(defaults.get("llm_endpoint") or "")])
-    if "llm_model" in defaults:
-        base_args.extend(["--llm-model", str(defaults.get("llm_model") or "")])
-    if "llm_api_key" in defaults:
-        base_args.extend(["--llm-api-key", str(defaults.get("llm_api_key") or "")])
-    if "llm_chunk_size" in defaults:
-        base_args.extend(["--llm-chunk-size", str(defaults.get("llm_chunk_size") or 2)])
-
-    # WhisperX model option
-    if "whisperx_model" in defaults:
-        base_args.extend(["--whisperx-model", str(defaults.get("whisperx_model") or "medium")])
-
-    # Break words list -> comma string
-    if isinstance(defaults.get("sentence_unit_break_words"), list):
-        base_args.extend(["--sentence-unit-break-words", ",".join(str(x) for x in defaults.get("sentence_unit_break_words") or [])])
-
-    # Apply experiment overrides
-    exp_args = _overrides_to_args(overrides or {})
+    # Merge defaults + overrides into one "effective config", then convert once.
+    # This allows bool False to disable a default-on flag without relying on `--no-xxx` arguments.
+    effective: Dict[str, Any] = dict(defaults)
+    effective.update(dict(overrides or {}))
+    # paths -> cli (only when not already specified by overrides/defaults)
+    if "whisperx_model_dir" in paths and "whisperx_model_dir" not in effective:
+        effective["whisperx_model_dir"] = paths.get("whisperx_model_dir")
+    if "glossary" in paths and "glossary" not in effective:
+        effective["glossary"] = paths.get("glossary")
+    base_args = _overrides_to_args(effective)
+    exp_args: List[str] = []
 
     cmd = [
         sys.executable,
-        str(Path(__file__).resolve().parents[0] / "quality_pipeline.py"),
+        str(Path(__file__).resolve().parents[1] / "quality_pipeline.py"),
         "--video",
         str(video),
         "--output-dir",

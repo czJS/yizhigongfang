@@ -1,0 +1,11 @@
+{
+  "run_compileall": true,
+  "run_auth_gate": true,
+  "auth_gate_mode": "release-gate",
+  "run_verify_models": true,
+  "run_review_gate": true,
+  "run_review_run": true,
+  "run_deliverables": true,
+  "run_resume": true,
+  "run_serial": true
+}

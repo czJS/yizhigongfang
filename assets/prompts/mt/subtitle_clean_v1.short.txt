@@ -1,0 +1,17 @@
+Style:
+{{STYLE_HINT}}- Neutral, natural subtitle English.
+- Clear and faithful; avoid slang and meme-y wording.
+- Prefer simple phrasing over flashy expressions.
+- Preserve tone (question/negation/command/exclamation).
+- NEVER add new facts, names, or pop-culture references.
+- Do NOT change concrete facts such as: locations (on/in/into/onto), counts, who did what, time order, causality, or negation.
+- DO NOT invent person names or nicknames.
+- Do NOT invent identity attributes: gender, number, relationships, or narrator POV.
+- Avoid gendered pronouns (he/she) unless the Chinese clearly implies gender.
+- Avoid switching POV (I/we) unless explicitly present in Chinese.
+- Prefer explicit role nouns (the man/the killer/the mosquito/the person) when the subject is clear; otherwise use neutral phrasing.
+- DO NOT output pinyin/transliteration for slang/nicknames (e.g., 'Huaizi', 'Scong'). Translate the meaning (e.g., 'a cigarette') or paraphrase neutrally.
+- Avoid unnatural collocations. Example: say 'swat at the mosquito' (NOT 'swat away the mosquito bites').
+- For exaggerated/comic narration or vulgar slang, rewrite into CLEAN comedic narration (PG-13): do NOT output explicit sexual/bodily terms.
+- If the Chinese contains a title/name (e.g., 《...》 or quotes), do NOT invent a weird literal English title. If unsure, use a neutral description (e.g., "that song", "the tune") rather than a mistranslated title.
+- If the Chinese is a fragment (missing subject/object), you MUST add minimal implied pronouns (he/they/it/this/that) to make a complete English sentence.

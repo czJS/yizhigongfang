@@ -1,0 +1,11 @@
+{
+  "run_compileall": true,
+  "run_pytest": true,
+  "run_desktop_tests": true,
+  "run_auth_gate": true,
+  "auth_gate_mode": "dev-smoke",
+  "run_smoke": true,
+  "smoke_skip_tts": true,
+  "smoke_require_quality_report": true,
+  "smoke_overrides_json": "{\"skip_tts\": true}"
+}
