@@ -2,16 +2,24 @@
 .idea/
 .vscode/
 .venv/
+.venv-*/
 .venv_fluency/
 .venv_*/
+**/.venv*/
 __pycache__/
 **/__pycache__/
 *.pyc
-
-# Node / frontend
-frontend/node_modules/
-frontend/dist/
-frontend/dist_electron/
+.pycache/
+.pytest_cache/
+**/.pytest_cache/
+.mypy_cache/
+**/.mypy_cache/
+.ruff_cache/
+**/.ruff_cache/
+htmlcov/
+.coverage
+.coverage.*
+coverage/
 
 # Node / desktop (v2)
 apps/desktop/node_modules/
@@ -20,18 +28,24 @@ apps/desktop/dist_electron/
 apps/desktop/.vite/
 apps/desktop/.cache/
 apps/desktop/out/
+node_modules/
 
 # Outputs and logs
 outputs/
 *.log
+tmp/
 
 # Large models / caches
 assets/models/
-assets/models/whisperx/
-assets/models/tts/
-assets/models/mt/
+assets/models/quality_asr_whisperx/
+assets/models/quality_tts_coqui/
+assets/models/lite_mt_marian_opus_mt_zh_en/
+assets/models/common_cache_hf/
+assets/models/build_incoming/
 backend/models--*/
 backend/whisper*/
+apps/backend/backend/models--*/
+apps/backend/backend/whisper*/
 assets/models/**/snapshots/
 
 # LLM local models
@@ -41,7 +55,6 @@ ollama_models/
 VideoLingo/
 
 # Large binaries that should not be in git
-scripts/model.bin
 app_from_image/bin/ffmpeg
 
 # Local build artifacts
@@ -51,10 +64,23 @@ dist/
 # Local tool binaries (package scripts can copy from elsewhere)
 bin/*.exe
 
+# Docker / 本地密钥（勿提交）
+.env
+docker/.env
+apps/auth_service/.env.local
+
 # Local test media
 test_*.mp4
 *_15s.mp4
 
 # Local packs (very large)
 pack/
+
+# Automation test generated reports (keep README)
+automation/reports/*
+!automation/reports/README.md
+
+# Local test media (downloaded, not committed)
+test_media/*
+!test_media/README.md
 
