@@ -1,5 +1,5 @@
-appId: com.local.dubbing
-productName: YizhiStudio
+appId: com.miaoyichuhai.desktop
+productName: 秒译出海
 icon: build/icon.ico
 #
 # NSIS 安装器在包含大体积资源（如 ollama pack / 模型等）时，
@@ -17,9 +17,12 @@ files:
   # Prefer v2 layout
   - ../../configs/**
   - ../../pipelines/**
-  # Legacy (transition)
-  - ../../config/**
-  - ../../scripts/**
+  # quality-only packaging: exclude non-quality mode entrypoints/configs
+  - "!../../configs/online.yaml"
+  - "!../../pipelines/online_pipeline.py"
+  - "!../../pipelines/online_pipeline_impl.py"
+  - "!../../pipelines/lite_pipeline.py"
+  - "!../../pipelines/lite_pipeline_impl.py"
 extraResources:
   - from: ../../bin
     to: bin
@@ -30,13 +33,17 @@ extraResources:
   # backend_server.exe needs configs/pipelines on disk (not inside app.asar)
   - from: ../../configs
     to: configs
+    filter:
+      - "**/*"
+      - "!online.yaml"
   - from: ../../pipelines
     to: pipelines
-  # Legacy (transition): keep old locations for wrappers / rollback
-  - from: ../../config
-    to: config
-  - from: ../../scripts
-    to: scripts
+    filter:
+      - "**/*"
+      - "!online_pipeline.py"
+      - "!online_pipeline_impl.py"
+      - "!lite_pipeline.py"
+      - "!lite_pipeline_impl.py"
   - from: ../../assets
     to: assets
     filter:
@@ -52,7 +59,7 @@ win:
   target:
     - nsis
   # Use timestamp to avoid "output file is locked" when rebuilding while an older installer is open.
-  # BUILD_TS is set by scripts/build_installer.ps1.
+  # BUILD_TS is set by packaging/windows/scripts/build_installer.ps1.
   artifactName: "${productName}-${version}-win-${env.BUILD_TS}.${ext}"
   signAndEditExecutable: false
   verifyUpdateCodeSignature: false
@@ -62,6 +69,7 @@ nsis:
   perMachine: false
   allowElevation: false
   allowToChangeInstallationDirectory: true
+  # Kept in-repo so clean clones/release machines are reproducible.
   include: build/installer.nsh
 
 

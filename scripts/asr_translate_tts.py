@@ -667,48 +667,19 @@ def run_cmd(
     input_text: Optional[str] = None,
 ) -> subprocess.CompletedProcess:
     """运行子进程命令，失败时抛出详细日志，便于排查。"""
-    # Use Windows-friendly quoting for human-readable error messages.
-    try:
-        pretty = subprocess.list2cmdline(cmd) if os.name == "nt" else " ".join(cmd)
-    except Exception:
-        pretty = " ".join(str(x) for x in cmd)
     proc = subprocess.run(
         cmd,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
-        errors="replace",
         env=env,
         input=input_text,
     )
     if check and proc.returncode != 0:
         raise RuntimeError(
-            f"Command failed (rc={proc.returncode}): {pretty}\nstdout:\n{proc.stdout}\nstderr:\n{proc.stderr}"
+            f"Command failed: {' '.join(cmd)}\nstdout:\n{proc.stdout}\nstderr:\n{proc.stderr}"
         )
     return proc
-
-
-def _ffprobe_display_wh(p: Path) -> Optional[tuple[int, int]]:
-    """
-    Return display width/height with rotation handled (ffprobe rotation tag or displaymatrix).
-    This keeps PlayRes consistent with what players actually render, ensuring WYSIWYG for subtitle placement.
-    """
-    try:
-        from pipelines.lib.media_probe import ffprobe_display_wh
-
-        return ffprobe_display_wh(p)
-    except Exception:
-        return None
-
-
-def _probe_duration_s(p: Path) -> Optional[float]:
-    """Best-effort duration probe: prefer ffprobe, fall back to parsing ffmpeg output."""
-    try:
-        from pipelines.lib.media_probe import probe_duration_s
-
-        return probe_duration_s(p)
-    except Exception:
-        return None
 
 
 def ensure_tool(name: str) -> None:
@@ -1006,8 +977,6 @@ def extract_audio(
     denoise_model: Optional[Path] = None,
 ) -> None:
     # 统一转单声道、16k 采样，提升 ASR 稳定性；可选简单去噪
-    if not video_path.exists():
-        raise FileNotFoundError(f"Input video not found: {video_path}")
     audio_path.parent.mkdir(parents=True, exist_ok=True)
     cmd = [
         "ffmpeg",
@@ -1517,8 +1486,7 @@ def stretch_or_pad(
     audio: AudioSegment,
     target_ms: float,
     allow_speed_change: bool = True,
-    max_speed: float = 1.08,
-    align_mode: str = "resample",
+    max_speed: float = 1.1,
 ) -> AudioSegment:
     """
     若语音短于目标时长则补静音；超长则可微调倍速或截断，尽量贴合字幕时间。
@@ -1532,53 +1500,7 @@ def stretch_or_pad(
     if not allow_speed_change or target_ms <= 0:
         return audio[: int(max(target_ms, 0))]
     speed = min(current / max(target_ms, 1), max_speed)
-    mode = (align_mode or "resample").strip().lower()
-
-    # Prefer pitch-preserving time-stretch for better "same speaker" perception.
-    if mode == "atempo":
-        try:
-            import tempfile
-
-            def _atempo_chain(s: float) -> str:
-                # ffmpeg atempo supports 0.5..2.0 per filter; chain if needed (we normally don't).
-                if s <= 0:
-                    return "atempo=1.0"
-                parts = []
-                x = float(s)
-                while x > 2.0:
-                    parts.append("atempo=2.0")
-                    x /= 2.0
-                while x < 0.5:
-                    parts.append("atempo=0.5")
-                    x /= 0.5
-                parts.append(f"atempo={x:.6f}")
-                return ",".join(parts)
-
-            with tempfile.TemporaryDirectory(prefix="tts_atempo_") as td:
-                tin = Path(td) / "in.wav"
-                tout = Path(td) / "out.wav"
-                audio.export(tin, format="wav")
-                run_cmd(
-                    [
-                        "ffmpeg",
-                        "-y",
-                        "-i",
-                        str(tin),
-                        "-filter:a",
-                        _atempo_chain(speed),
-                        str(tout),
-                    ],
-                    check=True,
-                )
-                sped = AudioSegment.from_file(tout)
-                if len(sped) > target_ms:
-                    sped = sped[: int(target_ms)]
-                return sped
-        except Exception:
-            # fallback to resample below
-            pass
-
-    # Fallback: Increase speed by changing frame rate (faster, but pitch rises)
+    # Increase speed to reduce duration (pitch will rise slightly)
     sped = audio._spawn(audio.raw_data, overrides={"frame_rate": int(audio.frame_rate * speed)})
     sped = sped.set_frame_rate(audio.frame_rate)
     if len(sped) > target_ms:
@@ -1593,8 +1515,7 @@ def synthesize_segments(
     piper_bin: str = "piper",
     allow_speed_change: bool = True,
     split_len: int = 80,
-    max_speed: float = 1.08,
-    align_mode: str = "resample",
+    max_speed: float = 1.1,
     pad_to_ms: Optional[float] = None,
 ) -> AudioSegment:
     # 循环合成每一段英文音频 -> 长度校正 -> 按时间轴拼接（保留开头/段间静音，避免压缩时间线）
@@ -1646,20 +1567,13 @@ def synthesize_segments(
                 target_ms=part_ms,
                 allow_speed_change=allow_speed_change,
                 max_speed=max_speed,
-                align_mode=align_mode,
             )
             part_chunks.append(wav_aligned)
 
         if not part_chunks:
             raise ValueError("No audio chunks synthesized.")
         combined_part = sum(part_chunks[1:], part_chunks[0])
-        combined_part = stretch_or_pad(
-            combined_part,
-            target_ms=target_ms,
-            allow_speed_change=allow_speed_change,
-            max_speed=max_speed,
-            align_mode=align_mode,
-        )
+        combined_part = stretch_or_pad(combined_part, target_ms=target_ms, allow_speed_change=allow_speed_change, max_speed=max_speed)
         audio_chunks.append(combined_part)
         cursor_ms = max(cursor_ms, seg.end * 1000.0)
     if not audio_chunks:
@@ -1687,8 +1601,7 @@ def synthesize_segments_coqui(
     speaker: Optional[str] = None,
     language: Optional[str] = None,
     split_len: int = 80,
-    max_speed: float = 1.08,
-    align_mode: str = "resample",
+    max_speed: float = 1.1,
     pad_to_ms: Optional[float] = None,
 ) -> AudioSegment:
     """
@@ -1775,12 +1688,12 @@ def synthesize_segments_coqui(
                 language=language,
             )
             wav = AudioSegment.from_file(seg_wav)
-            wav_aligned = stretch_or_pad(wav, target_ms=part_ms, allow_speed_change=True, max_speed=max_speed, align_mode=align_mode)
+            wav_aligned = stretch_or_pad(wav, target_ms=part_ms, allow_speed_change=True, max_speed=max_speed)
             part_chunks.append(wav_aligned)
         if not part_chunks:
             raise ValueError("No audio chunks synthesized for segment.")
         combined_part = sum(part_chunks[1:], part_chunks[0])
-        combined_part = stretch_or_pad(combined_part, target_ms=target_ms, allow_speed_change=True, max_speed=max_speed, align_mode=align_mode)
+        combined_part = stretch_or_pad(combined_part, target_ms=target_ms, allow_speed_change=True, max_speed=max_speed)
         combined_part = combined_part.set_frame_rate(sample_rate)
         audio_chunks.append(combined_part)
         cursor_ms = max(cursor_ms, seg.end * 1000.0)
@@ -1795,65 +1708,6 @@ def synthesize_segments_coqui(
 def build_coqui_tts(model_name: str, device: str = "auto"):
     """构建 Coqui TTS 接口，按需启用 GPU。"""
     try:
-        # In PyInstaller(onefile), Python sources are packed into an archive and TorchScript can fail
-        # when it tries to inspect source code (inspect.getsourcelines) for scripting.
-        # Disable JIT to avoid:
-        #   OSError: TorchScript requires source access... make sure original .py files are available.
-        os.environ.setdefault("PYTORCH_JIT", "0")
-        os.environ.setdefault("TORCH_JIT", "0")
-        try:
-            import torch  # type: ignore
-
-            try:
-                torch.jit._state.disable()  # type: ignore[attr-defined]
-            except Exception:
-                pass
-        except Exception:
-            pass
-
-        # In some PyInstaller(onefile) builds, `gruut` is present but its `VERSION` data file
-        # is missing from the bundle, causing:
-        #   FileNotFoundError: ...\_MEIxxxx\gruut\VERSION
-        # Create it proactively so Coqui TTS import can proceed.
-        try:
-            import sys
-
-            mei = getattr(sys, "_MEIPASS", None)
-            if mei:
-                vp = Path(mei) / "gruut" / "VERSION"
-                if not vp.exists():
-                    vp.parent.mkdir(parents=True, exist_ok=True)
-                    vp.write_text("0.0.0", encoding="utf-8")
-        except Exception:
-            pass
-
-        # Coqui's text normalization stack pulls in `inflect`, which (newer versions) uses `typeguard`
-        # decorators that instrument functions by calling `inspect.getsource()`. In PyInstaller(onefile),
-        # source code may be unavailable, causing:
-        #   OSError: could not get source code
-        # Workaround: monkey-patch typeguard's decorator to a no-op before importing TTS/inflect.
-        try:
-            def _no_typechecked(*args, **kwargs):  # type: ignore[no-untyped-def]
-                # supports both @typechecked and @typechecked(...)
-                if args and callable(args[0]) and len(args) == 1 and not kwargs:
-                    return args[0]
-                def _deco(fn):  # type: ignore[no-untyped-def]
-                    return fn
-                return _deco
-
-            try:
-                import typeguard  # type: ignore
-                setattr(typeguard, "typechecked", _no_typechecked)
-            except Exception:
-                pass
-            try:
-                import typeguard._decorators as _tg_decorators  # type: ignore
-                setattr(_tg_decorators, "typechecked", _no_typechecked)
-            except Exception:
-                pass
-        except Exception:
-            pass
-
         from TTS.api import TTS as CoquiTTS  # type: ignore
     except ImportError as exc:  # pragma: no cover - runtime guard
         raise SystemExit("Coqui TTS not installed. Please `pip install TTS`.") from exc
@@ -1870,84 +1724,45 @@ def build_coqui_tts(model_name: str, device: str = "auto"):
     return CoquiTTS(model_name=model_name, progress_bar=False, gpu=use_gpu)
 
 
-def mux_video_audio(
-    video_path: Path,
-    audio_path: Path,
-    output_path: Path,
-    *,
-    sync_strategy: str = "slow",
-    slow_max_ratio: float = 1.10,
-    threshold_s: float = 0.05,
-    tail_pad_max_s: float = 0.80,
-    erase_subtitle_enable: bool = False,
-    erase_subtitle_method: str = "delogo",
-    erase_subtitle_coord_mode: str = "ratio",
-    erase_subtitle_x: float = 0.0,
-    erase_subtitle_y: float = 0.78,
-    erase_subtitle_w: float = 1.0,
-    erase_subtitle_h: float = 0.22,
-    erase_subtitle_blur_radius: int = 12,
-) -> None:
-    # v2: delegate to shared library
-    from pipelines.lib.ffmpeg_mux import mux_video_audio as _mux
-
-    return _mux(
-        video_path,
-        audio_path,
-        output_path,
-        sync_strategy=sync_strategy,
-        slow_max_ratio=slow_max_ratio,
-        threshold_s=threshold_s,
-        tail_pad_max_s=tail_pad_max_s,
-        erase_subtitle_enable=erase_subtitle_enable,
-        erase_subtitle_method=erase_subtitle_method,
-        erase_subtitle_coord_mode=erase_subtitle_coord_mode,
-        erase_subtitle_x=erase_subtitle_x,
-        erase_subtitle_y=erase_subtitle_y,
-        erase_subtitle_w=erase_subtitle_w,
-        erase_subtitle_h=erase_subtitle_h,
-        erase_subtitle_blur_radius=erase_subtitle_blur_radius,
-    )
+def mux_video_audio(video_path: Path, audio_path: Path, output_path: Path) -> None:
+    # 使用 ffmpeg 将新音频与原视频画面复合，视频流直接拷贝
+    cmd = [
+        "ffmpeg",
+        "-y",
+        "-i",
+        str(video_path),
+        "-i",
+        str(audio_path),
+        "-map",
+        "0:v",
+        "-map",
+        "1:a",
+        "-c:v",
+        "copy",
+        "-c:a",
+        "aac",
+        "-shortest",
+        str(output_path),
+    ]
+    run_cmd(cmd)
 
 
-def burn_subtitles(
-    video_path: Path,
-    srt_path: Path,
-    output_path: Path,
-    *,
-    font_name: str = "Arial",
-    font_size: int = 18,
-    outline: int = 1,
-    shadow: int = 0,
-    margin_v: int = 24,
-    alignment: int = 2,
-    place_enable: bool = False,
-    place_coord_mode: str = "ratio",
-    place_x: float = 0.0,
-    place_y: float = 0.78,
-    place_w: float = 1.0,
-    place_h: float = 0.22,
-) -> None:
-    # v2: delegate to shared library
-    from pipelines.lib.subtitles_burn import burn_subtitles as _burn
-
-    return _burn(
-        video_path,
-        srt_path,
-        output_path,
-        font_name=font_name,
-        font_size=font_size,
-        outline=outline,
-        shadow=shadow,
-        margin_v=margin_v,
-        alignment=alignment,
-        place_enable=place_enable,
-        place_coord_mode=place_coord_mode,
-        place_x=place_x,
-        place_y=place_y,
-        place_w=place_w,
-        place_h=place_h,
-    )
+def burn_subtitles(video_path: Path, srt_path: Path, output_path: Path) -> None:
+    # 将 SRT 以 mov_text 形式封装到 mp4 容器，避免重编码
+    cmd = [
+        "ffmpeg",
+        "-y",
+        "-i",
+        str(video_path),
+        "-i",
+        str(srt_path),
+        "-c",
+        "copy",
+        "-c:s",
+        "mov_text",
+        str(output_path),
+    ]
+    run_cmd(cmd)
 
 
 def _read_srt_texts(path: Path) -> List[str]:
@@ -2022,7 +1837,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--piper-model", type=Path, default=Path("assets/models/en_US-amy-low.onnx"), help="Piper ONNX model path")
     p.add_argument("--piper-bin", default="piper", help="Path to piper executable")
     p.add_argument("--tts-backend", choices=["piper", "coqui"], default="piper", help="TTS backend (default piper)")
-    p.add_argument("--coqui-model", default="tts_models/en/ljspeech/tacotron2-DDC", help="Coqui TTS model name")
+    p.add_argument("--coqui-model", default="tts_models/multilingual/multi-dataset/xtts_v2", help="Coqui TTS model name")
     p.add_argument("--coqui-device", default="auto", help="Coqui TTS device: auto/cpu/cuda")
     p.add_argument("--coqui-speaker", default=None, help="Coqui speaker name if multi-speaker model")
     p.add_argument("--coqui-language", default=None, help="Coqui language code if multilingual model")
@@ -2081,46 +1896,7 @@ def parse_args() -> argparse.Namespace:
     # Light-weight stability controls
     p.add_argument("--min-sub-dur", type=float, default=1.5, help="Minimum subtitle duration (seconds); will extend short segments")
     p.add_argument("--tts-split-len", type=int, default=80, help="Max characters per TTS chunk before splitting")
-    p.add_argument("--tts-speed-max", type=float, default=1.08, help="Max speed-up factor when aligning audio")
-    p.add_argument(
-        "--tts-align-mode",
-        choices=["atempo", "resample"],
-        default="resample",
-        help="How to align TTS to time budget: atempo=better pitch preservation (recommended), resample=faster but may change timbre",
-    )
-
-    # ------------------------------------------------------------
-    # P2-ASR (experimental in lite): accept flags for compatibility
-    # ------------------------------------------------------------
-    # These flags are used by quality.yaml defaults and by TaskManager pass-through.
-    # The lite pipeline currently does NOT implement these enhancements; we accept
-    # the args to avoid hard failures and will print a warning when enabled.
-    p.add_argument("--asr-preprocess-enable", action="store_true", help="(compat) enable ASR audio preprocess (NOT implemented in lite)")
-    p.add_argument("--asr-preprocess-loudnorm", action="store_true", help="(compat) loudnorm during ASR preprocess (NOT implemented in lite)")
-    p.add_argument("--asr-preprocess-highpass", type=int, default=None, help="(compat) highpass Hz for preprocess (NOT implemented in lite)")
-    p.add_argument("--asr-preprocess-lowpass", type=int, default=None, help="(compat) lowpass Hz for preprocess (NOT implemented in lite)")
-    p.add_argument("--asr-preprocess-ffmpeg-extra", type=str, default="", help="(compat) extra ffmpeg filter args (NOT implemented in lite)")
-
-    p.add_argument("--asr-merge-short-enable", action="store_true", help="(compat) merge very short ASR segments (NOT implemented in lite)")
-    p.add_argument("--asr-merge-min-dur-s", type=float, default=0.8, help="(compat) min dur for merge-short (NOT implemented in lite)")
-    p.add_argument("--asr-merge-min-chars", type=int, default=6, help="(compat) min chars for merge-short (NOT implemented in lite)")
-    p.add_argument("--asr-merge-max-gap-s", type=float, default=0.25, help="(compat) max gap for merge-short (NOT implemented in lite)")
-    p.add_argument("--asr-merge-max-group-chars", type=int, default=120, help="(compat) max group chars for merge-short (NOT implemented in lite)")
-    p.add_argument("--asr-merge-save-debug", action="store_true", help="(compat) save debug files for merge-short (NOT implemented in lite)")
-
-    p.add_argument("--asr-llm-fix-enable", action="store_true", help="(compat) enable ASR typo fix via LLM (NOT implemented in lite)")
-    p.add_argument("--asr-llm-fix-mode", type=str, default="suspect", help="(compat) LLM fix mode (NOT implemented in lite)")
-    p.add_argument("--asr-llm-fix-max-items", type=int, default=60, help="(compat) LLM fix max items (NOT implemented in lite)")
-    p.add_argument("--asr-llm-fix-min-chars", type=int, default=12, help="(compat) LLM fix min chars (NOT implemented in lite)")
-    p.add_argument("--asr-llm-fix-save-debug", action="store_true", help="(compat) save LLM fix debug (NOT implemented in lite)")
-    p.add_argument("--asr-llm-fix-model", type=str, default="", help="(compat) LLM model id/name (NOT implemented in lite)")
-    # Subtitle burn-in style (hard-sub)
-    p.add_argument("--sub-font-name", default="Arial", help="Subtitle font name for hard-burn (best-effort)")
-    p.add_argument("--sub-font-size", type=int, default=18, help="Subtitle font size for hard-burn")
-    p.add_argument("--sub-outline", type=int, default=1, help="Subtitle outline thickness")
-    p.add_argument("--sub-shadow", type=int, default=0, help="Subtitle shadow")
-    p.add_argument("--sub-margin-v", type=int, default=24, help="Subtitle vertical margin (pixels)")
-    p.add_argument("--sub-alignment", type=int, default=2, help="ASS Alignment (2=bottom-center)")
+    p.add_argument("--tts-speed-max", type=float, default=1.1, help="Max speed-up factor when aligning audio")
     return p.parse_args()
 
 
@@ -2131,14 +1907,6 @@ def main() -> None:
     if mode in {"quality", "online"}:
         raise SystemExit(f"Mode '{mode}' not supported in this pipeline. Use lite or select another pipeline.")
     ensure_tool("ffmpeg")
-
-    # Compatibility warnings (do not fail the run).
-    if getattr(args, "asr_preprocess_enable", False):
-        print("[warn] lite pipeline: --asr-preprocess-* flags are accepted for compatibility but are NOT implemented; ignoring.")
-    if getattr(args, "asr_merge_short_enable", False):
-        print("[warn] lite pipeline: --asr-merge-short-* flags are accepted for compatibility but are NOT implemented; ignoring.")
-    if getattr(args, "asr_llm_fix_enable", False):
-        print("[warn] lite pipeline: --asr-llm-fix-* flags are accepted for compatibility but are NOT implemented; ignoring.")
     resume_from = getattr(args, "resume_from", None)
     need_asr = resume_from is None or resume_from == "asr"
     need_tts = (not args.skip_tts) and (resume_from is None or resume_from in {"asr", "mt", "tts"})
@@ -2345,7 +2113,6 @@ def main() -> None:
                 allow_speed_change=True,
                 split_len=args.tts_split_len,
                 max_speed=args.tts_speed_max,
-                align_mode=getattr(args, "tts_align_mode", "resample"),
                 pad_to_ms=audio_total_ms,
             )
         else:
@@ -2359,7 +2126,6 @@ def main() -> None:
                 language=args.coqui_language,
                 split_len=args.tts_split_len,
                 max_speed=args.tts_speed_max,
-                align_mode=getattr(args, "tts_align_mode", "resample"),
                 pad_to_ms=audio_total_ms,
             )
         save_audio(combined_audio, tts_wav, sample_rate=args.sample_rate)
@@ -2371,18 +2137,7 @@ def main() -> None:
     mux_video_audio(args.video, tts_wav, video_dub)
 
     print("[7/7] Embedding subtitles...")
-    srt_to_burn = bi_srt if getattr(args, "bilingual_srt", False) and bi_srt.exists() else eng_srt
-    burn_subtitles(
-        video_dub,
-        srt_to_burn,
-        video_sub,
-        font_name=str(getattr(args, "sub_font_name", "Arial") or "Arial"),
-        font_size=int(getattr(args, "sub_font_size", 18) or 18),
-        outline=int(getattr(args, "sub_outline", 1) or 1),
-        shadow=int(getattr(args, "sub_shadow", 0) or 0),
-        margin_v=int(getattr(args, "sub_margin_v", 24) or 24),
-        alignment=int(getattr(args, "sub_alignment", 2) or 2),
-    )
+    burn_subtitles(video_dub, eng_srt, video_sub)
 
     print("Done.")
     print(f"Outputs in: {output_dir}")

@@ -2,238 +2,137 @@ paths:
   # Absolute or app-relative paths to bundled binaries and models.
   script: pipelines/asr_translate_tts.py
   whispercpp_bin: bin/whisper-cli
+  whispercpp_model: assets/models/lite_asr_whispercpp/ggml-small-q5_1.bin
+  vad_model: assets/models/lite_asr_whispercpp/ggml-silero-v6.2.0.bin
+  kokoro_model: assets/models/lite_tts_kokoro_onnx/kokoro-v1.0.onnx
+  kokoro_voices: assets/models/lite_tts_kokoro_onnx/voices-v1.0.bin
   ffmpeg_bin: bin/ffmpeg
   models_root: assets/models
   tts_home: assets/models/tts
   outputs_root: outputs
+  # 可选：为 Lite 主链指定一套独立 Python 运行时（例如支持 onnxruntime/kokoro 的 3.12 venv）。
+  lite_runtime_python: .venv-lite-arm64/bin/python
   # HuggingFace/Transformers 离线缓存目录（相对于 repo 根目录）
-  hf_cache: assets/models/hf
+  hf_cache: assets/models/common_cache_hf
 
 defaults:
   sample_rate: 16000
   # 全离线模式：运行期禁止任何联网下载（HuggingFace/Transformers/Coqui等）。
   # 若本地缺模型，将直接报错提示你手动放置到 assets/models 下。
   offline: true
-  # 轻量模式默认 TTS 使用 Piper（完全离线、依赖最少）
-  tts_backend: piper
+  # 轻量模式默认 TTS 使用 Kokoro ONNX（保持离线、CPU 友好，同时比旧 Piper 基线更自然）
+  tts_backend: kokoro_onnx
   bilingual_srt: false
-  vad_enable: false
-  vad_threshold: 0.6
-  vad_min_dur: 1.5
+  whispercpp_beam_size: 5
+  vad_enable: true
+  vad_threshold: 0.5
+  vad_min_dur: 0.18
   denoise: false
   dedupe: true
   max_sentence_len: 50
   allow_gpu: true
   allow_heavy_models: true
   min_sub_duration: 1.5
-  tts_split_len: 80
-  tts_speed_max: 1.08
+  tts_split_len: 100
+  tts_speed_max: 1.15
   # 配音对齐变速方式：atempo=尽量不变声（推荐）；resample=改采样率（更快但更容易“变声”）
   tts_align_mode: atempo
-  # 句子单元（通用）：默认关闭。开启后在翻译前对相邻短段做保守合并，再拆回时间轴。
-  sentence_unit_enable: false
-  sentence_unit_min_chars: 12
-  sentence_unit_max_chars: 60
-  sentence_unit_max_segs: 3
-  sentence_unit_max_gap_s: 0.6
-  sentence_unit_boundary_punct: "。！？!?.,"
-  # 合并断点词：遇到明显转折/并列提示，更倾向断开，避免“硬合并”导致错译
-  sentence_unit_break_words: ["但", "而", "于是", "然后", "忽然", "突然", "不过", "结果", "同时"]
-
-  # 专名保护（自动，优先保证配音可读）：从中文字幕中提取候选专名→先单独翻译得到稳定英文→用占位符保护→翻译后回填
-  entity_protect_enable: false
-  entity_protect_min_len: 2
-  entity_protect_max_len: 8
-  entity_protect_min_freq: 4
-  entity_protect_max_items: 8
-
-  # ASR 文本净化（完全无争议）：控制字符/零宽、空白折叠、中文标点空格、重复标点、基础 ASCII 标点→中文标点、可选小词典（默认空）
+  # 中译英普遍膨胀，给 lite 主链更充足但受控的时间预算。
+  # 听感优先：靠“句内受控提速 + 成片整体慢放”闭环，不做尾部补帧。
+  tts_plan_safety_margin: 0.02
+  tts_sample_rate: 24000
+  kokoro_voice: af_bella
+  kokoro_language: en-us
+  kokoro_speed: 1.0
+  # Lite 主链固定策略：保持模型与解码策略不变，只减少单条调用开销。
+  mt_batch_enable: true
+  mt_batch_size: 8
+  # Lite 主链固定策略：ASR 文本净化 + 规则修正 + 低成本清洗 + 坏句识别默认开启。
   asr_normalize_enable: true
   asr_normalize_dict: assets/asr_normalize/asr_zh_dict.json
-
-  # P2-ASR：ASR 专用音频预处理（best-effort，失败回退）
-  asr_preprocess_enable: false
-  asr_preprocess_loudnorm: false
-  asr_preprocess_highpass: 80
-  asr_preprocess_lowpass: 8000
-  asr_preprocess_ffmpeg_extra: ""
-
-  # P2-ASR：分段后处理（合并极短段，减少短窗胡猜）
-  asr_merge_short_enable: false
-  asr_merge_min_dur_s: 0.8
-  asr_merge_min_chars: 6
-  asr_merge_max_gap_s: 0.25
-  asr_merge_max_group_chars: 120
-  asr_merge_save_debug: false
-
-  # P2-ASR：同音错字/错别字 LLM 保守纠错（严格 JSON，失败回退）
-  asr_llm_fix_enable: false
-  asr_llm_fix_mode: suspect
-  asr_llm_fix_max_items: 60
-  asr_llm_fix_min_chars: 12
-  asr_llm_fix_save_debug: false
-  asr_llm_fix_model: ""
-
-  # P0（质量提质）：字幕回流/阅读速度整形 + TTS稿分离（默认关闭，质量模式可在 quality.yaml 中打开）
-  # - subtitle_postprocess_enable: 开启后会对 eng.srt 做“单行净化/可选软换行/可选 CPS 时间轴补偿”
-  # - tts_script_enable: 生成 eng_tts.srt，并优先用其作为 TTS 输入（字幕稿 vs 朗读稿分离）
-  subtitle_postprocess_enable: false
-  subtitle_wrap_enable: false
-  subtitle_wrap_max_lines: 2
-  subtitle_cps_fix_enable: false
-  subtitle_cps_safety_gap: 0.2
-  tts_script_enable: false
-  # P0-5：更严格的通用 TTS 稿清洗（URL/邮箱移除，常见单位/区间轻量规范）
-  tts_script_strict_clean_enable: false
-
-  # P0-1：显示版字幕（允许改变行号，用于更好可读性；不影响 eng.srt）
-  display_srt_enable: false
-  display_use_for_embed: false
-  display_max_chars_per_line: 42
-  display_max_lines: 2
-  display_merge_enable: false
-  display_merge_max_gap_s: 0.25
-  display_merge_max_chars: 80
-  display_split_enable: false
-  display_split_max_chars: 86
+  asr_glossary_fix_enable: true
+  asr_low_cost_clean_enable: true
+  asr_badline_detect_enable: true
+  asr_same_pinyin_path: assets/zh_phrase/pycorrector_same_pinyin.txt
+  asr_same_stroke_path: assets/zh_phrase/pycorrector_same_stroke.txt
+  asr_project_confusions_path: assets/zh_phrase/asr_project_confusions.json
+  asr_lexicon_path: assets/zh_phrase/chinese_xinhua_ci_2to4.txt
+  asr_proper_nouns_path: assets/zh_phrase/thuocl_proper_nouns.txt
+  # Lite 主链固定策略：Stage1 仅保留本地规则修正与低成本清洗，不再依赖任何本地小模型/Ollama。
 
   # 硬字幕擦除（原字幕烧录在画面里时使用，通用且可回退；默认关闭）
   erase_subtitle_enable: false
-  erase_subtitle_method: delogo          # delogo|blur|cover
+  erase_subtitle_method: auto            # auto|fill|blur|delogo
   erase_subtitle_coord_mode: ratio       # ratio|px
-  erase_subtitle_x: 0.0
-  erase_subtitle_y: 0.78
-  erase_subtitle_w: 1.0
+  erase_subtitle_x: 0.05
+  erase_subtitle_y: 0.745
+  erase_subtitle_w: 0.9
   erase_subtitle_h: 0.22
   erase_subtitle_blur_radius: 12
 
   # 硬字幕烧录样式（默认更“友好”：不遮脸、字号不过大）
   sub_font_name: Arial
-  sub_font_size: 18
+  sub_font_size: 34
   sub_outline: 1
   sub_shadow: 0
   sub_margin_v: 24
   sub_alignment: 2   # 2=底部居中（ASS 对齐）
 
-  # 字幕位置矩形（可选）：开启后，新字幕强制居中到该矩形中心（优先级高于 sub_alignment/sub_margin_v）
+  # 字幕位置矩形（可选）：开启后，新字幕会在该矩形中居中排版（优先级高于 sub_alignment/sub_margin_v）。
+  # 默认按 16:9 常见字幕安全区设置：左右各留约 5%，整体落在下三分之一。
   sub_place_enable: false
   sub_place_coord_mode: ratio
   sub_place_x: 0.05
-  sub_place_y: 0.72
+  sub_place_y: 0.745
   sub_place_w: 0.9
-  sub_place_h: 0.1
+  sub_place_h: 0.22
 
   # 成片对齐策略（听感优先）
   mux_sync_strategy: slow          # slow|freeze
-  mux_slow_max_ratio: 1.10         # 最多整体慢放 10%
+  mux_slow_max_ratio: 1.18         # 最多整体慢放 18%，不给尾部补帧
   mux_slow_threshold_s: 0.05       # 音频比视频多出超过该秒数才触发
-
-  # P1（质量提质）：TTS 超时裁剪（规则估时→裁剪到时长预算内，降低“被迫极限提速/截断”的概率）
-  # - 仅作用于 TTS 稿（eng_tts.srt），不改字幕稿（eng.srt）
-  # - 默认关闭；质量模式可在 quality.yaml 的 preset 打开
-  tts_fit_enable: true
-  tts_fit_wps: 2.6
-  tts_fit_min_words: 3
-  tts_fit_save_raw: false
-  # P1-2：TTS 每段语速规划 + 停顿注入（尾部补静音）+ 审计（写入 tts_fit.json）
-  tts_plan_enable: true
-  tts_plan_safety_margin: 0.05
-  tts_plan_min_cap: 1.05
-
-  # P1-4：保留背景音并自动混音（ducking + loudnorm；可选 demucs 分离）
-  bgm_mix_enable: false
-  bgm_separate_method: none          # none|demucs
-  bgm_duck_enable: true
-  bgm_gain_db: -10.0
-  tts_gain_db: 0.0
-  bgm_loudnorm_enable: true
-  bgm_sample_rate: 48000
-
-  # P1（质量提质）：多步翻译 TRA（Faithful→Reflect→Adapt），默认关闭
-  tra_enable: false
-  tra_save_debug: false
-  tra_json_enable: false
-  tra_auto_enable: false
-
-  # 翻译提质（通用、prompt-level）：上下文/主题提示/术语前置提示/LLM 自检
-  # - mt_context_window: 0=关闭；1=提供上一行/下一行作为翻译上下文（只用于消歧，不要求翻译上下文）
-  # - mt_topic: 可选主题提示（例如“剧情解说/第三人称/女主角公主”等）
-  # - glossary_prompt_enable: 仅在 prompt 中提示术语表（不做硬替换）
-  # - llm_selfcheck_enable: （已下线）与 TRA/QE 修复链路功能重叠且回归风险高（见 eval/fluency_en/CONFIDENCE_LOG.md）
-  mt_context_window: 0
-  mt_topic: ""
-  glossary_prompt_enable: false
-  # llm_selfcheck_enable: false
-  mt_json_enable: false
-  mt_topic_auto_enable: false
-  mt_topic_auto_max_segs: 20
-  # 超长句压缩：仅超长触发（中文 >= 60 或 英文 >= 22），目标压缩到 <= 18 词
-  mt_long_zh_chars: 60
-  mt_long_en_words: 22
-  mt_long_target_words: 18
-  # P0-4：译前暂停点（生成 terminology.json，人工编辑 force_translate 后再 resume_from=mt）
-  mt_pause_before_translate: false
-
-  # P1-1：语义切句（meaning-based splitting，仅超长段触发；失败回退）
-  meaning_split_enable: true
-  meaning_split_min_chars: 60
-  meaning_split_max_parts: 3
-  meaning_split_save_debug: false
-  qe_enable: false
-  qe_threshold: 3.5
-  qe_mode: suspect
-  qe_max_items: 200
-  qe_save_report: false
-  qe_model: ""
-  qe_time_budget_s: 180
-  qe_embed_enable: false
-  qe_embed_model: nomic-embed-text
-  qe_embed_threshold: 0.55
-  qe_embed_max_segs: 2000
-  qe_backtranslate_enable: false
-  qe_backtranslate_model: ""
-  qe_backtranslate_max_items: 60
-  qe_backtranslate_overlap_threshold: 0.35
-  glossary_placeholder_enable: false
-  glossary_placeholder_max: 6
 
 presets:
   normal:
     label: 普通
     hardware_hint: "CPU 4-8 线程 / 8-16GB / 无独显"
-    asr_model: assets/models/ggml-small-q5_0.bin
-    # 推荐离线本地目录（你把 Marian 模型文件放进去即可；见 assets/models/mt/opus-mt-zh-en/README.md）
-    mt_model: assets/models/mt/opus-mt-zh-en
-    # 默认使用本地 Piper（完全离线）；Coqui 需要额外下载/缓存模型，不适合全离线默认。
-    tts_backend: piper
-    vad_enable: false
+    asr_model: assets/models/lite_asr_whispercpp/ggml-small-q5_1.bin
+    mt_model: assets/models/lite_mt_marian_opus_mt_zh_en
+    # 默认使用本地 Kokoro ONNX（完全离线、CPU 友好、自然度优于旧 Piper 基线）。
+    tts_backend: kokoro_onnx
+    whispercpp_threads: 4
+    whispercpp_beam_size: 5
+    vad_enable: true
     max_sentence_len: 50
-    dedupe: true
     bilingual_srt: false
   mid:
     label: 中端
     hardware_hint: "CPU 8-12 线程 / 16-32GB / GPU 4-8GB"
-    asr_model: assets/models/ggml-medium-q5_0.bin
-    mt_model: assets/models/mt/opus-mt-zh-en
-    tts_backend: piper
+    asr_model: assets/models/lite_asr_whispercpp/ggml-small-q5_1.bin
+    mt_model: assets/models/lite_mt_marian_opus_mt_zh_en
+    tts_backend: kokoro_onnx
+    whispercpp_threads: 8
+    whispercpp_beam_size: 5
     vad_enable: true
     max_sentence_len: 50
-    dedupe: true
     bilingual_srt: false
   high:
     label: 高端
     hardware_hint: "CPU ≥12 线程 / 32GB+ / GPU ≥8-12GB"
-    asr_model: assets/models/ggml-medium-q5_0.bin
-    mt_model: facebook/nllb-200-distilled-600M
-    tts_backend: piper
+    asr_model: assets/models/lite_asr_whispercpp/ggml-small-q5_1.bin
+    mt_model: assets/models/lite_mt_marian_opus_mt_zh_en
+    tts_backend: kokoro_onnx
+    whispercpp_threads: 8
+    whispercpp_beam_size: 5
     vad_enable: true
     max_sentence_len: 45
-    dedupe: true
     bilingual_srt: false
 
 ui:
   api_base: http://127.0.0.1:5175
   polling_ms: 1200
+  quality_teaser_only: true
+  online_disabled: true
 
 # 质量门禁阈值（公共能力，lite/quality/online 统一使用；前端只读展示，避免“看不见的规则”）
 # 修改这里后：

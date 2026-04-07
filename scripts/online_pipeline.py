@@ -37,15 +37,6 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--min-sub-dur", type=float, default=1.5, help="Minimum subtitle duration (seconds)")
     p.add_argument("--tts-split-len", type=int, default=80, help="Max characters per TTS chunk")
     p.add_argument("--tts-speed-max", type=float, default=1.1, help="Max speed factor")
-    # burned-in subtitle erase (optional)
-    p.add_argument("--erase-subtitle-enable", action="store_true", help="Enable burned-in subtitle erase/obscure on source video frames")
-    p.add_argument("--erase-subtitle-method", default="delogo", help="Erase method (currently delogo)")
-    p.add_argument("--erase-subtitle-coord-mode", default="ratio", choices=["ratio", "px"], help="Coordinate mode for erase region")
-    p.add_argument("--erase-subtitle-x", type=float, default=0.0, help="Erase region X (ratio or px)")
-    p.add_argument("--erase-subtitle-y", type=float, default=0.78, help="Erase region Y (ratio or px)")
-    p.add_argument("--erase-subtitle-w", type=float, default=1.0, help="Erase region width (ratio or px)")
-    p.add_argument("--erase-subtitle-h", type=float, default=0.22, help="Erase region height (ratio or px)")
-    p.add_argument("--erase-subtitle-blur-radius", type=int, default=12, help="Aggressiveness (mapped to delogo band)")
     # Remote endpoints
     p.add_argument("--asr-endpoint", required=True, help="ASR endpoint URL")
     p.add_argument("--asr-api-key", default="", help="ASR API key")
@@ -57,21 +48,6 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--tts-api-key", default="", help="TTS API key")
     p.add_argument("--mode", default="online", help="Mode flag (online)")
     p.add_argument("--skip-tts", action="store_true", help="Skip TTS")
-    # Subtitle burn-in style (hard-sub)
-    p.add_argument("--sub-font-name", default="Arial", help="Subtitle font name for hard-burn (best-effort)")
-    p.add_argument("--sub-font-size", type=int, default=18, help="Subtitle font size for hard-burn")
-    p.add_argument("--sub-outline", type=int, default=1, help="Subtitle outline thickness")
-    p.add_argument("--sub-shadow", type=int, default=0, help="Subtitle shadow")
-    p.add_argument("--sub-margin-v", type=int, default=24, help="Subtitle vertical margin (pixels)")
-    p.add_argument("--sub-alignment", type=int, default=2, help="ASS Alignment (2=bottom-center)")
-    # Subtitle placement box (optional): when enabled, subtitles are forced to the center of this box.
-    # This takes precedence over alignment/margins.
-    p.add_argument("--sub-place-enable", action="store_true", help="Force subtitle position to the center of a user-defined box")
-    p.add_argument("--sub-place-coord-mode", default="ratio", choices=["ratio", "px"], help="Coordinate mode for subtitle box")
-    p.add_argument("--sub-place-x", type=float, default=0.0, help="Subtitle box X (ratio or px)")
-    p.add_argument("--sub-place-y", type=float, default=0.78, help="Subtitle box Y (ratio or px)")
-    p.add_argument("--sub-place-w", type=float, default=1.0, help="Subtitle box width (ratio or px)")
-    p.add_argument("--sub-place-h", type=float, default=0.22, help="Subtitle box height (ratio or px)")
     return p.parse_args()
 
 
@@ -240,38 +216,10 @@ def main() -> None:
     lite.save_audio(combined, tts_wav, sample_rate=args.sample_rate)
 
     print("[6/7] Muxing video with new audio...")
-    lite.mux_video_audio(
-        args.video,
-        tts_wav,
-        video_dub,
-        erase_subtitle_enable=bool(getattr(args, "erase_subtitle_enable", False)),
-        erase_subtitle_method=str(getattr(args, "erase_subtitle_method", "delogo") or "delogo"),
-        erase_subtitle_coord_mode=str(getattr(args, "erase_subtitle_coord_mode", "ratio") or "ratio"),
-        erase_subtitle_x=float(getattr(args, "erase_subtitle_x", 0.0) or 0.0),
-        erase_subtitle_y=float(getattr(args, "erase_subtitle_y", 0.78) or 0.78),
-        erase_subtitle_w=float(getattr(args, "erase_subtitle_w", 1.0) or 1.0),
-        erase_subtitle_h=float(getattr(args, "erase_subtitle_h", 0.22) or 0.22),
-        erase_subtitle_blur_radius=int(getattr(args, "erase_subtitle_blur_radius", 12) or 12),
-    )
+    lite.mux_video_audio(args.video, tts_wav, video_dub)
 
     print("[7/7] Embedding subtitles...")
-    lite.burn_subtitles(
-        video_dub,
-        eng_srt,
-        video_sub,
-        font_name=str(getattr(args, "sub_font_name", "Arial") or "Arial"),
-        font_size=int(getattr(args, "sub_font_size", 18) or 18),
-        outline=int(getattr(args, "sub_outline", 1) or 1),
-        shadow=int(getattr(args, "sub_shadow", 0) or 0),
-        margin_v=int(getattr(args, "sub_margin_v", 24) or 24),
-        alignment=int(getattr(args, "sub_alignment", 2) or 2),
-        place_enable=bool(getattr(args, "sub_place_enable", False)),
-        place_coord_mode=str(getattr(args, "sub_place_coord_mode", "ratio") or "ratio"),
-        place_x=float(getattr(args, "sub_place_x", 0.0) or 0.0),
-        place_y=float(getattr(args, "sub_place_y", 0.78) or 0.78),
-        place_w=float(getattr(args, "sub_place_w", 1.0) or 1.0),
-        place_h=float(getattr(args, "sub_place_h", 0.22) or 0.22),
-    )
+    lite.burn_subtitles(video_dub, eng_srt, video_sub)
 
     print("Done.")
     print(f"Outputs in: {output_dir}")

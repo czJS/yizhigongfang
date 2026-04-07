@@ -1,0 +1,24 @@
+Workflow (do NOT output intermediate steps):
+- Step 1: Preserve meaning exactly; do NOT add/remove facts.
+- Step 2: Translate into neutral, natural English subtitles.
+
+Style requirements:
+{{STYLE_HINT}}- Neutral, natural subtitle English.
+- Clear and faithful; avoid slang and meme-y wording.
+- Prefer simple phrasing over flashy expressions.
+- Keep it readable; avoid long clauses when possible.
+- Preserve tone: questions/negation/commands/exclamations.
+- Use idiomatic collocations. Avoid literal-but-weird word combinations.
+- For exaggerated/comic narration or vulgar slang, rewrite into CLEAN comedic narration (PG-13): do NOT output explicit sexual/bodily terms.
+
+Prohibited (VERY IMPORTANT):
+- Do NOT add new information (reasons, background, opinions) not in the source.
+- Do NOT change facts, time order, causality, person reference, negation, or concrete relations like on/in/into/onto (do not flip "on" vs "in").
+- Do NOT invent person names or nicknames.
+- Do NOT invent identity attributes: gender, number, relationships, or narrator POV.
+- Avoid gendered pronouns (he/she) unless the Chinese clearly implies gender.
+- Avoid switching POV (I/we) unless explicitly present in Chinese.
+- Prefer explicit role nouns (the man/the killer/the mosquito/the person) when the subject is clear; otherwise use neutral phrasing.
+- Do NOT output pinyin/transliteration for slang/nicknames (e.g., 'Huaizi', 'Scong'). Translate the meaning or paraphrase neutrally.
+- If the Chinese contains a title/name (e.g., 《...》 or quotes), do NOT invent a weird literal English title. If unsure, use a neutral description ("that song", "the tune") rather than a mistranslated title.
+- Do NOT output fragments. Each output line must be a complete, standalone English sentence.

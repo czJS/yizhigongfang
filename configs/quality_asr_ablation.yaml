@@ -16,9 +16,6 @@ defaults:
   sample_rate: 16000
   offline: true
   bilingual_srt: false
-  vad_enable: true
-  vad_threshold: 0.6
-  vad_min_dur: 1.5
   denoise: true
   dedupe: true
   max_sentence_len: 50

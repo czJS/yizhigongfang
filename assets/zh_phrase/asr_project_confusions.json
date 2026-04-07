@@ -1,0 +1,6006 @@
+{
+  "version": 2,
+  "notes": "Reviewed ASR project confusions promoted from the final manually reviewed confusion set. Only accepted items should enter this file.",
+  "items": [
+    {
+      "wrong": "一幕",
+      "candidates": [
+        "异木"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:照片里的一幕棉那是咱们华南地区的特有植物在首尔根本见不到这下好了评论区直接炸了越南网友偷眼头的专业点啊连广州公交四个字都不批调是把我们当瞎子吗韩国网友紧接着是嘴硬这公交车肯定是模仿我们首尔设计的广州的街道本来就是->照片里的异木棉那是咱们华南地区的特有植物在首尔根本见不到这下好了 评论区直接炸了越南网友 偷也偷的专业点啊连广州公交四个字都不批掉是把我们当瞎子吗韩国网友紧接着是嘴硬这公交车肯定是模仿我们首尔设计的广州的街道本来就是"
+    },
+    {
+      "wrong": "一箱",
+      "candidates": [
+        "异乡"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:波阿布特的一箱是一场国家与民族的悲剧他以构建理想项慧为皇座推行极端正在MGC界革命军民实施独裁统计其行为不仅备利了他最初接触的进步思想更被优化->波尔布特的异乡是一场国家与民族的悲剧他以构建理想社会为房子推行极端政策本届世界统计其行为不仅背离了他最初接触的进步思想更被拥有了"
+    },
+    {
+      "wrong": "一话",
+      "candidates": [
+        "异化"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:也可以直接写在简历里或者面试说出来学到就等于装到夫话就是自己搞一遍对标就是抄袭内容差一话就是别全抄拆解就是都列出来响应呢就是回消息->也可以直接写在简历里或者面试说出来学到就等于装到俗话就是自己搞一遍对标就是抄袭内容差异化就是别全抄拆解就是都列出来响应呢就是回消息"
+    },
+    {
+      "wrong": "上见",
+      "candidates": [
+        "案件"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:但是如果按照刑法的一个角度去看够不够成犯罪证据扎不扎实应该定什么罪判多少年你可能心里真就没数你只能有个大概的感觉律师在刑事上见当中如果是->但是如果按照刑法的一个角度去看够不够成犯罪证据扎不扎实应该定什么罪判多少年你可能心里真就没数你只能有个大概的感觉律师在刑事案件当中如果是"
+    },
+    {
+      "wrong": "不直",
+      "candidates": [
+        "布局"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:被快懒恼感觉可能完全不一样了支持家体验的种草方式让你理解背后的工艺价格就不再只是数字了空间不直上它更像个会迷路的世纪拉斯维加斯的那一家就很典型三千坪的单层空间近四成面积给了它->那块奶酪感觉可能完全不一样了知识加体验的种草方式让你理解背后的工艺价格就不再只是数字了空间布局上它更像个会迷路的事迹拉斯维加斯的那家就很典型3000平的单层空间近四层面积给了"
+    },
+    {
+      "wrong": "丘利高",
+      "candidates": [
+        "秋栗糕"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 3,
+      "notes": "例:对吧，我不可能四个人都招这样的，我得招两个，我自己觉得它真有潜力的，那我觉得是有潜力呢，比如说，你看，在我喝完丘利高的时候，就没有人给我倒水了。->对吧 我不可能四个人都招这样的我得招两个我自己觉得他真有潜力的那我觉得谁有潜力呢比如说你看在我喝完秋栗糕的时候就没有人给我倒水"
+    },
+    {
+      "wrong": "个逻辑",
+      "candidates": [
+        "有罗记"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 3,
+      "notes": "例:那我们要先做明白一个点内容永远是特别的具体表现不管你是企业还是个人如果你已经开始做账号了但是做账号什么目的接下来打个怎么变现这个逻辑如果我们有搞清楚你想办点妆但吸引来的是一群老大爷看上去粉丝数好像是有了但变不了限那内容做得再好有什么用呢->那我们要先弄明白一个点内容永远是策略的具体表现不管你是企业还是个人如果你已经开始做账号了但是做账号什么目的接下来打算怎么变现这有罗记如果没有搞清楚你想卖女装但吸引来的是一群老大爷看上去粉丝处好像是有了但变不了现那内容做得再好有什么用的"
+    },
+    {
+      "wrong": "中程",
+      "candidates": [
+        "忠诚"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 3,
+      "notes": "例:就是为了对不同的信用评级项目探讨不同的信用评级标准和方法关于信用评级的概念至目前为止没有统一说法但内涵大致相同安博尔中程性认为主要包括三方面首先->就是为了对不同的信用评级项目探讨不同的信用评级标准和方法关于信用评级的概念至目前为止没有统一说法但内涵大致相同安博尔忠诚信认为主要包括三方面首先"
+    },
+    {
+      "wrong": "丰厉",
+      "candidates": [
+        "锋利"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:有多丰厉而是->有多锋利而是"
+    },
+    {
+      "wrong": "为停",
+      "candidates": [
+        "违停"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:只能停在路边，然后经常为停被罚款多的时候差不多两个月有21次的一个违章被罚了有4，200然后后面也是在网上各种找那种违章->然后只能停在路边然后经常违禀被罚款多的时候差不多两个月有21次的一个违章被罚了有4200然后后面也是在网上各种找那种 | 例:只能停在路边，然后经常为停被罚款多的时候差不多两个月有21次的一个违章被罚了有4，200然后后面也是在网上各种找那种违章->然后只能停在路边然后经常违禀被罚款多的时候差不多两个月有21次的一个违章被罚了有4200然后后面也是在网上各种找那种"
+    },
+    {
+      "wrong": "为援",
+      "candidates": [
+        "委员"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:洪威为援看因->洪威委员看因"
+    },
+    {
+      "wrong": "主之",
+      "candidates": [
+        "组织"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:小红书，黑猫投诉这些地方，搜索用户真实抱怨什么痛点，企业内部到底有什么刚需，这些是现成的，有厚度的面试题。平时给自己做现实训练的时候，看到一个真实的产品问题，逼自己在两分钟内主之出，包含，场景用户方案影响评功的完整回答。->小红书黑猫投诉这些地方搜索用户真是抱怨什么痛点企业内部到底有什么刚需这些是现成的有厚度的面试题平时给自己做现实训练的时候看到一个真实的产品问题逼自己在两分钟内组织出包含场景用户方案影响评工的完整回答这种练习"
+    },
+    {
+      "wrong": "主借",
+      "candidates": [
+        "逐渐"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:跟同事的沟通借力的信的时候才能够主借上手一些所谓的小项目第一个月到第二个月打砸第二个月到第三个月去做一些相应的项目然后推动他上线 完成复盘那可能也需要到三个月到四个月的时间所以->跟同事的沟通建立了线之后才能够逐渐上手一些所谓的小项目那第一个月到第二个月打杂那第二个月到第三个月去做一些相应的项目然后推动它上线完整复盘那可能也需要到三个月到四个月的时间所以"
+    },
+    {
+      "wrong": "义书",
+      "candidates": [
+        "艺术"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:今天我们聊聊什么是商业模式在商业模式新生代义书中给到了其定义商业模式描述了企业如何创造价值传递价值和获取价值的基本原理即包括四个主要方面客户 产品 获取->今天我们聊聊什么是商业模式在商业模式新生代艺术中给到了其定义商业模式描述了企业如何创造价值传递价值和获取价值的基本原理即包括四个主要方面客户产品或者企业"
+    },
+    {
+      "wrong": "之池",
+      "candidates": [
+        "支持"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:建立中国最鼎盛的王朝拉开许墓是7。57 朱温面堂五代十国开始18。16 赵狂印建立北宋19。16 靖康之池北宋灭亡 南宋建立->建立中国最鼎盛的王朝拉开许牧17。57朱温灭道武奈十国开始18。16赵匡益建立北宋19。16静康支持北宋灭亡南宋建立"
+    },
+    {
+      "wrong": "之类",
+      "candidates": [
+        "什么"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:反正大概就三四个亿人民币左右嗯哪边什么空调车那边好的一米内工厂说是261季度开始生产线较准之类的反正就是量产还有大时间右边这个是->反正大概就有三四个亿人民币左右嗯拉北什么工厦车里外就没什么事好的印尼那个工厂说是2001季度开始生产线较准什么的反正就是量产还有大时间右边这个是"
+    },
+    {
+      "wrong": "也闹",
+      "candidates": [
+        "然后"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:怎么了你不是刚才不是开车去玩了吗刚才我开车怎么突然坐在这里啊开车下来也闹一个也问路好像喷了一个什么东西喷什么东西明明我在这边坐老公->怎么了 你不是刚才不是开车去玩了吗后员刚才我开车 怎么突然坐在这里啊开车下来 然后一个人问路我想喷了一个什么东西喷什么东西 咪咪咕咕在这里坐啊"
+    },
+    {
+      "wrong": "书营",
+      "candidates": [
+        "输赢"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:一个官司本身的书营我这里的提醒如下四条1。上一致未病企业HR最高境界是完善公司规则制度体系最大化避免发生劳动纠纷2。沟通致百病发生了劳动纠纷对企业来讲成本最小不利影响->官司本身的输赢我这里的提醒如下四条一 上一致未病企业HR最高境界是完善公司规则制度体系最大化避免发生劳动纠纷二 沟通致百病发生了劳动纠纷对企业来讲成本最小不利影响"
+    },
+    {
+      "wrong": "争凝",
+      "candidates": [
+        "狰狞"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:世界上只有青海才有的全球独一无二的十大奇景1。世界上最争凝的地狱之眼艾肯权2。世界上最纯净的冰川童华年宝玉泽3。世界上最魔幻的水上离公乌苏特水上亚丹4。世界上最纯净的冰川童华年宝玉泽->世界上只有青海才有的全球独一无二的十大奇景1。世界上最狰狞的地狱之眼爱恳全2。世界上最纯净的冰川童话年宝玉泽3。世界上最魔幻的水上迷宫乌苏特水上亚丹4。"
+    },
+    {
+      "wrong": "互聪",
+      "candidates": [
+        "护送"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:一路互聪结果->一路护送结果"
+    },
+    {
+      "wrong": "五职",
+      "candidates": [
+        "武直"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:我真的想问问季晓岚的食谱是什么知道的麻烦发我一份2。历史上真实的五大郎原名五职是一位相貌不俗身材高大的支线潘金莲是名门书员贤妻良母夫妻二人过得十分美满还生了四个->我真的想问问季晓兰的食谱是什么知道的麻烦发我一份二历史上真实的武大郎原名武直是一位相貌不俗身材高大的知县潘金莲是名门书员贤妻良母夫妻二人过得十分美满还生了四个女儿"
+    },
+    {
+      "wrong": "井坡",
+      "candidates": [
+        "紧迫"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:想用世界上的第一台相机拍照那么你得坐着八个小时不动九明朝皇帝上厕所用的是四川中部地区进贡的蚕丝之城的井坡来擦屁股十唐朝时期很多人爱喝茶但不是->想用世界上的第一台相机拍照那么你得坐着八个小时不动9。明朝皇帝上厕所用的是四川中部地区进贡的蚕丝之城的紧箔来擦屁股10。唐朝时期很多人爱喝茶但不是很难"
+    },
+    {
+      "wrong": "交助",
+      "candidates": [
+        "胶住"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:拼缝交助封闭->拼缝胶住封闭"
+    },
+    {
+      "wrong": "产会",
+      "candidates": [
+        "忏悔"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 3,
+      "notes": "例:赛伯产会时不知道Nimopai黑色和白色静看搜索听听各种故事做的当事人->赛博忏悔时不知道柠檬派黑色和白色近看搜索倾听各种故事做我的当事人"
+    },
+    {
+      "wrong": "今页",
+      "candidates": [
+        "经验"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:今页限制的经济补偿那么今页限制的经济补偿是按了什么标准去主张呢这个啊 现在看你和公司的约定如果约定的金额低于当地的最低工资标准则按照最低工资标准来主张如果说没有约定则按照离之前12个月的月平均工资的30%来计算这个之外就是公司的经济限制的限制->经验限制的经营补偿那么经验限制的经营补偿是按照什么标准去主张呢这个先来看你和公司的约定如果约定的金额低于当地的最低工资标准则按照最低工资标准来主张如果说没有约定则按照你之前12个月的月平均工资的30%的计算这个事情就是公司的经验限制的限制"
+    },
+    {
+      "wrong": "从学端",
+      "candidates": [
+        "出去"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:又要从学端这么->又要出去这么"
+    },
+    {
+      "wrong": "仓意",
+      "candidates": [
+        "苍蝇"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:都敢遗嘱13。在超市商场餐厅等地摔倒可以要求赔偿14。在餐厅吃饭吃出仓意可以要求商家退役->13。在超市、商场、餐厅等地摔倒，可以要求赔偿14。在餐厅吃饭吃出苍蝇，可以要求商家退一"
+    },
+    {
+      "wrong": "他式",
+      "candidates": [
+        "踏实"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:舒服他式的人->舒服踏实的人"
+    },
+    {
+      "wrong": "他而",
+      "candidates": [
+        "胎儿"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:他而在妈妈肚子里就能继承遗产时 侄子 侄女 外申女可以继承遗产第一 游戏账号 游戏装备等西女产产->胎儿在妈妈肚子里就能继承遗产使侄子、侄女、外申女可以继承遗产11。游戏账号、游戏装备等妻女财产 | 例:他而在妈妈肚子里就能继承遗产时 侄子 侄女 外申女可以继承遗产第一 游戏账号 游戏装备等西女产产->胎儿在妈妈肚子里就能继承遗产使侄子、侄女、外申女可以继承遗产11。游戏账号、游戏装备等妻女财产"
+    },
+    {
+      "wrong": "以到",
+      "candidates": [
+        "一道"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:的可以到晚上->的可一道晚上"
+    },
+    {
+      "wrong": "以较税",
+      "candidates": [
+        "一觉睡"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:定是以较税到天->定是一觉睡到天"
+    },
+    {
+      "wrong": "仪式",
+      "candidates": [
+        "疑似"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:保险基金支付仪式性商场补支金解除劳动关系的可以领取仪式性工商医疗补支金这是由工商保险基金支付的和仪式性商场就业补支金这是由用人当安位来支付的->公商保险基金支付疑似性商产补资金解除劳动关系的可以领取疑似性工商医疗补资金这是由工商保险基金支付的和疑似性商产就业补资金这是由用人单位来支付的"
+    },
+    {
+      "wrong": "件值",
+      "candidates": [
+        "介质"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:核心玩法就是别人控制也就是大家常说的寸指目标不是冲到顶点而是让快感始终停在发射零件值以下就蹭蹭不进去那种但注意不是在零点硬挺魅养法阿罗伊翻车风险很高这一句做法->核心方法就是别人控制也就是大家常说的寸直目标不是冲到顶点而是让快感始终停在发射零介质以下就寸寸不进去那种但注意不是在意顶点硬停那样反而容易翻车风险很高正直做法"
+    },
+    {
+      "wrong": "企刹",
+      "candidates": [
+        "警察"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:被告住所地或你消费地方的基层法院第5 被告信息是可以上美团查看三家的营业执照如果对方是公司你还可以上企刹查根据营业执照上的公司名称查看更详细的信息->被告住所地或者你消费地方的继承法院而第五被告信息是可以上美团查看商家的营业执照如果对方是公司你还可以上企查查根据营业执照上的公司名称查看更详细的信息"
+    },
+    {
+      "wrong": "众揪心",
+      "candidates": [
+        "重就轻"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 3,
+      "notes": "例:都会知道这个阶段紧张 容易大脑空白是正常的情况这个同理心其实还是有的当然如果说你能口语一点 通俗一点 自然一点效果会更好一些那我首先和大家把自我介绍作用说一下这样大家就可以知道怎么说可以避众揪心->都会知道这个阶段紧张容易大脑空白是正常的情况 这个同理心其实还是有的当然 如果说你能口语一点 通俗一点 自然一点 效果会更好一些那我首先和大家把自我介绍作用说一下 这样大家就可以知道怎么说可以避重就轻 | 例:都会知道这个阶段紧张 容易大脑空白是正常的情况这个同理心其实还是有的当然如果说你能口语一点 通俗一点 自然一点效果会更好一些那我首先和大家把自我介绍作用说一下这样大家就可以知道怎么说可以避众揪心->都会知道这个阶段紧张容易大脑空白是正常的情况这个同理心其实还是有的当然如果说你能口语一点通俗一点自然一点效果会更好一些那我首先和大家把自我介绍作用说一下这样大家就可以知道怎么说可以避重究情"
+    },
+    {
+      "wrong": "会会",
+      "candidates": [
+        "混混"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:在做律师之前我就是个小会会 打架到车和嫖赌那是加成变犯 什么无赖地痞流氓我都见过对付这种家暴男绝对属于专业对口 但是我要声明 我绝不是以报之报把家暴男干死 咱们现在是法治上->在做律师之前我就是个小混混打架都吃喝嫖赌那是家常便饭什么无赖地痞流氓我都见过对付这种家暴男绝对属于专业对口但是我要声明我绝不是以暴制暴把家暴男干死咱们现在是法治"
+    },
+    {
+      "wrong": "会只",
+      "candidates": [
+        "为止"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:目前会只在打->目前为止在打"
+    },
+    {
+      "wrong": "伪业",
+      "candidates": [
+        "违约"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:如果这一年内不行使，那么该权利就消灭了风险二呢，赔偿可能会伤劲动骨，损失远超压金或者是定金一旦被认定为伪业解除，那么你需要承担的不仅仅是繁华财产，还可能需要赔偿->设置起一年如果这一年内不行使那么该权利就消灭了风险二呢赔偿可能会伤金动骨损失远超押金或者是定金一旦被认定为违约解除那么你需要承担的不仅仅是返还财产还可能需要赔偿"
+    },
+    {
+      "wrong": "伪计",
+      "candidates": [
+        "伟绩"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:怎么个夫妇法呢？1、2、3用事实来佐证他在经营公司的过程当中秉承着一个3C理念什么叫3C理念呢？再解释一下那么他在经营过程当中取得了分工伪计怎么个分工伪计呢？1、2、3再分开来说一下->怎么个封负法呢一一二三用事实来佐证他在经营公司的过程当中秉承着一个3C理念什么叫3C理念呢再解释一下那么他在经营过程当中取得了分工伟绩怎么个分工伟绩呢一一二三再分开来说"
+    },
+    {
+      "wrong": "伪障",
+      "candidates": [
+        "违章"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:撤侨的看咱们国家现在说国内这个汽车保养量法都突破了4个亿道路上车越来越多了难免有各种各样的这个伪障情况它有意思是有些伪障压根是不用扣分的我给大家履历吧这6种是可以深情撤侨的伪障情况->撤销的看咱们国家现在说实话国内这个汽车保有量都突破了四个亿道路上车是越来越多了难免有各种各样的这个卫章情况可有意思是有些卫章压根是不用扣分的我给大家捋理吧这六种是可以实行撤销的卫章情况"
+    },
+    {
+      "wrong": "位镜",
+      "candidates": [
+        "危境"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:还是否定自己这可能是我们一开始就选择了岗位没有找到自己的优势喜欢不一定擅长可以通过任职多位镜和塞尔原则等找到自己的优势不要沉溺在沉默成本中工作不在于跑多久而在于跑对方向我们需要通过不同的->还是否定自己这可能是我们一开始就选错了岗位没有找到自己的优势喜欢不一定擅长可以通过认知多危境和style原则等找到自己的优势不要沉溺在沉默成本中工作不在于跑多久而在于跑对方向我们需要通过不同的"
+    },
+    {
+      "wrong": "体典",
+      "candidates": [
+        "提点"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:大罗氏是专门抓鸟补兽的唐代的飞龙使是养芋马的明代的太和山体典是管理道士的太平天国后期时达开设立了一个叫巨帅的官职时清末时候专门设立了一个虎神营以后记得订阅和打开小铃铛 还有打开小铃铛 还有打开小铃铛 还有打开小铃铛 还有打开小铃铛 还有打开小铃铛 还有打开小铃铛 还有打开小铃铛 还有打开小铃铛 又是这个地方了->大罗氏，是专门抓鸟捕兽的，唐代的飞龙使，是养御马的，明代的太和山提点，是管理道士的，太平天国后期。时达开设立了一个叫巨帅的官职，时，清末时候，专门设立了一个虎神营。"
+    },
+    {
+      "wrong": "体头",
+      "candidates": [
+        "挺脱"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:个微体头毛膏->个微挺脱毛膏"
+    },
+    {
+      "wrong": "作写",
+      "candidates": [
+        "做协"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:还当上了作写的领导安徽省作写写了好几本书最后在21年之后因为现在DNA技术被发泄->还当上了坐鞋的领导安徽省坐鞋写了好几本书最后在21年之后因为现在DNA技术被发现 | 例:还当上了作写的领导安徽省作写写了好几本书最后在21年之后因为现在DNA技术被发泄->还当上了坐鞋的领导安徽省坐鞋写了好几本书最后在21年之后因为现在DNA技术被发现"
+    },
+    {
+      "wrong": "作列",
+      "candidates": [
+        "拙劣"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:我非常非常喜欢莎士比亚的一段话他说人生不过是一个行走的影子一个在舞台上指手画脚的作列的令人登场片刻就在无声无息周悄然退仙他是一个余人所讲的故事->我非常非常喜欢萨斯比亚的一段话他说人生不过是一个行走的影子一个在舞台上指手画脚的拙劣的令人登场片刻就在无声无息周悄然推行他是一个愚人所讲的故事"
+    },
+    {
+      "wrong": "使孝",
+      "candidates": [
+        "时效"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:将被视为终了之日该日期的6个月内公安机关对多次嫖娼行为都会一并处罚法律设置追究使孝是为了让违法人在认识到自己的违法行为后改邪规证->将被视为终了之日该日期的六个月内公安机关对多次嫖娼行为都会一并处罚法律设置追究时效是为了让违法人在认识到自己的违法行为后改邪归正"
+    },
+    {
+      "wrong": "依测",
+      "candidates": [
+        "一侧"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:洞的依测中间->洞的一侧中间"
+    },
+    {
+      "wrong": "侠次",
+      "candidates": [
+        "瑕疵"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:唯一侠次在哪->唯一瑕疵在哪"
+    },
+    {
+      "wrong": "修价",
+      "candidates": [
+        "休假"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1",
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:书卷修价你见->书卷休假你见 | 例:五十五岁之前的时间你和公司属于劳动关系按你修了一次咱们姑且按照七年的劳动关系吧你有六次享受年修价的权利修了一次还有五次->55岁之前的时间你和公司属于劳动关系按你修了一次咱们姑且按照七年的劳动关系吧你有六次享受年休假的权利那修了一次呢还有五次"
+    },
+    {
+      "wrong": "俱到",
+      "candidates": [
+        "巨大"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:受众俱到的意->受众巨大的意"
+    },
+    {
+      "wrong": "倒赴",
+      "candidates": [
+        "到付"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:我感觉主要是我落着开箱视频所以说那就胜利了嘛到时候我给他顺风倒赴寄过去我这边再说一下不论你是投小瓦停还是克服介入->我感觉主要是我录的这开箱视频所以说我就胜利了到时候我给他顺风到复寄过去我这边再说一下无论你是走小瓦停还是客服介入"
+    },
+    {
+      "wrong": "倘用",
+      "candidates": [
+        "朋友"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:散弄一些倘用圈反腐小红书反腐的案件本人或其他亲属在一些公共的社交媒体上去晒一些美好的生活去晒一些奢侈物品->看到一些朋友圈反腐小胡叔反腐的案件本人或其他清楚在一些公共的社交媒体上去晒一些美好的生活去晒一些奢侈物品"
+    },
+    {
+      "wrong": "倾枪",
+      "candidates": [
+        "清仓"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:三月二十号，第二个卖点，也是最后的倾枪点冲到更高的位置之后，一路回落，带着超长的上影线这一天换手，是整段走势里最大的一天量能比任何一天都大，冲高完全守不住->3月20号第二个卖点也是最后的清仓点冲到更高的位置之后一路回落带着超长的上影线这一天换手是整段走势里最大的一天量能比任何一天都大冲高完全守不住"
+    },
+    {
+      "wrong": "傅戴",
+      "candidates": [
+        "附带"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:要求一年工作经验那就是新手也能上但是如果标题上面直接写接受小白有老师傅戴那基本上就是在割你韭菜要求一到两年工作经验那就是招一个专员港过往履历只要有一部分的相似或者是重合就可以去投一投试试->要求一年工作经验那就是新手也能上但是如果标题上面直接写接受小白有老师附带那基本上就是在割你韭菜要求一到两年工作经验那就是招一个专员港过往履历只要有一部分的相似或者是重合就可以去投一投试试"
+    },
+    {
+      "wrong": "僚量",
+      "candidates": [
+        "嘹亮"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 3,
+      "notes": "例:他以高抗僚量的嗓音和精湛的唱功著称为电影《泰坦尼克号》演唱的主题曲My Heart Will Go On成为全球历史上最畅销的单曲之一《荷乙铭》1972年马来西亚华裔女歌手他以魂后华丽的歌手->他以高亢嘹亮的嗓音和精湛的唱功著称为电影泰坦尼克号演唱的主题曲My Heart Will Go On成为全球历史上最畅销的单曲之一贺一鸣1972年马来西亚华裔女歌手他以浑厚华丽的歌曲"
+    },
+    {
+      "wrong": "元宫",
+      "candidates": [
+        "员工"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:逼这个小姐走人结果小姐每天在办公室啥也不做就带本书上班级看书下班级准备回家老板也想这样降得下去我亏大法了工资要发设法还得交最后老板跟元宫跟小姐协商陪了N+2走人各位老姐你们听明白了吗郭忠祐珠每天学习->逼这个小姐走人结果小姐每天在办公室啥也不做都有带本书上半期看书下半期准备回家老板也想这样将得下去我亏大法了工资要发社保还在交最后老板跟员工跟小姐协商陪了N加2走人各位老铁你们听明白了吗观众老猪每天"
+    },
+    {
+      "wrong": "先更",
+      "candidates": [
+        "深耕"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:此后落脚在北京苍蝇小王庄的中国农业机器化科学研究院吸烟箭他们继续先更奶牛养殖及配套农机研发使众依普通劳动者的身份和职工一起劳动为后续成套养殖机器的研究打下了基础->此后落脚在北京昌亭小王庄的中国农业机械化科学研究院实验站他们继续深耕奶牛养殖及配套农机研发始终以普通劳动者的身份和职工一起劳作为后续成套养殖机械的研究打下了基础"
+    },
+    {
+      "wrong": "兔鞋",
+      "candidates": [
+        "吐血"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:日本舆论要求日本政府就强床使馆事件向中方道歉。8。重庆，地铁兔鞋女孩被关注后，已收40余万捐款，爱心捐款能覆盖后续治疗，会带着大家的善意好好活。->日本舆论要求日本政府就强床使馆事件向中方道歉。8。重庆，地铁吐血女孩被关注后，已收40余万捐款，爱心捐款能覆盖后续治疗，会带着大家的善意好好活。"
+    },
+    {
+      "wrong": "入课",
+      "candidates": [
+        "顾客"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:你看曹操老师手上这支笔是我花了一千块钱买的那你现在说把我这支笔没收了那么对我来说是不是相当于我损失了一千块钱那如果我还想继续给同学们入课我还要再花一千块钱去买一支笔对不对所以说没收财产它是更具有惩罚性的刑事责任好那么一个罚款->你看乔乔老师手上这支笔是我花了一千块钱买的那你现在说把我这支笔没收了那么对我来说是不是相当于我损失了一千块钱那如果我还想继续给同学们顾客我还要再花一千块钱去买一支笔 对不对所以说没收财产它是更具有惩罚性的刑事责任"
+    },
+    {
+      "wrong": "入辱",
+      "candidates": [
+        "录入"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:特定的开庭代办还支持一件上传案件的法院开庭传票，系统自动识别传票信息，实现代办关键信息的自动填充，如开庭法院，法官和书记员，以及开庭日期，律师无需手动入辱。->特定的开庭代办还支持一件上传案件的法院开庭传票系统自动识别传票信息实现代办关键信息的自动填充如开庭法院、法官和书记员以及开庭日期律师无需手动录入"
+    },
+    {
+      "wrong": "八轮",
+      "candidates": [
+        "巴伦"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:儿子八轮英俊->儿子巴伦英俊"
+    },
+    {
+      "wrong": "公庄",
+      "candidates": [
+        "工装"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:美女承诺下单半小时就有女孩子穿着外卖公庄上门你可以指定让哪家的外卖员来送餐指定中餐还是西餐当然你也可以两个都吃再加点小费还能指定男员工给你送餐你再多加点->没菜品全是美女承诺下单半小时就有女孩子穿着外卖工装上门你可以指定让哪家的外卖员来送餐指定中餐还是西餐当然你也可以两个都吃再加点小费还能指定男员工给你送餐你再多加点甚至"
+    },
+    {
+      "wrong": "公新",
+      "candidates": [
+        "工薪"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:日本公新族的->日本工薪族的"
+    },
+    {
+      "wrong": "公零",
+      "candidates": [
+        "工龄"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:加班的审批记录或者是公司安排的加班证据第四个年纪回价年纪回价大家都会计算了吧累计公零一到十年的五天累计公零十年二十年的十天累计公零二十年以上的十五天那么你就只需要证明你的累计工作连线比如说你的社保缴纷->加班的审批记录或者是公司安排的加班人证据第四个 年休假年休假大家都会计算了吧累计工龄一到十年的五天累计工龄十年二十年的十天累计工龄二十年以上的十五天那么你就只需要证明你的累计工作年限比如说你的社保侨"
+    },
+    {
+      "wrong": "兰撞",
+      "candidates": [
+        "澜壮"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:世界上最薄的两本书美国的历史英国的菜谱那你倒是说说你这一天是如何波兰撞阔的->世界上最薄的两本书美国的历史英国的菜谱那你倒是说说你这一天是如何波澜壮阔的听好了零点零分下期建立下场东国进入"
+    },
+    {
+      "wrong": "共筹",
+      "candidates": [
+        "供求"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:另外一方面大量进程的农民工住房条件较差那么大家看到这明明就是有对应的共筹关系的对吧所以推进户籍制度改革是解决供需矛盾的关键->库存积压另一方面呢大量进程的农民工住房条件较差那么大家看到这明明就是有对应的供求关系的对吧所以呢推进户籍制度改革是解决供需矛盾的关键第三个"
+    },
+    {
+      "wrong": "内缅",
+      "candidates": [
+        "里面"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:最近交换部门的话，对某些位上出发力多也许有所调整就比如说从车内缅往外升垃圾，再用飞机路车道这些行为都改成了这个自发法不够分这也说明了，交换部门的自发力间是在于时即尽的，更注意的教育和引导不过话说过来，咱们开的上路安全是第一才是王道尊最手法是在每个世界应用的义务->最近交管部门然后对某些围装处罚六都也是有所调整就比如说车里面往外扔垃圾再用飞机车道这些行为都改成了这个自罚款不够分这也说明了交管部门的自罚的一件事在欲使欲尽的更注意教育和引导不过话又说过来咱们开车上路安全是第一财政王道尊技手法是在每个司机应用的义务"
+    },
+    {
+      "wrong": "写线",
+      "candidates": [
+        "显现"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:更像是灰犀牛，在爆发前也有迹象写线，但却被忽视，2017年7月17日，金融工作会议召开后的首个工作日。人民日报在头版刊发评论员文章，有效防范金融风险。->在爆发前已有迹象显现，但却被忽视，2017年7月17日，金融工作会议召开后的首个工作日，人民日报在头版刊发评论员文章，有效防范金融风险。"
+    },
+    {
+      "wrong": "冰坏",
+      "candidates": [
+        "病患"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:此外，打印机未消耗完就只能导弹状态时下一期死伤过后，人会继续恢复血量，直到储存血耗完最后一个特质，千半打冰坏在附近时，可以手进的奔赴，快速跑向冰坏->此外，当硬机未消耗完就只能导弹状态时，下一次死伤过后仍会继续恢复血量，直到储存血耗完。最后一个特质，牵绊。当病患在附近时可以使用技能奔赴，快速跑向病患。"
+    },
+    {
+      "wrong": "决诸",
+      "candidates": [
+        "绝逐"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:\"小霸\" 郑庄公使他开启了争霸风气最终却无实力成为真正的诸侯领袖只能被称\"小霸\"自此之后各国诸侯开始决诸争霸真正的春秋舞霸逐渐登上历史舞台他们分明是->郑庄公使他开启了争霸风气最终却无实力成为真正的诸侯领袖只能被称小霸自此之后各国诸侯开始绝逐争霸真正的春秋舞霸逐渐登上历史舞台"
+    },
+    {
+      "wrong": "冻平",
+      "candidates": [
+        "洞庭"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:直到耶郎溪王昌陵到过的武溪之一是武水浙江县为什么重要武水与原江汇合最终通向了冻平湖通向了长江看去源的原油止溪利尔兰又出现了->直到夜郎西王昌林到过的五夕之一是五水浙江县为什么重要五水与原江汇合最终通向了洞庭湖通向了长江看去园的原有紫西列右兰又出现了"
+    },
+    {
+      "wrong": "减力",
+      "candidates": [
+        "简历"
+      ],
+      "type": "double_char",
+      "evidence_count": 3,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:以后面试官会根据他们的要求挖掘你减力中匹配的点但如果你要面试的岗位JD重点跟你目前的减力重点不太一样比如你减力重点是创作的运营但是想冲一冲电商相关的岗位你也有这方面的经验那就需要在你的通用版减力上做模块的更新->也有面试官会根据他们的要求挖掘你简历中匹配的点但如果你要面试的岗位JD重点跟你目前的简历重点不太一样比如你简历重点是创作者运营但是想冲一冲电商相关的岗位你也有这方面的经验那就需要在你的通用版简历上做模块的更多"
+    },
+    {
+      "wrong": "减漏",
+      "candidates": [
+        "简陋"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "降价简陋语境通顺 | 例:降价减漏的是->降价简陋的是"
+    },
+    {
+      "wrong": "几里",
+      "candidates": [
+        "起立"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:上小华不良这是保命常使13。红色几里避邪科学研究发现人看到红色会更自信有干净却是能够带来好状态算不上避邪是真的能让人更有经济神14。过年放冰炮->消化不良，这是保命常识13。红色起立，避邪科学研究发现，人看到红色会更自信有干净，确实能够带来好状态算不上避邪，是真的能让人更有精气神14。过年放鞭炮"
+    },
+    {
+      "wrong": "凭入",
+      "candidates": [
+        "平路"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:新通道的组成部分大桥建成通车意味着这条水云大通道的配套工程在逐步推进凭入运河建成后将打通广西内路到北部湾的水云通道对沿线地区的物流效率会有所提升第七条->在新通道的组成部分大桥建成通车意味着这条水云大通道的配套工程在逐步推进平路运河建成后将打通广西内路到北部湾的水云通道对沿线地区的物流效率会有所提升第七条"
+    },
+    {
+      "wrong": "击入",
+      "candidates": [
+        "记录"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:一旦开车，脾气就干嘛呢？就放大八百倍于是我故意击入的我带他去野生动物园->一旦开车脾气就干嘛呢就放大八百倍于是我故意记录的我带他去野生动物园"
+    },
+    {
+      "wrong": "击成",
+      "candidates": [
+        "继承"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:对拆迁补偿款的所有权也就是说只要被击成人所立遗嘱是有效的那么遗嘱中所指防场即使被拆迁遗嘱认为->对拆迁补偿款的所有权也就是说只要被继承人所立遗嘱是有效的那么遗嘱中所指房产即使被拆迁不认为"
+    },
+    {
+      "wrong": "击敷",
+      "candidates": [
+        "肌肤"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:眼不击敷状态->眼不肌肤状态"
+    },
+    {
+      "wrong": "刀物",
+      "candidates": [
+        "耽误"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:领很刀物时间->领很耽误时间"
+    },
+    {
+      "wrong": "划避",
+      "candidates": [
+        "画壁"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:多则少万清洁严重的还可能涉及违法自媒体账号更会被泄流、封禁辛苦做的账号直接作废最后给大家划避坑就点商用一定要找做主要授权用正版素材平台非商用引用->多则少万我做的叫号最后给大家画壁坑就点用正版素材平台非消用引用"
+    },
+    {
+      "wrong": "刘志",
+      "candidates": [
+        "留置"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:我们感觉在刘志室里面真的说有事 但去扛这种可行性 也并不是很大所以还是回答这句话吧 你试试唯一句吧你科广物 证据 为这个安建最核心的东西不要乱说 不要瞎说 但是你也不要去课一说->我们感觉在刘志诗里面真的说有事但去扛这种可行性也并不是很大所以还是回答这句话吧你实实为依据吧以客观误证据为这个案件最核心的东西不要乱说不要瞎说但是也不要去刻意"
+    },
+    {
+      "wrong": "刚木",
+      "candidates": [
+        "纲目"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:把农政全书本草刚木概括为科技把茶局制酒瓶中政治科局制概括为选官制度最限制陆府州县行审制概括为地方行政制度这个叫归类->把农政权书本草纲目概括为科技把查局制九品中正制科举制概括为选官制度郡县制陆府州县行省制概括为地方行政制度这个叫归类"
+    },
+    {
+      "wrong": "制平",
+      "candidates": [
+        "自评"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:在最下面 否则你先制平个95分然后领导给你评个65分你的签字在最下面那么可能就变成了你已经签字确认了公司的考评结果对你非常不利第三 发现技巧被恶意打低分一定要第一时间提出声音->在最下面否则你先自评个95分然后领导给你评个65分你的签字在最下面那么可能就变成了你已经签字确认了公司的考评结果对你非常不利第三发现技巧被恶意打低分一定要第一时间提出身份"
+    },
+    {
+      "wrong": "剑眼",
+      "candidates": [
+        "戒严"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:你这是剑眼的吗？啊？你这混蛋是剑我呢？来，上屋来一块儿，来吧啊！上屋！你好这个直接才放弃你吗？请问您愿意和谁度过一个愉快的周末呢？A->你这是戒烟的吗你这来上屋来快点啊上屋啊请问您愿意和谁度过一个愉快的周末呢A | 例:你这是剑眼的吗？啊？你这混蛋是剑我呢？来，上屋来一块儿，来吧啊！上屋！你好这个直接才放弃你吗？请问您愿意和谁度过一个愉快的周末呢？A->你这是戒烟的吗你这来上屋来快点啊上屋啊请问您愿意和谁度过一个愉快的周末呢A"
+    },
+    {
+      "wrong": "剪辆",
+      "candidates": [
+        "减量"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:在过去要完成这个分剪辆至少需要一百名熟练工人两千平方米的装饰两千平方米的装饰两千平方米的装饰两千平方米的装饰->必须依赖于这些不知疲倦的小黄人在过去要完成这个分减量至少需要一百名熟练工人两千平方米的作用 | 例:在过去要完成这个分剪辆至少需要一百名熟练工人两千平方米的装饰两千平方米的装饰两千平方米的装饰两千平方米的装饰->全发出去必须依赖于这些不知疲倦的小黄人在过去要完成这个分钱量至少需要100名熟练工人2000平方米的"
+    },
+    {
+      "wrong": "力值",
+      "candidates": [
+        "离职"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:总之就是各种折磨你让你主动力值这样的话公司就能省掉一笔不小的支出面对公司的各种骚扰作打工人应该如何争取应对呢公司开始动歪老金的迹象之后就赶紧在工作的时候收集好资料->总之啊就是各种折磨你让你主动离职这样的话公司就能省掉一笔不小的支出面对公司的各种骚骚动打工人应该如何正确应对呢公司开始动歪脑筋的迹象之后就赶紧在工作的时候收集好"
+    },
+    {
+      "wrong": "力移",
+      "candidates": [
+        "利益"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 3,
+      "notes": "例:就没力移住他们的爷爷奶奶和外公外婆也会同孩子一样来继承遗产虽然一般来说老人并不会跟孙子来争夺遗产大多会选择自愿放弃但如果意外出现->又没利益主他们的爷爷奶奶和外公外婆也会同孩子一样来继承遗产虽然一般来说老人并不会跟孙子来争夺遗产大多会选择自愿放弃但如果意外出现"
+    },
+    {
+      "wrong": "功读",
+      "candidates": [
+        "工作"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:我只有三年功读经验的不是你哪儿来三年功读经验第一年我深入研究主流社交媒体平台分析短视频内容趋势和用户偏好啊双个年短视频第二年我深入参与数字鱼的产业生态具备高强度压下的团队协论啊打了年游戏呗第三年我负责家庭快速->我就有三年工作经验的不是你哪来三年工作经验第一年我深入研究主流社交媒体平台分析短视频内容趋势和用户偏好刷了一年短视频第二年我深入参与数字鱼的产生态具备高强度压强的团队协作能力打了一年游戏呗第三年我负责家庭困难"
+    },
+    {
+      "wrong": "动辑",
+      "candidates": [
+        "冻结"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:想得到贾一赔四赔偿并且想把这个商家的店铺货款保证金全部动辑彻底关电你就投诉到12315一般一到两个工作他们会受理受理之后呢->全套工作想得到甲义赔斯赔偿并且想把这个商家的店铺货款保证金全部冻结彻底关店你就投注到12315一般一到两个工作日他们会受理受理之后呢"
+    },
+    {
+      "wrong": "助索",
+      "candidates": [
+        "住所",
+        "驻所"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1",
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:其实陌生人的需求然而霍布斯指出在自然状态下资源是稀缺的食物和助索难以获取可用的资源也十分有限因此人们之间不可避免地会爆发激烈的竞争我们将时刻为了争夺生存所需的资源而挣扎并生活在持续的恐惧之中害怕别人会抢走自己已有的一切这种生活是黑暗而出的->是陌生人的需求然而霍布斯指出在自然状态下资源是稀缺的食物和住所难以获取可用的资源也十分有限因此人们之间不可避免的会爆发激烈的竞争我们将时刻为了争夺生存所需的资源而挣扎并生活在持续的恐惧之中害怕别人会抢走自己已有的一切这种生活是黑暗而止的 | 例:和伊拉克控制领导人助索遭袭，称美以同盟无疑是全球安全与和平的严重威胁11。以色列士兵所侯拘留美媒记者 孝孝整个约旦和西岸都属于以色列和犹太人以色列军方表示 将决定->和伊拉克库局领导人驻所遭习，称美以同盟无疑是全球安全与和平的严重威胁。11、以色列士兵所侯拘留美媒记者，叫嚣整个约旦河西岸都属于以色列和犹太人。以色列军方表示，将军方向前，"
+    },
+    {
+      "wrong": "劳力",
+      "candidates": [
+        "定理"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:是在劳动合同把第14票这里就不小气展开说明了应当劳力分为两种情况一种情况是老赵在公司干了十年惊惊业业 惊惊恳恳公司这时候越看老赵又不胜眼正好这时候合同要到期了就想着要把股照裁掉那老赵说->是在劳动合同法第14条这里就不详细展开说明了应当定理分为两种情况一种情况是老赵在公司干了10年金金页页、勤勤恳恳公司在这时候越看老赵越不顺眼正好这时候合同要到期了就想著要把老赵裁掉但老赵说"
+    },
+    {
+      "wrong": "劳奏",
+      "candidates": [
+        "牢骚"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:咱千万别劳奏抱怨如果我们不经历小事的锻炼也不太可能有能力做大事做事的关键不在于事的大小而在于事的方法你在小事当中举一反三总结方法同时你把小事->咱千万别牢骚抱怨如果我们不经历小事的锻炼也不太可能有能力做大事做事的关键不在于事的大小而在于事的方法你在小事当中举一反三总结方法同时呢你把小事"
+    },
+    {
+      "wrong": "匹劫",
+      "candidates": [
+        "细节"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:那个标题就没放到那个背景颜色里他们对法律文件的格式要求非常严格匹劫很重要你不认真吗 这就是简历 我正好想说一个你写在简历上的东西必须是在你心里烂熟的东西要有把握->底下那个标题就没放在那个背景颜色里他们对法律文件的格式要求非常严格细节很重要你不认真吗这就是简历我正好想说一个你写在简历上的东西必须是在你心里烂熟的东西要有把握"
+    },
+    {
+      "wrong": "十一",
+      "candidates": [
+        "实习"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:说得好呢，说出边的好评委对你的业务不了解不可怕可怕的是他对你的业务的了解是错的我又一次就赶上了跟我做同一个业务的同事排在我的前边打变跟评委说了很多牛屁的想法虽然这些想法没有在十一中间->说的好呢不如编的好评委对你的业务不了解不可怕可怕的是他对你的业务的了解是错的我有一次呢就赶上了跟我做同一个业务的同事排在我的前边打扁跟评委说了很多牛X想法虽然这些想法没有在实习中"
+    },
+    {
+      "wrong": "十页",
+      "candidates": [
+        "什叶"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:预警击已被完全摧毁，附近其他飞机也遭受严重损坏。阿，伊朗最高领袖穆杰塔巴哈梅内伊，对伊拉克十页派宗教领袖，即伊拉克人民在面对伊朗遭受侵略时，表现出的鲜明立场和知识。->预警级卫星图显示预警级已被完全摧毁附近其他飞机也遭受严重损坏阿伊朗最高领袖穆杰塔巴哈梅内伊对伊拉克什叶派宗教领袖及伊拉克人民在面对伊朗遭受侵略时表现出的鲜明立场和支持"
+    },
+    {
+      "wrong": "升诸",
+      "candidates": [
+        "生猪"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:不如旦记，按常年规律，结后猪肉消费较节前通常下降15%-20%同时，当前我国升诸价格周期，正处于从强周期向弱周期转变的过程中，市场供给维持较高水平第六，回光反正->不如淡季，按常年规律，结后猪肉消费较节前通常下降15%到20%同时，当前我国生猪价格周期正处于从强周期向弱周期转变的过程中，市场供给维持较高水平第六，回光反正"
+    },
+    {
+      "wrong": "半市",
+      "candidates": [
+        "办事"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:任何声称内部渠道百分百追回先收费后半市的个人祸公司99%是二次诈骗识别争为法务律师正规法律服务者会出示职业资质分析案件风险->任何声称内部渠道百分百追回先收费后办事的个人或公司99%是二次诈骗识别真伪法务律师正规法律服务者会出示职业资质分析案件风险"
+    },
+    {
+      "wrong": "南宫",
+      "candidates": [
+        "男工"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:这是一种阶层赋予的博弊太认真或者没什么值得认真的一种虚无感直到引化3转变开始了南宫习惯了为以一切事务估值投资机会什么都算了清清楚楚把空力很强但它发现你欠下了->这是一种阶层赋予的不必太认真或者没什么值得认真的一种虚无感直到引化3转变开始了男工习惯了为一切事物估值投资机会什么都算了清清楚楚把控力很强但他发现你签一下"
+    },
+    {
+      "wrong": "博力",
+      "candidates": [
+        "薄利"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:销售能力越强企业可以通过博力多销的办法加速资产的周转再来利润绝对额的增加总资产周转率综合反映了企业整体资产的盈喻能力一般来说资产的周转次数越多->销售能力越强企业可以通过薄利多销的办法加速资产的周转带来利润绝对额的增加总资产周转率综合反映了企业整体资产的营运能力一般来说资产的周转次数越多"
+    },
+    {
+      "wrong": "印界",
+      "candidates": [
+        "应届"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:人众尘埃前行今年印界高校毕业生是1220万人脱贫人口物空规模需要保持在3000万以上->沉压前行今年应届高校毕业生是1222万人脱贫人口务工规模需要保持在3000万以上"
+    },
+    {
+      "wrong": "即使",
+      "candidates": [
+        "其实"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:即使早在十几年前，安利旧伙辩大街小巷，甚至上过央市，几乎无人不知，无人不晓，他来自美国，业务范围区遍布全国八十多个地区，即使在2020年疫情蔓延下了。->其实早在十几年前，安利就火遍大街小巷，甚至上过央视，几乎无人不知，无人不晓，他来自美国，业务范围却遍布全国八十多个地区，即使在2020年疫情蔓延，"
+    },
+    {
+      "wrong": "却是",
+      "candidates": [
+        "趋势"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:却是AI中国力量全面珍惜，凭借超大规模的市场，强大的供应链，基建狂魔和工程师红利优势，有望后来就上。第十大趋势，应对->趋势AI中国力量全面惊喜凭借超大规模的市场强大的供应链基建狂魔和工程师红利优势有望后来居上第十大趋势应对"
+    },
+    {
+      "wrong": "原众",
+      "candidates": [
+        "援助"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:太不负责任了不要说从案件实施到办案证据再到法律试用的意义写出洋洋洒洒的几千次起码也对得起被告人的律师费吧即便是法律原众律师没有收被告人的钱也不能就这样随便互动吧然而也有没有师认为->太不负责任了不要说从案件事实到办案证据再到法律适用的意义写出洋洋撒撒的几千字起码也对得起被告人的律师费吧即便是法律援助律师没有收被告人的钱也不能就这样随便糊弄吧然而也有律师认为"
+    },
+    {
+      "wrong": "去务",
+      "candidates": [
+        "水谷"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:还有这么多年的加班费去务局吗我们老板每次发工资都给我多发然后把多发的钱转给我老板还有老板买的车送给他小钱能开了我跟你说老板娘那一次差一点->还有这么多年的加班费水谷局吗我们老板每次发工资都给我多发然后把多发的钱转给我老板还有老板买的车送给他小情人开了我跟你说啊老板呀那一次差一点"
+    },
+    {
+      "wrong": "去查",
+      "candidates": [
+        "觉察"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:要去去查自己->要去觉察自己"
+    },
+    {
+      "wrong": "县利",
+      "candidates": [
+        "先例"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:权的县利呢有->权的先例呢有"
+    },
+    {
+      "wrong": "参业",
+      "candidates": [
+        "餐饮"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:搞一个NBA 那个不是经济类的吗是啊 就是你就是要自愿互换的就是如果说你去读一个你自己本专业的那都是你本专业的那帮人懂吗你读了NBA的话你会发现有各行各业的有参业业的老板有电子信号->搞一个NBA那个不是经济类的吗是啊就是啊你就是要自愿互换的就是如果说你去读一个你自己本专业的那都是你本专业的那帮人懂吗你读了NBA的话你会发现有各行各业的有餐饮业的老板有电子"
+    },
+    {
+      "wrong": "取收",
+      "candidates": [
+        "起床"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:早上取收->早上起床"
+    },
+    {
+      "wrong": "变正",
+      "candidates": [
+        "辩证"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:孩子上粗糙中朗发现跟不太上了再想起来给他去补孩子长脑子最快的方式就是读同时他能提升孩子眼界和格局让孩子带着变正思维去认识世界而不是别人说什么我们就信什么这点很重要这本书从认识自我认识世界->孩子上初高中了发现跟不太上了再想起来给他去补孩子长脑子最快的方式就是读同时他能提升孩子眼界和格局让孩子带着辩证思维去认识世界而不是别人说什么我们就信什么这点很重要这本书从认识自我认识世界"
+    },
+    {
+      "wrong": "叙击",
+      "candidates": [
+        "蓄积"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:土的 放养的东西好或许他们在味道上确实是更胜一筹但是你真不知道他们去过哪儿了要是他们的生长环境 重金属高或者有机毒药的残留高那在身体里肯定是有叙击的->土的放养的东西好或许他们在味道上确实是更胜一筹但是你真不知道他们去过哪要是他们的生长环境重金属高或者有机毒药的残留高那在身体里肯定是有蓄积的所以"
+    },
+    {
+      "wrong": "古大",
+      "candidates": [
+        "孤单"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:好多法院把藏高法律亚洲来府屋夫女人谁得保护老年人时刻两儿女不怪谁古大法律亚洲保护->逃到法院把张高，法律丫族来服务，夫妮人谁得保护，保护人十颗粮，儿女不怪谁孤单，法律丫族把我服务，"
+    },
+    {
+      "wrong": "只让",
+      "candidates": [
+        "纸张"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:而且只让在炸->而且纸张在炸"
+    },
+    {
+      "wrong": "叮叮",
+      "candidates": [
+        "丁丁"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:前面是这四个条件业务的组成部分 那么这里面最主要适合的点就是工资支付基督和接受管理的证据所以说工资流水一定要行是原件 然后其实管理证据 比如说是打卡基督或者是叮叮一定要录屏加结统 第二个关于被迫解除的->这四个条件业务的组成部分那么这里面最主要审核的点就是工资支付记录和接受管理的证据所以说工资流水一定要接受原件然后接受管理的证据比如说是打卡记录或者是丁丁一定要录屏加截图第二个关于被迫解除"
+    },
+    {
+      "wrong": "司法",
+      "candidates": [
+        "四华"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:司法会员系统 机器人导购其实吧 这些提升效率打开视野的科技内容并不能形成太久的竞争差异最终的身份还是会回到人心的陪伴和人性的保护第六是无界化就是把各种液态打缓在一起->四华会员系统机器人导购其实吧这些提升效率打开视野的科技内容并不能形成太久的竞争差异最终的胜负还是会回到人心的陪伴和人性的保护第六是无界化就是把各种业态打混在一起"
+    },
+    {
+      "wrong": "吃啰啰",
+      "candidates": [
+        "赤裸裸"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1",
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 3,
+      "notes": "例:自己吃啰啰的->自己赤裸裸的 | 例:可以说是吃啰啰的实体错误程序违法更不要讲还有违法托押的五个亿根本都没有写到医生判决书之中如果这样的行为这样的证据这样的判决还可以->可以说是赤裸裸的实体错误程序违法更不要讲还有违法扣押的5个亿根本都没有写到一审判决书之中如果这样的行为这样的证据这样的判决还可以"
+    },
+    {
+      "wrong": "合结",
+      "candidates": [
+        "和解"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:你打算多少钱来着？3800块3800块？不是3800块，是3800块你看啊，我的房租是一个月700我租了七个月零二十八天，还剩四个月所以合结起来是2840->你打算多少钱三千八三千八百万不是三千八百万是三千八百块你看啊我的房租是一个月七百我租了七个月零二十八天还剩四个月所以合计起来是两千八百四十"
+    },
+    {
+      "wrong": "同局",
+      "candidates": [
+        "工具"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:诗歌带着剑大客国料领导瞬间察觉到客户对纯净甜美的小职员有意思于是故意和田田偶物还要带她去参见高级宴会身为公司新人能有和各行各业大人物接触机会田田非常激动的同意可让她意想不到的是自己竟是白总获得利益的同局为了讨好看->诗歌带着剑大客不料领导瞬间察觉到客户对纯净甜美的小职员有意思于是故意和甜甜偶遇还要带她去参见高级宴会身为公司心愿能有和各行各业大人物接触机会甜甜非常激动的同意可让她意想不到的是自己竟是白总获得利益的工具为了讨好客户"
+    },
+    {
+      "wrong": "名声",
+      "candidates": [
+        "民生"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:2026名声铁拳行动启动研查食品安全依美乱象价格欺诈套路消费等八大领域次安全与事故重庆大学实验室爆炸3月20日一死三伤疑似操作不到->2026民生铁拳行动启动严查食品安全医美乱象价格欺诈讨路消费等八大领域4。安全与事故重庆大学实验室爆炸3月20日一死三伤疑似操作不到"
+    },
+    {
+      "wrong": "名思",
+      "candidates": [
+        "公司"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:我劝你放弃一笔难账也不会为了赚取你的失费让你去打一场赢了也执行不到的空盼因为我知道这笔贷款可能是名思运营的救命钱我的责任是帮你直损而不是让你赢->劝你放弃一笔难账也不会为了赚取你的支费让你去打一场赢得也执行不到的空盘因为我知道这笔贷款可能是公司运营的救命钱我的责任是帮你止损而不是让你赢"
+    },
+    {
+      "wrong": "听姐",
+      "candidates": [
+        "亲戚"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:听姐阿姨可能就清理掉了实际上非985学校的同学的简历都没有办法被你们携带回公司对 其实也不单是我们遇见这样的问题我们会这么操作其他的大型->亲戚阿姨可能就清理掉了就实际上非985学校的同学的简历都没有办法被你们携带回公司对其实也不单是我们遇见这样的问题我们会这么操作其他的大型"
+    },
+    {
+      "wrong": "启一",
+      "candidates": [
+        "起疑"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:可以有更高的执行权限要回签款的速度会更快我没有同意还是按照原方案执行活还没干就让我交钱这个时候我就有点启一心了这群人不会是坑我钱的吧然后就开始了漫长的等待中间他们也会发消息安抚我意思就是->可以有更高的执行权限要回欠款的速度会更快我没有同意啊还是按照原方案执行活还没干就让我交钱这个时候我就有点起疑心了啊这群人不会是坑我钱的吧然后就开始了漫长的等待中间他们也会发消息安抚我啊意思就是"
+    },
+    {
+      "wrong": "告过",
+      "candidates": [
+        "干活"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:老婆弄错了对不起你还是发火吧没事那你告过去呀看着干啥你昨天晚上又去按摩去了对呀你们男人都这么喜欢按摩吗->老婆弄错了对不起啊那你还说还是发火吗没事啊那你告过去啊那看着干啥你昨天晚上要去按摩去了对啊你们男人都这么喜欢按摩吗"
+    },
+    {
+      "wrong": "周弄",
+      "candidates": [
+        "中东"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:都不知道，你还少拿了不少钱呢那么这里一般有两种情况不管是哪种情况，你都是可以拿到补偿金或者赔偿金的记得点击关注加收藏不然你把老周弄丢了，可就找不到了->很多人都不知道 你还少拿了不少钱的那么这里一般有两种情况不管是哪种情况你都是可以拿到补偿金或者赔偿金的记得点击关注加收藏不然你把老中东丢了 可就找不到了"
+    },
+    {
+      "wrong": "和信仰",
+      "candidates": [
+        "核心两"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:认可和信仰点->认可核心两点"
+    },
+    {
+      "wrong": "品据",
+      "candidates": [
+        "平均"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:就是你的税金的品据依法工资一般包含以下四个部分一 银行卡到手的工资二 加上你的个人扣税的部分三 再加上你的社保的个人部分四 再加上你的住房公积金的个人部分->就是你的税勤的平均依法工资一般包含以下四个部分一、银行卡到手的工资二、加上你的个人扣税的部分三、再加上你的社保的个人部分四、再加上你的住房公积金的个人部分"
+    },
+    {
+      "wrong": "唯秀",
+      "candidates": [
+        "维修"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:在2003年，他以488分考入正宗大学给排学加业，成为家族里唯秀不多的大学生，大学期间他活跃以主持以辩论，口才以表达能力得到断裂。2007年毕业后，->家境瓶海2003年他以488分考入郑州大学给排学专业成为家族里维修不多的大学生大学期间他活跃于主持与辩论口才与表达能力得到锻炼2007年毕业后 | 例:在2003年，他以488分考入正宗大学给排学加业，成为家族里唯秀不多的大学生，大学期间他活跃以主持以辩论，口才以表达能力得到断裂。2007年毕业后，->家境瓶海2003年他以488分考入郑州大学给排学专业成为家族里维修不多的大学生大学期间他活跃于主持与辩论口才与表达能力得到锻炼2007年毕业后"
+    },
+    {
+      "wrong": "商派",
+      "candidates": [
+        "伤害"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:去体会他的感受的而不是可以任意去愉悦界限的商派到他那么这个真要好好反省->处身处地去体会他的感受的而不是可以任意去逾越界限的伤害到他那么这个真的要好好反省人最难的呀就是学会去尊重他人把人作为目的而不是纯粹的事"
+    },
+    {
+      "wrong": "喉筒",
+      "candidates": [
+        "合同"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:死走难藏北多年呢卖过保险摆过它而热总之用这些经验给你们上一堂直抢法律课一定要签劳动喉筒签了合作很多权益就能收到法律的保护没签的也别怕留好工作->是走南藏北多年内卖过保险摆过他儿子啊说就用这些经验给你们上一堂职场法律课啊一定要签劳动合同签了合同很多权益就能受到法律的保护啊没签的也别怕 留好工作"
+    },
+    {
+      "wrong": "嗯他",
+      "candidates": [
+        "大概"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:问题嗯他怎么->问题大概怎么"
+    },
+    {
+      "wrong": "团圆",
+      "candidates": [
+        "同样"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:思路完全不一样但在头字角度上来看他们做生意的方法更像是一个生物体的进化走的是水到渠成的路子但面对团圆是引水到沙漠这样的世纪难题他并不企图从一开始就设计出一条路来考虑的面面俱到->思路完全不一样但在投资的角度上来看他们做生意的方法更像是一个生物体的进化走的是水到渠成的路子但面对同样是引水到沙漠这样的事迹难题他并不企图从一开始就设计出一条路来考虑的面面巨岛"
+    },
+    {
+      "wrong": "固碍",
+      "candidates": [
+        "故而"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:下跌固碍我们->下跌故而我们"
+    },
+    {
+      "wrong": "图信",
+      "candidates": [
+        "途径"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:更为显著需要明确的是这两条图信军队举报人信息严格保密并有专门规定防止打击报复你不必担心因实名反应的底而遭遇额外的风险事实上规范化的监督机制正是为了->更为显著需要明确的是这两条途径军队举报人信息严格保密并有专门规定防止打击报复你不必担心因实名反应问题而遭遇额外的风险事实上规范化的监督机制正是为了"
+    },
+    {
+      "wrong": "圣敢",
+      "candidates": [
+        "顺感"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:亚培圣敢二->亚培顺感二"
+    },
+    {
+      "wrong": "坏机",
+      "candidates": [
+        "会计"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:别人在采访人机时他在监狱里面学会了关企业管理法律 坏机的内容甚至还会修电脑这位罪犯刑满事放后一点都不担心出来之后找不到工作他给自己起了一个新名字索南然后量身为自己打造一个新身份就这样->别人在踩扶轮机时他在监狱里面学会留关企业管理法律会计的内容甚至还会修电脑这位罪犯刑满释放后一点都不担心出来之后找不到工作他给自己起了一个新名字索南然后量身为自己打造一个新身份就这样"
+    },
+    {
+      "wrong": "培上",
+      "candidates": [
+        "赔偿"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:仍附有安全保障业务的应夹事够了妥善处置乘客有务要求退还相应区顿的票款供如果因处置不当造成人身损外可依法主张培上的请试提醒->应付有安全保障义务的应夹示救助妥善处置乘客有权要求退还相应驱顿的票款如果因处置不当造成人申损害可以发出主张赔偿的陈诗提醒"
+    },
+    {
+      "wrong": "堂民",
+      "candidates": [
+        "产品"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:今天我们就来扒一把阿战以后大中堂民经历了几轮大猪期看一看到底是什么在推动它上涨又是什么最终把它给按下去看完了这段以后大家可能会对眼下的石油的走势会有一些->大跌呢今天我们就来扒一把这个二战以后大中产品经历了几轮大周期看一看到底是什么在推动它上涨又是什么最终把它给按下去看完了这一段以后呢大家可能会对眼下的这个石油的走势会有一些"
+    },
+    {
+      "wrong": "堵围块",
+      "candidates": [
+        "睹为快"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 3,
+      "notes": "例:你看对方听了紧不紧张第四 向客户推荐一些新奇的他不知道有东西人们都喜欢一堵围块第五 可以利用一些关联的故事例如 您这种情况我的客户也遇到过我们一起想了很多的办法最后发现一个简单的窍门就可以解决->你看对方听了紧不紧张第四向客户推荐一些新奇的他不知道的东西人们都喜欢一睹为快第五可以利用一些关联的故事例如因这种情况我的客户也遇到过我们一起想了很多的办法最后发现一个简单的窍门就可以解决"
+    },
+    {
+      "wrong": "境袋",
+      "candidates": [
+        "静怠"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:23。34 鸦片战争 中国进入境袋23。54 甲午战争惨败23。56 八国联军攻入北京24。10 辛亥革命 清朝灭亡->关锁国23。34 鸦片战争 中国进入静怠23。54 甲午战争惨败23。56 八国联京攻入北京24。整 辛亥革命 清朝灭亡"
+    },
+    {
+      "wrong": "墙是",
+      "candidates": [
+        "强势"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:处在什么位置如果收盘架在近期高点的位置说明多头墙是KDJ往上走如果收盘架在近期地点的位置说明空头墙是KDJ往下走它反映的是短期动能的强拙基础运动->如果收盘架在近期高点的位置说明多头强势KDJ往上走如果收盘架在近期低点的位置说明空头强势KDJ往下走它反映的是短期动能的强弱"
+    },
+    {
+      "wrong": "声不",
+      "candidates": [
+        "生动"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:但是咱俩讲故事的能力不一样你把这些东西看起来以后你讲故事讲得不过我声不但是我讲故事就会讲得比你声不所以说这种讲故事的能力是什么是锻炼出来的你不锻炼->但是咱俩讲故事的能力不一你把这些东西看起来以后你讲故事讲的不如我生动但是我讲故事就会讲的比你生动所以说这种讲故事的能力是什么是锻炼出来的你不锻炼"
+    },
+    {
+      "wrong": "备输",
+      "candidates": [
+        "背书"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:保证行为是商业会票保证人发生保证债券的行为保证的对象可以是出票人、成对人或备输人即分别为商业会票的出票、成对、备输行为做保证->保证行为是商业汇票保证人发生保证债券的行为保证的对象可以是出票人、成对人或背书人即分别为商业汇票的出票、成对、背书行为做保证"
+    },
+    {
+      "wrong": "大猪",
+      "candidates": [
+        "打住"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:大猪 别说这些也没有用咱们赚点贪钱 好不好好嘞 那我就切入正题了啊之前您的主管已经把您的诉求都提上来了但我们实在没法全部满足只能给到百分之五不行我的底线是百分之二十->打住 别说这些没有用咱们抓紧谈钱好不好好嘞那我就切入正题了啊之前您的主管已经全部满足只能给到百分之五不行我的底线是百分之二十"
+    },
+    {
+      "wrong": "大院隔",
+      "candidates": [
+        "单元格"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 3,
+      "notes": "例:第2个参数代表开始日期这里我们选择员工入职日期C2大院隔第2个参数代表月数如果我们转正时间是2个月这里就停2如果是3个月就停3这样就计算出转正日期->第一个参数代表开始日期这里我们选择员工入职日期C2单元格第二个参数代表月数如果我们转正时间是两个月这里就填二如果是三个月就填三这样就计算出转正日期"
+    },
+    {
+      "wrong": "失果",
+      "candidates": [
+        "事故"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:下班路上被撞，算工伤吗？批准的朋友看情况，在上下班途中受到非本人主要责任的交通失果，就算工伤比如下班骑著回家，被骑著撞了交警认定对方主要责任->下班路上被撞算工伤吗批出的朋友看情况在上下班途中受到非本人主要责任的交通事故就算工伤比如下班骑车回家被骑车撞了交警认定对方主要"
+    },
+    {
+      "wrong": "头走",
+      "candidates": [
+        "动手"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:的手头走上下->的手动手上下"
+    },
+    {
+      "wrong": "奋而",
+      "candidates": [
+        "份额"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:就会出现转继承的特殊情况本有老人继承的奋而会由他们的继承人来继承也就是说一份遗产可能就有叔叔叔叔舅舅姨妈等继承人->就会出现转继承的特殊情况本云有老人继承的份额会由他们的继承人来继承也就是说一份遗产可能就有叔叔姑姑舅舅姨妈等继承人"
+    },
+    {
+      "wrong": "奏示",
+      "candidates": [
+        "就是"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:都是喷放Style奏示那句话这都不是事一零五七年我重庆时候便拿到北宋央企工作的机会工作初期企业内部正是新旧党派互相撕逼的时候其中新派老大->这句爱好都是奔放style就是那句话这都不是事儿1057年我中进士后便拿到北宋央企工作的机会工作初期企业内部正是新旧党派互相撕逼的时候其中新派老大"
+    },
+    {
+      "wrong": "奖势",
+      "candidates": [
+        "讲师"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:与专业信息2016年6月他的一段七分钟解读34所985高校短视频意外报红播放量破译绝难他一夜之间从考研圈小众奖势变成全网教育网红童年九月->高校与专业信息2016年6月她的一段七分钟解读34所985高校短视频意外爆猴播放量破亿却让她一夜之间从考研圈小众讲师变成全网教育网猴同年9月 | 例:与专业信息2016年6月他的一段七分钟解读34所985高校短视频意外报红播放量破译绝难他一夜之间从考研圈小众奖势变成全网教育网红童年九月->高校与专业信息2016年6月她的一段七分钟解读34所985高校短视频意外爆猴播放量破亿却让她一夜之间从考研圈小众讲师变成全网教育网猴同年9月"
+    },
+    {
+      "wrong": "女生",
+      "candidates": [
+        "幼儿"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:女生中的霹雳舞红了当然如果她能让县里的中小学生都有机会跳跳霹雳舞有机会运动那她更应该红幼儿园的老师让小朋友闻她的脚还拍照 发了朋友圈她也红了不过这个红->幼儿中的霹雳舞红了当然如果他能让县里的中小学生都有机会跳跳霹雳舞有机会运动他更应该红幼儿园的老师让小朋友闻他的脚还拍照发了朋友圈他也红了不过这个红"
+    },
+    {
+      "wrong": "子弯",
+      "candidates": [
+        "指纹"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "指纹打法比分合理 | 例:的子弯打几->的指纹打几"
+    },
+    {
+      "wrong": "存亿",
+      "candidates": [
+        "损益"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:表外业务，worth balance sheet，business从财务角度看，银行业务可以分为表内业务和表外业务表外业务是指商业银行从事的不列入资产负债表但能影响银行当期存亿的经营活动它有限制的->表外业务从财务角度看银行业务可以分为表内业务和表外业务表外业务是指商业银行从事的不列入资产负债表但能影响银行当期损益的经营活动它有想法"
+    },
+    {
+      "wrong": "守斗",
+      "candidates": [
+        "手段"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:取代后州，定都开封，建立北宋王朝，开启了大宋时代登基之后，他深知武将专权的危害，为了杜绝兵兵隐患上演了著名的悲酒士兵权，他设验款待开国武将，以问和守斗->取代后舟，定独开封，建立北宋王朝，开启了大宋时代，登基之后，他深知武将专权的危害，为了杜绝兵变隐患，上演了著名的杯酒士兵权，他设宴款待开国武将，以温和手斗"
+    },
+    {
+      "wrong": "完后",
+      "candidates": [
+        "玩偶"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:超大完后都还->超大玩偶都还"
+    },
+    {
+      "wrong": "宏岸",
+      "candidates": [
+        "同案"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:影响到自己的行期就是不知道该如何去应对公诉人夺夺逼人的一个发问担心的想到对自己不利的一些地方那么就像孙律师之前的案件宏岸的被告人他就没有请律师安排的法律原则->影响到自己的刑期就是不知道该如何去应对公诉人咄咄逼人的一个发问担心地想到对自己不利的一些地方就像孙律师之前的案件同案的被告人他就没有请律师安排的法律"
+    },
+    {
+      "wrong": "宝菜",
+      "candidates": [
+        "饱餐"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:白鹿看雕着尼秋 缓缓的将它吞入腹中宝菜一顿后 白鹿优雅的逼下头清虾了几口清水->白鹿看叼着尼秋，缓缓地将它通入腹中。饱餐一顿后，白鹿优雅地逼下头，加了几口清水。"
+    },
+    {
+      "wrong": "实购",
+      "candidates": [
+        "施工"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:实购单位处选应罚款工程兼理单位转让兼理业务等可以择令停业整顿降低资质等级情结严重的调销资质整书->施工单位处相应罚款，工程监理单位转让监理业务等，可以责令停业整顿，降低资质等级，情节严重地吊销资质证书。"
+    },
+    {
+      "wrong": "宣管",
+      "candidates": [
+        "神馆"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:1952年进入长洲明报链复刊编辑专写大量功能题材报道在独家中影响宣管1954年他以庞令郊居民考取北京大学中文系新闻专业入学后正式改名临郊->1952年进入长洲民报院副刊编辑，撰写大量功能题材报导，在读者中影响神馆。1954年，他以彭令娇之名考起北京大学中文系新闻专业，入学后正式改名林娇。"
+    },
+    {
+      "wrong": "宣销",
+      "candidates": [
+        "喧嚣"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:疑在宣销的城->疑在喧嚣的城"
+    },
+    {
+      "wrong": "宪复",
+      "candidates": [
+        "线索"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:监委的调查手段技术能力是非常强的所以你的一些小聪明往往无所对齐可能监委正式通过你的一些小聪明的动作来去挖掘发泄犯罪宪复第三件不能做的事情->监委的调查手段技术能力是非常强的所以你的一些小聪明往往无所对齐可能监委正是通过你的一些小聪明的动作来去挖掘发泄犯罪线第三件不能做的事情"
+    },
+    {
+      "wrong": "导举",
+      "candidates": [
+        "蹈矩"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:就已经便利出现了我要是再循规导举那我就只能下线回家收费品我其实并不知道我这条路行不行但当你只有一条路走的时候其实你是不会就考虑行不行的只会让这条路尽量变得行感谢你的坦承你让我长了个记性常识生存见识->就已经片里出现了我要是再循规蹈矩那我就只能下线回家收费品了我其实并不知道我这条路行不行但当你只有一条路走的时候其实你是不会就考虑行不行的只会让这条路尽量变得行感谢你的坦诚你让我长了个记性城市生存"
+    },
+    {
+      "wrong": "将册",
+      "candidates": [
+        "讲解"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:各种各样的比赛也拿过了一些奖项请大家允许我小小的骄傲一下但是参加了这么多的比赛悄悄的告诉大家科普将册大赛非常具有挑战性也非常具有韩精灵->各种各样的比赛也拿过了一些奖项请大家呢允许我小小的骄傲一下但是呢参加了这么多的比赛啊悄悄的告诉大家科普讲解大赛非常具有挑战性也非常具有含金力"
+    },
+    {
+      "wrong": "小拿",
+      "candidates": [
+        "缴纳"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:没有实习 也没有领导这是我的第一份工作除了名字是真的其实其他的都是假的实习经历是编的因为实习不用小拿无限一斤你们也就插不到社保至于上家公司的领导你应该能猜到是谁扮演的了吧你给上家公司领导打电话->没有实习也没有领导这是我的第一份工作除了名字是真的其实其他的都是假的实习经历是编的因为实习不用缴纳无限一金你们也就查不到社保至于上家公司的领导你应该能猜到是谁扮演的了吧你给上家公司领导打电话"
+    },
+    {
+      "wrong": "尔士",
+      "candidates": [
+        "而是"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 3,
+      "notes": "例:因为没有提醒而吾尔士的请举手今天教大家电脑端怎么实现强提醒首先我们要安装一个小工具好用变迁电脑就装Windows的版本手机也有安卓跟IOS工具打开就能直接用操作很是简单这里是->因为没有提醒而我而是的请举手今天教大家电脑端怎么实现强提醒首先我们要安装一个小工具好用变迁电脑就装Windows的版本手机也有安卓跟iOS工具打开就能直接用操作很是简单"
+    },
+    {
+      "wrong": "尖练",
+      "candidates": [
+        "建立"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:不用尖练耐->不用建立耐"
+    },
+    {
+      "wrong": "就分",
+      "candidates": [
+        "纠纷"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1",
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:本案属于同居关系就分上诉人已屡要求被上诉人假拦履行恋爱协议约定的补偿卡项该协议是双方同居期间出具的该协议属于一种具有感情色彩的身份协议->本案属于同居关系纠纷上诉人一旅要求被上诉人甲兰履行恋爱协议约定的补偿卡项该协议是双方同居期间出具的该协议属于一种具有感情色彩的身份协议 | 例:法院的速前速中以及停后的调解也都属于调解的方式第三通过仲裁解决合同就分当事人矛盾比较激烈协商不成的时候如果合同当中有约定仲裁的可以通过仲裁的->法院的诉前诉中以及停后的调解也都属于调解的方式第三通过仲裁解决合同纠纷当事人矛盾比较激烈协商不成的时候如果合同当中有约定仲裁的可以通过仲裁"
+    },
+    {
+      "wrong": "屈足",
+      "candidates": [
+        "驱逐"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:屈足优质品 进而出现市场交易产品停均质量下降的现象例如 在产品市场上 特别是在旧货市场上由于卖方比买方拥有更多的关于商品质量的信息 买方由于无法识别商品->驱逐优质品进而出现市场交易产品平均质量下降的现象例如在产品市场上特别是在旧货市场上由于卖方比买方拥有更多的关于商品质量的信息买方由于无法识别商品质量"
+    },
+    {
+      "wrong": "屋叶",
+      "candidates": [
+        "物业"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:做一个小小的准备第二个就是找第三方去调解如果在小区被叶祖的虫狗咬杀我们已经可以找一般可以找屋叶找屋叶要从屋叶进入进些杀我们也可以找->做一个小小的准备第二个就是找第三方去调节如果在小区被这个业主的虫口咬杀我们可以找一般可以找物业找物业要从物业进入进行协商我们也可以找好"
+    },
+    {
+      "wrong": "属总",
+      "candidates": [
+        "输送"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:专家属总关键->专家输送关键"
+    },
+    {
+      "wrong": "山山",
+      "candidates": [
+        "姗姗"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:平星山山来迟->平星姗姗来迟"
+    },
+    {
+      "wrong": "岩份",
+      "candidates": [
+        "盐分"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:和像小珍珠一样的岩其实是岩份在水里慢慢沉淀再碰上水体轻微流动或者遇到一些小颗粒来当做结晶核心就在这个又稳又咸的环境下一点点形成为这种光滑圆润的球状眼力又比如一些不规则的结晶岩他们是->像小珍珠一样的盐其实是盐分在水里慢慢沉淀再碰上水体轻微流动或者遇到一些小颗粒来当做结晶核心就在这个又稳又闲的环境下一点点形成了这种光滑圆润的球状眼力又比如一些不规则的结晶盐"
+    },
+    {
+      "wrong": "工时",
+      "candidates": [
+        "公司"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:Gemini 全套公司报销 随便你用诶 你觉得这只小扇 我给你算一笔账一个员工每天用AI处理文档写方案做分析的效率不用AI的员工的三到五倍同样的薪水 同样的工时一个人干->全套公司报销随便你用你觉得这是小善儿我给你算一笔账一个员工每天用AI处理文档写方案做分析的效率不用AI的员工的三到五倍同样的薪水同样的公司一个人干"
+    },
+    {
+      "wrong": "工行",
+      "candidates": [
+        "通航"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:像今年市场不好的情况下可以先从新农员入手比如说之前在招的工行岗位的线切五年之后稳定在八千到一万二并且新农员工厂的订单比较稳定你也不用担心工史的问题也可以去学习装备变工装备前工你现在意味着->像今年市场不好的情况下可以先从新农园入手比如说之前在招的通航岗位的线切无链之后呢稳定在8000到12000并且新农园工厂的订单比较稳定你也不用担心工时的问题你也可以去学习装备电工 装备钱工"
+    },
+    {
+      "wrong": "已主",
+      "candidates": [
+        "遗嘱"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:每个字都必须有本人新笔书写不能打印，也不能让别人带写第二点，一定要加上这一句话本人在历史已主时，神至清晰->每个字都必须由本人亲笔书写不能打印也不能让别人带写第二点一定要加上这一句话本人在立此遗嘱时神智清晰"
+    },
+    {
+      "wrong": "布居",
+      "candidates": [
+        "不拘"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:是说职场失忆但是文创生活搞的那是红红火火先给四起搞了接地气的哑号东坡军事诱写了不少像赤壁副这样庞博布居的师子此外作为大聪认证的苏大厨还抽了个洪发明->说职场诗语但是文创生活搞得那是红红火火先给自己搞了接地气的雅号东坡居士又写了不少像赤壁赋这样磅礴不居的诗词此外所谓大聪认证的苏大厨还抽了个哄发明"
+    },
+    {
+      "wrong": "帐纪",
+      "candidates": [
+        "账记"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:有转帐纪录一->有转账记录一"
+    },
+    {
+      "wrong": "帕变形",
+      "candidates": [
+        "怕便携"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:阿卓帕变形式显->阿卓怕便携式显"
+    },
+    {
+      "wrong": "帕尼藤",
+      "candidates": [
+        "怕你疼"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:是把帕尼藤放进->是把怕你疼放进"
+    },
+    {
+      "wrong": "平派",
+      "candidates": [
+        "评判"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:培养自我观察的能力当强迫思维或者行为出现时尝试将自己从必须服从的紧迫压抑感中抽离出来以一种温和不平派的正念态度去觉察啊 原来这是强迫症状的一种是我下意识的灾难化思维在恐吓威胁我这一步是为了打破->培养自我观察的能力当强迫思维或者行为出现时尝试将自己从必须服从的紧迫压抑感中抽离出来以一种温和不评判的正念态度去觉察原来这是强迫症状的一种是我下意识的灾难化思维在恐吓威胁我这一步是为了打破"
+    },
+    {
+      "wrong": "年兴",
+      "candidates": [
+        "黏性"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:这件计划案子都给履下了免费收图有一个坏处坏处是什么呢年兴可能不强可能人家会跑你交货的人家就跑了所以这里边一定要打一个年兴的钩子就是我刚才最后跟他说那一点你能提供->这些计划案了东哥给捋一下了免费收图呢有一个坏处坏处是什么呢黏性可能不强可能人家会跑你教会了人家人家就跑了所以这里边呢一定要打一个黏性的钩子就是我刚才最后跟他说那点你能提供"
+    },
+    {
+      "wrong": "并气",
+      "candidates": [
+        "摒弃"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:并开始将他们的美元兑换成史无尽美国的黄金储备迅速耗尽所以尼克松总统停止了这种兑换他并气了美国进而并气了任何一种与黄金标准相似的东西->并开始将他们的美元兑换成实无金美国的黄金储备迅速耗尽所以尼克松总统停止了这种兑换他摒弃了美国进而摒弃了任何一种与黄金标准相似的东西"
+    },
+    {
+      "wrong": "幻化",
+      "candidates": [
+        "坏话"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:那些说你幻化的人会给你一毛钱吗会在你困难的时候帮助你吗会在你没饭吃的时候给你一碗饭吃吗如果不会那些人说的话就当放屁好的好的好的谢谢谢谢来啊直播间的兄弟姐妹们这个原子一定要贯彻到人身到死就是那些->那些说你坏话的人会给你一毛钱吗会在你困难的时候帮助你吗会在你没饭吃的时候给你一碗饭吃吗如果不会那些人说的话就当放屁好的好的谢谢谢谢来啊直播间的兄弟姐妹们这个原则一定要贯彻到人生到死就是那些"
+    },
+    {
+      "wrong": "广参嗯",
+      "candidates": [
+        "晚餐"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:关于广参嗯还想->关于晚餐还想"
+    },
+    {
+      "wrong": "庆彭",
+      "candidates": [
+        "亲朋"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:每场从早期的起伏纳祥庙会到市集结场最早可追溯到北宋末年每逢2月初8 家家户户庆彭宁门欢聚一堂穿新衣走庆祝->从早期的祈福纳祥庙会到市集结场最早可追溯到北宋末年每逢2月初八家家户户亲朋宁萌欢聚一躺穿新衣走亲"
+    },
+    {
+      "wrong": "序幕",
+      "candidates": [
+        "畜牧"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:他凭借勤的努力考入伊利诺伊大学协议四年转入康奈尔大学农学院农幕专业系统学习序幕养机凭中改良等专业知识毕业后凭借学历和能力他本可享受安危优惠的生活->他凭借勤奋努力考入伊利诺伊大学学医四年转入康奈尔大学农学院农牧专业系统学习畜牧养鸡品种改良等专业秩序毕业后凭借学历和能力他本可享受安稳优渥的生活"
+    },
+    {
+      "wrong": "应声声",
+      "candidates": [
+        "硬生生"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:子我应声声忍住->子我硬生生忍住"
+    },
+    {
+      "wrong": "应识",
+      "candidates": [
+        "硬是"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:员工作者给出书面的理由口头的不要认远处罚有明确规定不符合要出具书面的通知应识不出具的用录屏或录音保存证据然后到当地的司法局进行投诉对出具的书面通知不符的也可以司法局收到投诉->员工作者给出书面的理由口头的不要认员处罚有明确规定不符合要出具书面的通知硬是不出具的用录评或录音保存证据然后到当地的司法局进行投诉对出具的书面通知不符的也可以司法局受到投诉"
+    },
+    {
+      "wrong": "底性",
+      "candidates": [
+        "底薪"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:公司还要给你提成我去面的这家公司它提成方式有两种第一种就是有2000%的底性40%的底性第二种就是没有底性70%的底性我觉得大部分人应该都会选择第二种吧所以我们765再乘以70%的底性->你的公司里面公司还要给你提成我去面的这家公司它提成方式有两种第一种就是有2000的底薪40%的提成第二种就是没有底薪70%的提成我觉得大部分人应该都会选择第二种吧所以我们765再乘以70%"
+    },
+    {
+      "wrong": "底销",
+      "candidates": [
+        "抵消"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:当价格变动 使现货买卖上出现赢亏时可由期货交易上的亏盈得到底销或弥补从而在线与期之间 近期和远期之间建立一种兑充机制->近同等数量的期货经过一段时间当价格变动使现货买卖上出现盈亏时可由期货交易上的亏盈得到抵消或弥补从而在现与期之间近期和远期之间建立一种对冲机制"
+    },
+    {
+      "wrong": "度由",
+      "candidates": [
+        "独有"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:但是属于经济纠纷不与处理人家自杀了一个普通的村民因为可能被拍到了车牌号涉嫌侵犯的肖像权隐私权你大晚上的全军出击登门拜访要求删视频无度由我前段时间某人去举报武汉某大学->是属于经济纠纷不予处理人家自杀了一个普通的村民因为可能被拍到了车牌号涉嫌侵犯了肖像权隐私权你大晚上的全军出击登门拜访要求筛视频无独有我前段时间某人去举报武汉某大学"
+    },
+    {
+      "wrong": "廉价",
+      "candidates": [
+        "年假"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:所得税上面去查询第二笔就是未秀廉价的工资劳动合同到期后如果当你的廉价是没有修完的劳动者是可以主张未秀廉价的工资举个例子你的劳动合同是6月30号到期那么当年你仍然是可以享受的->所得税上面去查询第二笔就是未修年假的工资劳动合同到期后如果当年的年假是没有修完的劳动者是可以主张未修年假的工资举个例子你的劳动合同是6月30号到期那么当年你仍然是可以享受"
+    },
+    {
+      "wrong": "建酱",
+      "candidates": [
+        "健将"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:运动建酱确实有加分但具体到高校录取还得看学校的政策有人觉得这是不公平的特权普通孩子累死累活的刷题人家爬个山就加分了这事其实反映了一个更加深层的问题就是高端教育资源的方式->高考政策运动健将确实有加分但具体到高校录取还得看学校的政策有人觉得这是不公平的特权普通孩子累死累活的刷题人家爬个山就加分了这事其实反映了一个更加深层的问题就是高端教育资源的"
+    },
+    {
+      "wrong": "弦剂",
+      "candidates": [
+        "衔接"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:怎么配图更有冲击力比如照了推广你还得让他快速的明白你的运营目标推广方向各个板块的配合和弦剂等等为了节约工时你还得建立一套完整的培训体系方便后期新员工经录能够快乐->怎么配图更有冲击力比如照了推广你还得让他快速的明白你的运营目标推广方向各个板块的配合和衔接等等为了节约工时你还得建立一套完整的培训体系方便后期新员工进入能够快速的"
+    },
+    {
+      "wrong": "弹员",
+      "candidates": [
+        "单元"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:然后再来标记出本月要转正员工的日期选中地点击条件格式下拉箭头点击突出显示弹员格规则选中发生日期选择本月然后填充颜色可以自己选择->然后再来标记出本月要转正员工的日期，选中地链，点击条件格式下拉箭头，点击突出显示单元格规则，选中发生日期，选择本月，然后填充颜色可以自己选择。"
+    },
+    {
+      "wrong": "当久",
+      "candidates": [
+        "挡酒"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:以前总觉得职场女性想往上走要么得在酒局硬扛要么得被家人扯后腿现在才发现早变天了小实习生拿体检报告当久年轻人早不完喝倒才算给面子那套贪生意也不用费->以前总觉得职场女性想往上走要么得在酒局硬扛要么得被家人扯后腿现在才发现早变天了小实习生拿体检报告挡酒年轻人早不完喝倒才算给面子那套谈生意也不用非"
+    },
+    {
+      "wrong": "形式",
+      "candidates": [
+        "刑事"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:评论说，现在做形式律师，你如果没有资源，就不要做，或者说你怎么样，就不要做，其实我是不赞狠的。我一直认为，也坚信认为，形式辩护律师，我们靠专业，就完全可以立足。->评论说说现在这个做刑事律师你如果没有资源你就不要做或者说你怎么样就不要做其实我是不赞同的我一直认为也坚信认为刑事辩护律师我们靠专业就完全可以立足"
+    },
+    {
+      "wrong": "彼式",
+      "candidates": [
+        "比试"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:还有一位网友报考博弹卫的击合处岗位彼式面试都非常优秀证审的时候发现他有作弊记录记录长安原来他在大学期间有个作弊记录->还有一位网友报考某单位的集合处岗位彼氏面试都非常优秀正审的时候发现他有作弊记录记录档案原来他在大学期间有过作弊记录"
+    },
+    {
+      "wrong": "彼身",
+      "candidates": [
+        "笔生"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:我败诉还是师父你败诉都不用给学费这就是以彼之道还之彼身是不是啊 清除于蓝还胜于蓝抓住了师父逻辑当中的漏洞于反共师父听完徒弟这么说哈哈大笑说徒弟没有枉我白教你一场->我拜数还是师父你拜数都不用给学费这就是以彼之道还之彼身是不是清除于难而胜于难抓住了师父逻辑当中的漏洞于反攻师父听完徒弟这么说哈哈大笑说徒弟没有往我白教你一场"
+    },
+    {
+      "wrong": "徒物",
+      "candidates": [
+        "突兀"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:也都猜出来就是上门徒物的意思后面又问九昏四素是什么菜有人知道吗还有很多人在网上发一个硬币你知道啥意思吗十八声水土同城自取啥意思二手截安特可骑六十分钟五九九二手空调上门爱->也都猜出来就是上门突兀的意思后面又问九婚四素是什么菜有人知道吗还有很多人在网上发一个硬币你知道啥意思吗十八升水土同城自取啥意思二手捷特可其60分钟599二手空调上门爱"
+    },
+    {
+      "wrong": "心愁",
+      "candidates": [
+        "薪酬"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:但是说实话 我不太建议你把心愁这个问题这个时候来提出来因为H2跟你offer的时候他一定会跟你再次来确认这个问题的这个时候每个人只有一到两个最多三个这样交流的机会你把他用于问心愁 其实就白白浪费->但是说实话我不太建议你把薪酬这个问题这个时候来提出来因为HR给你offer的时候呢他一定会给你再次来确认这个问题的那这个时候每个人只有一到两个最多三个这样的交流的机会你把它用于问薪酬呢其实就白白浪负了"
+    },
+    {
+      "wrong": "心洗",
+      "candidates": [
+        "欣喜"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:如果人类是完美的，我们就不会有商业周期，经济就会持续增长。但我们不是，我们会犯错误，我们会从心洗变为恐惧，经济也会相应地做出反应。一些经济学家认为，可以建立消除商业周期。->如果人类是完美的，我们就不会有商业周期，经济就会持续增长。但我们不是，我们会犯错误。我们会从欣喜变为恐惧，经济也会相应地做出反应。一些经济学家认为，可以建立消除商业周期的消费。"
+    },
+    {
+      "wrong": "忠祐",
+      "candidates": [
+        "中油"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:谢谢忠祐喔害->谢谢中油喔害"
+    },
+    {
+      "wrong": "快课",
+      "candidates": [
+        "夸克"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:如何提升说服力不落下风呢第一步拉满专业度专业能力自带高光当然也能快速准备就照这三点但千万点手工码字全网掌模板这些用快课就够了它搭载了阿里千问大模型不管是打字描述需求还是翻译->如何提升收服力 补弱下风呢第一步拉满专业度专业能力自带高光当然也能快速准备就照这三点但千万别手工码字全网掌握办直接用夸克就够了它搭载了阿里千问大模型不管是打字 描述需求 还是翻译"
+    },
+    {
+      "wrong": "思觉",
+      "candidates": [
+        "速决"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:第二，找到更舒适的刺激方式，别总是一套连招就走到底起飞，本来就是一个享受过程，不是为了思战思觉，不要奇异一位追求快，很容易形成习惯，时间反而越来越短，追求就很快->上点时间的基础不敢知就等一下完第二找到更舒适的刺激方式别总是一套连招就走到底起飞本来就是一个享受过程不是为了速战速决不要急一位追求快很容易形成习惯时间反而越来越短之后就很简单"
+    },
+    {
+      "wrong": "性容学",
+      "candidates": [
+        "系溶血"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:免疫性容学因为->免疫系溶血因为"
+    },
+    {
+      "wrong": "您缺药",
+      "candidates": [
+        "明确要"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 3,
+      "notes": "例:高手只做一件事，贩卖确定性记住反脆弱汇报工事1。先给定心蛮，结论先行2。给止痛药，只说你做了什么3。找同盟，您缺药什么资源->高手只做一件事，贩卖确定性记住反脆肉汇报公式一，先给令心丸，结论先行二，给止痛药，只说你做了什么三，找同盟，明确要什么资源"
+    },
+    {
+      "wrong": "意圆前",
+      "candidates": [
+        "一元钱"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 3,
+      "notes": "例:\"货币的时间价值，your time value of money，相同的意圆前在今天和将来的价值是否相同。经济学家说，不同，为什么？\"回答是，因为人们具有时间偏好，人们在消费时，->货币的时间价值The time value of money相同的一元钱在今天和将来的价值是否相同经济学家说不同为什么回答是因为人们具有时间偏好人们在消费时"
+    },
+    {
+      "wrong": "意识",
+      "candidates": [
+        "一时"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:你不是因为离了你公司就玩不赚了是因为你的性价比最高是因为意识找不到人顶替你网留你不是因为你不可替代而是缓兵之计第二公司怎么网留你的记住打感->不是因为离了你公司就玩不转了是因为你的性价比最高是因为一时找不到人顶替你挽留你不是因为你不可替代而是缓兵之计第二公司怎么挽留你的记住"
+    },
+    {
+      "wrong": "成员",
+      "candidates": [
+        "承认"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:弱力工资制度，实行平静分配的全民工资金。外交方面，对外实行闭关锁国就责。1976年，世界上有86个国家成员民俭政府，而民俭记忆其中的12个国家建立了外交关系。->货币工资制度，实行平均分配的全民公寄制，外交方面对外实行闭关锁国救责。1976年，世界上由86个国家承认民间政府，而民间基于其中的12个国家建立了外交关系。"
+    },
+    {
+      "wrong": "战门",
+      "candidates": [
+        "站稳"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:播想战门脚跟->播想站稳脚跟"
+    },
+    {
+      "wrong": "所陪",
+      "candidates": [
+        "索赔"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:初步所陪资格->初步索赔资格"
+    },
+    {
+      "wrong": "手假",
+      "candidates": [
+        "首甲"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:这两个所在的单位 从来不会有任何的回应也没看到有什么处理的结果结尾处啊 送给大家一手 假钱钱的诗真香啊 作者 假钱钱上午同事们一起吃饭一个同事当众扣扣->这两人所在的单位从来不会有任何的回应也没看到有什么处理的结果结尾处送给大家一首甲钱简的诗《真香》作者甲钱简上午同事们一起吃饭一个同事当众"
+    },
+    {
+      "wrong": "手段启",
+      "candidates": [
+        "首当其"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 3,
+      "notes": "例:网红经济作为近几年的新生事物却表示出强大的生命力由网红引流量使流量变现是现在各大山家营销最主要的方式网红经济自在悄悄颠覆传统的经济模式手段启冲的是电商行业网红与电商行业->网红经济作为近几年的新生事物却表现出强大的生命力由网红以流量使流量变现是现代各大商家营销最主要的方式网红经济正在悄悄颠覆传到的经济模式首单其冲的是电商行业网红与电商行业 | 例:网红经济作为近几年的新生事物却表示出强大的生命力由网红引流量使流量变现是现在各大山家营销最主要的方式网红经济自在悄悄颠覆传统的经济模式手段启冲的是电商行业网红与电商行业->网红经济作为近几年的新生事物却表现出强大的生命力用网红引流量 使流量变现是现代各大商家营销最主要的方式网红经济正在悄悄颠覆传掠的经济模式首当其冲的是电商行业网红与电商行业"
+    },
+    {
+      "wrong": "手绣",
+      "candidates": [
+        "首秀"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:\"Forever 21，9 Friends\"是的当年的顶流IP都在把手绣放在华海路上很多人关于华海路最热闹的记忆也都停留在了这个阶段而真正的转折点其实是2015年前后华海755升级穆吉世界级接年亮相Nike，阿迪达斯，标马，UA等等头部运动品牌->Forever 21 My Friends是的当年的顶流IP都在把首秀放在淮海路上很多人关于淮海路最热闹的记忆也都停留在了这个阶段而真正的转折点其实是2015年前后淮海755升级MUJI世界旗舰的亮相Nike阿迪拉斯彪马UA等等头部运动品牌"
+    },
+    {
+      "wrong": "打毙",
+      "candidates": [
+        "倒闭"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:着不打毙为什->着不倒闭为什"
+    },
+    {
+      "wrong": "扩好",
+      "candidates": [
+        "括号"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:和JD的要求进行一对一匹配组成你面试的话术来所有对自己口才没有自信的朋友把你在面试里享受的所有话都整理成主字稿我一个扩大小视频我就是一字一句写下来我甚至会在后面打扩好写这个地方我的表情应该是->和JD的要求进行一对一匹配组成你面试的话术来所有对自己口才没有自信的朋友把你在面试里享受的所有话都整理成主字稿我一个Polar小视频我就是一字一句写下来我甚至会在后面打括号写这个地方我的表情应该是"
+    },
+    {
+      "wrong": "投布",
+      "candidates": [
+        "头部"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:第四是实操体验行业投布公司的产品新功能营销新网法首先第一个板块是研究行业报告分为两个部分第一个部分是行业报告在哪里获取我自己一帮常用的->第四是实操体验行业头部公司的产品新功能营销新网法首先第一个板块是研究行业报告分为两个部分第一个部分是行业报告在哪里获取我自己一般常用的"
+    },
+    {
+      "wrong": "投席",
+      "candidates": [
+        "头皮"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:间我投席很多->间我头皮很多"
+    },
+    {
+      "wrong": "抖心",
+      "candidates": [
+        "斗星"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:一个抖心口径->一个斗星口径"
+    },
+    {
+      "wrong": "报果",
+      "candidates": [
+        "包裹"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:说我不写代码，所以跟我有什么关系，大错特错，这玩意的报果释放了三个极度重要的信号，第一，软件公司的最小单位被彻底颠覆，以前就算做个简单的APP，你也得凑齐前后端测试一帮草台班子。->就是说我不写代码，这跟我有什么关系，大错特错，这玩意的爆裹释放了三个极度重要的信号，第一，软件公司的最小单位被彻底颠覆，以前就算做个简单的APP，你也得凑齐前后端测试一帮草台班子。"
+    },
+    {
+      "wrong": "抵偏",
+      "candidates": [
+        "底片"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:339个月的养老金个人账户里面的鱼罗全部可以被继承三 打着商品不给退 违法影楼不给你全部抵偏违法 赠送的商品有质量问题可以要求赔偿小市店吃到苍蝇 最少可以->139个月的养老金个人账户里面的余额全部可以被继承打折商品不给退 违法 影楼不给你全部底片 违法 赠送的商品有质量问题 可以要求赔偿 小吃店吃到苍蝇最少可以"
+    },
+    {
+      "wrong": "抽钢",
+      "candidates": [
+        "超纲"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:指的是春秋时期，骑国江世的长女，所以叫孟江女你这题抽钢了，你再出一个再出一个，出一个你熟悉的，西游界孙悟空的鸡骨棒，重13500接厉害->指的是春秋时期齐国江市的长女所以叫孟江女你这题超纲了你再出一个再出一个出一个你熟悉的西游记孙悟空的金箍棒中一万三千五百件厉害"
+    },
+    {
+      "wrong": "拍段",
+      "candidates": [
+        "判断"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:比危险一斤还要重要以前拍段一家公司好不好看什么配不配电脑给不给手机有没有期权要不要加班现在我再加一条有没有给你配AI算力自由什么叫算力自由就是你上班不需要自己掏钱->无险一惊还要重要以前判断一家公司好不好看什么配不配电脑给不给手机有没有期权要不要加班现在我再加一条有没有给你配AI算力自有什么叫算力自有就是你上班不需要自己掏钱"
+    },
+    {
+      "wrong": "招责",
+      "candidates": [
+        "照顾"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:12348法律援助是要符合条件才行的具体条件在这招处理了第二 禁律师直播间联卖咨询一般的律师直播间都是提供联卖咨询按键的只是为了招责->11348法律援助是要符合条件才行的具体条件在这张图里了第二进律师直播间年迈咨询一般的律师直播间都是提供年迈咨询案件的只是为了照顾"
+    },
+    {
+      "wrong": "拥岛",
+      "candidates": [
+        "用到"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:是增长七千多家门店一年营收超二百亿连马云都亲自拜访学习他的商业模式究竟有什么过人之处呢认真看完相信你也能学到拥岛首先富能下游加盟商海南之家给加盟商说加盟我们不需要交加盟费只需要交一百搭备账->是增长7000多家门店一年营收超200亿连马云都亲自拜访学习他的商业模式究竟有什么过人之处呢认真看完相信你也能学到用到首先富能下有加盟商海岚之家给加盟商说加盟我们不需要交加盟费只需要交100W"
+    },
+    {
+      "wrong": "拧礼",
+      "candidates": [
+        "经理"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:卖用的这个东西叫做抖音对吧那抖音的产品拧礼的话就是什么呢就是要去了解抖音用户在用抖音的时候可能会出现的各种各样的问题因为你会发现每一个APP它都要不定期的更新一会儿更新一会儿更新->MI用的这个东西叫做抖音对吧那抖音的产品经理的话就是什么呢就是要去了解抖音用户在用抖音的时候可能会出现的各种各样的问题因为你会发现每一个APP它都要不定期的更新一会儿更新一会儿更新"
+    },
+    {
+      "wrong": "择救",
+      "candidates": [
+        "折旧"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:加上营业利润这大致就对应商品价值的C+V+M其中C是不变资本对应固定资产择救V是可变资本对应工资M是剩余价值对应税收和利润GDP是总值它包含了机器磨损如果你把择救扣除就值不止了->加上营业利润这大致就对应商品价值的C加V加M其中C是不变资本对应固定资产折旧V是可变资本对应工资M是剩余价值对应税收和利润GDP是总值它包含了机器磨损如果你把折旧扣除就只能够折旧"
+    },
+    {
+      "wrong": "持眼",
+      "candidates": [
+        "迟延"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:应当依照中华人民共和国民事诉讼法第253条之规定，加倍支付持眼旅行期间的债务利息。->应当依照中华人民共和国民事诉讼法第253条之规定加倍支付迟延旅行期间的债务利息"
+    },
+    {
+      "wrong": "捡上",
+      "candidates": [
+        "减少"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:要不以后还是别罚了那有想买小米汽车的看到这些言论过多过少都有点影响他们的购买决策这也正是黑黑们想要达到的目的一方面他们是想让小米正面的内容在互联网上捡上另一方面就是想着打->要不以后还是别发了那有想买小米汽车的看到这些言论或多或少都有点影响他们的购买决策这也正是黑黑们想要达到的目的一方面他们是想让小米正面的内容在互联网上减少另一方面就是想着"
+    },
+    {
+      "wrong": "据流",
+      "candidates": [
+        "拘留"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:案件吗其实法律有明确的规定只要我们家人被抓就可以第一时间聘请律师给他提供法律帮助这是法律规定的权利咱们普通老百姓不懂没关系但是不要盲目的恐慌而且没收到据流通知说是很长的->其实法律有明确的规定只要我们家人被抓就可以第一时间聘请律师给他提供法律帮助这是法律规定的权利咱们普通老百姓不懂没关系但是不要盲目的恐慌而且没收到居留通知说是很长 | 例:案件吗其实法律有明确的规定只要我们家人被抓就可以第一时间聘请律师给他提供法律帮助这是法律规定的权利咱们普通老百姓不懂没关系但是不要盲目的恐慌而且没收到据流通知说是很长的->其实法律有明确的规定只要我们家人被抓就可以第一时间聘请律师给他提供法律帮助这是法律规定的权利咱们普通老百姓不懂没关系但是不要盲目的恐慌而且没收到居留通知说是很长"
+    },
+    {
+      "wrong": "掌庭",
+      "candidates": [
+        "涨停"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:12号掌庭亮缩，说明换手完成，筹码重新锁定，方向重新确认两个白点之间，只要没跌破前掌庭的支撑位，就是洗盘，不是出货这是这段走法最核心的判断逻辑之后，3月13号继续冲动->12号涨停量缩说明换手完成筹码重新锁定方向重新确认两个买点之间只要没跌破前涨停的支撑位就是洗盘不是出货这是这段走法最核心的判断逻辑之后3月13号继续冲"
+    },
+    {
+      "wrong": "描组",
+      "candidates": [
+        "瞄准"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:光学描组->光学瞄准"
+    },
+    {
+      "wrong": "揽克",
+      "candidates": [
+        "揽客"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:真的深首先他们的监管肯定是没有检察官法官研的更别说入行的门槛另外最重要的是就算他是律师你也阻止不了他为了揽克什么都敢讲->真的深首先他们的监管呢肯定是没有检察官法官员的更别说入行的门槛了另外最重要的是就算他是律师你也阻止不了他为了揽客什么都敢讲"
+    },
+    {
+      "wrong": "摧药",
+      "candidates": [
+        "催要"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:给李某出拒了欠条一张成功2020年年底结亲到期后经李某多次摧药家具厂总以各种理由推托拒不支付我去要工资不是一次两次了咱们法院是不是能帮帮我呢->给李某出具了欠条一张承诺2020年年底结清到期后经李某多次催要家具厂总以各种理由推托拒不支付我需要工资不是一次两次了咱们法院是不是能帮帮我们"
+    },
+    {
+      "wrong": "摩岛式",
+      "candidates": [
+        "磨导师"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:致敬摩岛式了黑->致敬磨导师了黑"
+    },
+    {
+      "wrong": "撞加",
+      "candidates": [
+        "庄稼"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:爱律特本人也承认波浪理论主要适用于大盘指数因为指数代表市场整体情绪个股容易被撞加操控受公司基本面影响很难走出标准的无浪三波形态最后送你->爱瑞特本人也承认波浪理论主要适用于大盘指数因为指数代表市场整体情绪个股容易被庄稼操控受公司基本面影响很难走出标准的五浪三波形态"
+    },
+    {
+      "wrong": "政剧",
+      "candidates": [
+        "证据"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_300_speech_round4_20260403_formal_run_v2_selected_1_71"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:你觉得你看英美法戏看到什么法戏有意思呢那你这个肯定是看英美法戏会有意思因为律政剧他拍的这个按键为背景来展开他觉得不可能直接拍按键拍按键的话简单了律政剧想够加上一个上级这放了一个架子放了一本创作搞掩咱们翻了就行了不需要演了->那你这个肯定是看英美法系的会有意思因为律证据啊他拍了这个以案件为背景来展开他绝对不可能直接拍案件拍案件的话简单了那律证据想要加上一个摄像机这放了一个架子放了一本卷宗导演上翻了起来不需要演讲了那玩意儿你看没人看的是吧这个随时律证据呢表面上拍的是案件谁上拍的还是人那拍人的话呢这种诉讼"
+    },
+    {
+      "wrong": "政差",
+      "candidates": [
+        "征拆"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:先理清楚然后再想办法还有人回复什么这种情况可以要求政府依法理直我认为最开始都用法言法语了就很开心就是我们希望是通过直播间传递给大家啥呢第一 关于政差的关于土地登附->先理清楚然后再想办法还有人回复什么这种情况可以要求政府依法理职我说最开始都用法言法语了就很开心很开心就是我们希望是通过直播间传递给大家啥呢第一关于征拆的关于土地"
+    },
+    {
+      "wrong": "效后",
+      "candidates": [
+        "较厚"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:8090后的童年印现在为什么屁股针如此少见了呢？要知道这个问题我们先来了解一下屁股针屁股针是属于肌肉注射打针时会选择打在单侧臀部的外上四分之一处就于臀大肌肌肉效后刺一下->8090后的童年阴影现在为什么屁股针如此少见了呢要知道这个问题我们先来了解一下屁股针屁股针是属于肌肉注射打针时会选择打在单侧臀部的外上四分之一处由于臀大肌肌肉较厚刺激下"
+    },
+    {
+      "wrong": "教设以",
+      "candidates": [
+        "校色仪"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:使用教设以把屏->使用校色仪把屏"
+    },
+    {
+      "wrong": "整次啊",
+      "candidates": [
+        "疹子"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:然冒整次啊很多->然冒疹子很多"
+    },
+    {
+      "wrong": "斯欧",
+      "candidates": [
+        "似乎"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:来说斯欧直系->来说似乎直系"
+    },
+    {
+      "wrong": "方升",
+      "candidates": [
+        "放生"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "放生时水温叙事通 | 例:的吗方升时的->的吗放生时的"
+    },
+    {
+      "wrong": "旗纱",
+      "candidates": [
+        "七杀"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:都是旗纱我本->都是七杀我本"
+    },
+    {
+      "wrong": "日会",
+      "candidates": [
+        "智慧"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:民生与电商物流需求也持续回暖行业经营指标实现稳步增长日会物流、干线物流等细分领域迎来发展红利投资建议可关注物流运输行业的股票布局物流主题基金->民生与电商物流需求也持续回暖行业经营指标实现稳步增长智慧物流 干线物流等细分领域迎来发展红利投资建议可关注物流运输行业的股票布局物流主题基金"
+    },
+    {
+      "wrong": "旧一例",
+      "candidates": [
+        "就业力"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:排挤旧一例第二->排挤就业力第二"
+    },
+    {
+      "wrong": "明华点",
+      "candidates": [
+        "民法典"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 3,
+      "notes": "例:分尸还是可以要求法院进行处理能分割的可以分割不能分割的可以直接让使用人对另一方进行减价补偿根据明华点婚姻家庭->还是可以要求法院进行处理能分割的可以分割不能分割的可以直接让使用人对另一方进行格价补偿根据明花点婚姻家庭"
+    },
+    {
+      "wrong": "明车",
+      "candidates": [
+        "名称"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:来看一下花明车当中需要的到期时间是怎么和算的呢我们出了日期的相关函数，DAT，DIF它是计算两个时间节点中的一个天数的首先我们来看我们计算的程度->来看一下花名称当中需要的到期时间是怎么和算的呢我们输入日期的相关函数dat。f它是计算两个时间节点中的一个天数的首先我们"
+    },
+    {
+      "wrong": "昭姑",
+      "candidates": [
+        "照顾"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:这扑法履黑中妖 荒达锤中妖纸刀罗师 锤剑许报乎 盈盖远族和昭姑 法履眠下人情->法律是中央 光达全中央指导罗斯全气许报复 应该圆祖和招呼法律面前人情继续 | 例:这扑法履黑中妖 荒达锤中妖纸刀罗师 锤剑许报乎 盈盖远族和昭姑 法履眠下人情->法律是中央 光达全中央指导罗斯全气许报复 应该圆祖和招呼法律面前人情继续"
+    },
+    {
+      "wrong": "是关",
+      "candidates": [
+        "试官"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:行李当中表现的细节提出了否定这个时候就说明了两个问题第一个就是其实你的面是不太符合他的心意第二个当然我们也不排除有一些面是关缺乏基本的职业素养如果你发现了这一点->经历当中表现的细节提出了否定这个时候呢就说明了两个问题第一个就是其实你的面试不太符合他的心意第二个当然我们也不排除有一些面试官缺乏基本的职业素养那如果你发现了这一点"
+    },
+    {
+      "wrong": "是别",
+      "candidates": [
+        "直接"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:有些时候就是这些法律问题也不用想太多我如果当时确实很忙或者怎么样的话我也会做很忙我也不会跟你客气有一些小的一些简单的问题就是别问我这号的好的那可以找你作为法律国恶吗可以啊 当然可以->有些时候就是这些法律问题你不用想太多我如果当时确实很忙或怎么样的话我也会说我很忙我也不会跟你客气你有些想的一些简单的问题你就直接问我就好了好的那可以找你作为法治部位吗可以啊 当然可以"
+    },
+    {
+      "wrong": "是和",
+      "candidates": [
+        "适合"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:尤其是和喜欢->尤其适合喜欢"
+    },
+    {
+      "wrong": "晚息",
+      "candidates": [
+        "惋惜"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:21。10 这会有点不现实一大堆的生物出现完全没法解释21。27 上帝开始探息首次生物大面诀那是让人晚息21。42 在这一个时间段随暖花开动物出现的长得奇奇怪怪->21。10这会儿有点不现实一大堆的生物出现完全没法解释21。27上帝开始叹息首次生物大面觉那是让人惋惜21。42呢在这一个时间段随暖花开动物出现的长得奇奇怪怪"
+    },
+    {
+      "wrong": "智厚",
+      "candidates": [
+        "滞后"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:流行起来，而炸鸭的推广，相对来说智厚了，还没有出现像样的炸鸭品牌不在中国四川，炸鸭也有一定的受众群体有一道传统名菜，香酥鸭子，就是炸制的吃过小伙伴可以在评论区和弹幕说出你的感受好了->流行起来而炸鸭的推广相对来说滞后了还没有出现像样的炸鸭品牌不过在中国四川炸鸭也有一定的受众群体有一道传统名菜香酥鸭子就是炸制的吃过的小伙伴可以在评论区和弹幕说出你的感受好了"
+    },
+    {
+      "wrong": "暗戒",
+      "candidates": [
+        "案件"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:但是第二个问题我想说的是如果你反省是真实的你说我不跳下去这些年我也受不了了这里面突然生活 贫困 暗戒被打压 生气 抑郁都有了那么你也有办法来解决不用被非得跳下去的这种方式->但是第二个问题我想说的是如果你反应事情是真实的你说我不跳下去这些年我也受不了了这些生活 贫困 案件 被打压 生气 抑郁都有那么你也有方法来解决不用 非得跳下去这种方式"
+    },
+    {
+      "wrong": "曾立文",
+      "candidates": [
+        "真离婚"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:你是曾立文还是->你是真离婚还是"
+    },
+    {
+      "wrong": "有几起",
+      "candidates": [
+        "要继续"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:来也有几起闪闪->来也要继续闪闪"
+    },
+    {
+      "wrong": "服品",
+      "candidates": [
+        "扶贫"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:肩强的保障 开启了我国法律援助制度国家法时代法律援助是法律服品 是让法律服务的资源配置实现相对平衡->最坚强的保障，开启了我国法律援助制度国家法时代。法律援助是法律扶品，是让法律服务的资源配置实现相对平衡。国家通过妥善，"
+    },
+    {
+      "wrong": "服由",
+      "candidates": [
+        "浮游"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:矿地服由无法->矿地浮游无法"
+    },
+    {
+      "wrong": "期徒",
+      "candidates": [
+        "企图"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:期徒安稳->企图安稳"
+    },
+    {
+      "wrong": "末历",
+      "candidates": [
+        "茉莉"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:庭院末历瞬间->庭院茉莉瞬间"
+    },
+    {
+      "wrong": "朱个",
+      "candidates": [
+        "诸葛"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:到和朱个亮童->到和诸葛亮童"
+    },
+    {
+      "wrong": "机散",
+      "candidates": [
+        "计算"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:以文明的姿态去学习先进的知识学习人家优秀的人在学什么学习这些东西你比如说以前小时候我们以前上机散机上这个论坛那个论坛刚开始那批人就支持共享电影共享那个时候倒版电影特别多但是->以文明的姿态去学习先进的知识学习人家优秀的人在学什么学习这些东西你比如说以前小时候我们以前上计算机上这个论坛那个论坛刚开始那批人就知识共享电影共享那个时候盗版电影特别多但是"
+    },
+    {
+      "wrong": "权娱",
+      "candidates": [
+        "全局"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:效果肯定会比较差其实这个例子当中我这个同事就是缺乏权娱思维我们运营思维当中非常常见的一种思维而深度层面来讲经验相对缺乏的运营人很难看到很多事情背后的关联性经验丰富的运营人则是能够透过问题看到本质->效果肯定会比较差其实这个例子当中我这个同事就是缺乏全局思维运营思维当中非常常见的一种思维而深度层面来讲经验相对匮乏的运营人很难看到很多事情背后的关联性经验丰富的运营人则是能够透过问题看到本质 | 例:效果肯定会比较差其实这个例子当中我这个同事就是缺乏权娱思维我们运营思维当中非常常见的一种思维而深度层面来讲经验相对缺乏的运营人很难看到很多事情背后的关联性经验丰富的运营人则是能够透过问题看到本质->效果肯定会比较差其实这个例子当中我这个同事就是缺乏全聚思维我运营思维当中非常常见的一种思维而深度层面来讲经验相对匮乏的运营人很难看到很多事情背后的关联性经验丰富的运营人则是能够透过问题看到本质"
+    },
+    {
+      "wrong": "权安",
+      "candidates": [
+        "全案"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:思询的过程中遇到承诺结果包打赢的律师那我还是劝你绕道歪心因为案件的结果是法院根据认定的事实和权安的证据来做出最终判决的说一说->咨询的过程中呢遇到承诺结果包打赢的律师啊那我还是劝你呢绕道歪行因为案件的结果是法院根据认定的事实和全案的证据来做出最终判决的所以说啊"
+    },
+    {
+      "wrong": "查员",
+      "candidates": [
+        "察院"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1",
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:你请律师干嘛律师说我可以去跟公安沟通那我就问你有几个公安会调律师吗取了保的案子只需要考虑检查员阶段要不要请律师->你请律师干嘛我问你律师说我可以去跟公安沟通啊那我就问你嘛有几个公安会屌律师吗取了保的案子只需要考虑检察院阶段要不要请律师 | 例:所以强奸追溯消息多少年呢，15年但是如果法定最高行为无期徒刑和死刑经过20年那如果20年之后还要再追溯报了一个机构核准了报最高人民检查员核准->这以上以下含本数吗所以强奸最后追溯消失多少年呢15年是15年但是如果法定最高行为无期读刑和死刑经过20年那如果20年之后还要再追溯报哪个机构核准呢报最高人民检察院核准安徽就有一个"
+    },
+    {
+      "wrong": "柳核精",
+      "candidates": [
+        "铝合金"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:航空柳核精材质->航空铝合金材质"
+    },
+    {
+      "wrong": "案保点",
+      "candidates": [
+        "岸宝典"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:的上案保点吗正->的上岸宝典吗正"
+    },
+    {
+      "wrong": "梅菲吉",
+      "candidates": [
+        "没飞机"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:巧梅菲吉看->巧没飞机看"
+    },
+    {
+      "wrong": "橘弓",
+      "candidates": [
+        "鞠躬"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:0度橘弓哈腰->0度鞠躬哈腰"
+    },
+    {
+      "wrong": "次争",
+      "candidates": [
+        "刺针",
+        "赤箭"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:了就次争飞弹->了就刺针飞弹 | 例:了就次争飞弹->了就赤箭飞弹"
+    },
+    {
+      "wrong": "次增",
+      "candidates": [
+        "刺针"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:的次增飞弹->的刺针飞弹"
+    },
+    {
+      "wrong": "欧大",
+      "candidates": [
+        "殴打"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:然后还把仇人的头给剁了下来提著仇人的头来祭拜弟弟但后来发现这个仇人是割头而死而不是死于之前的欧大行为但是张商一直认为他割的是尸体的头->然后还把仇人的头给剁了下来提着仇人的头来祭拜弟弟但后来发现这个仇人是割头而死而不是死于之前的殴打行为但是张商一直认为他割的是尸体的头"
+    },
+    {
+      "wrong": "欧达",
+      "candidates": [
+        "殴打"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:客观行为核心是使用暴力或威胁手段暴力包括欧达捆绑等威胁包括恐吓扬言报复等三主观故意->客观行为核心是使用暴力或威胁手段暴力包括殴打捆绑等威胁包括恐吓扬言报复等三不关故意目的是"
+    },
+    {
+      "wrong": "欲试",
+      "candidates": [
+        "预示"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:股权评分是创业公司最常见的坑没有之一55分333分看似公平实则必死没人拍靶没人决策欲试->股权评分是创业公司最常见的坑没有自一55分33分看似公平实则必死没人拍板没人决策欲试"
+    },
+    {
+      "wrong": "母帽",
+      "candidates": [
+        "皮毛"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:母帽并没->皮毛并没"
+    },
+    {
+      "wrong": "每年处",
+      "candidates": [
+        "美联储"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 3,
+      "notes": "例:每年处发行货币通过向政府购买政府证券把钱借给政府这样政府就有钱可以进行经济刺激计划和向人民发放失业救济金来增加人们购买商品和服务的能力->美联储发行货币通过向政府购买政府证券把钱借给政府这样政府就有钱可以进行经济刺激计划和向人民发放失业救济金来增加人们购买商品和服务的能力"
+    },
+    {
+      "wrong": "气包",
+      "candidates": [
+        "细胞"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:是单气包生物->是单细胞生物"
+    },
+    {
+      "wrong": "气气拍",
+      "candidates": [
+        "齐齐排"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:整整气气拍好大->整整齐齐排好大"
+    },
+    {
+      "wrong": "水帮",
+      "candidates": [
+        "诽谤"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:会以自然管理出发榜与行政组但是如果造成了严重户口不管是经济上还是工作人物形象上那就有可能设计形式犯罪了不过对你不一样有可能过程污辱罪压或者水帮罪等在如今的网络时代我们的言论传播的速度是非常快的->会以治安管理处罗与行政处罗但是如果造成的严重获果不管是经济上还是工作人物提供上那就有可能设计刑事犯罪了不过罪名不一样有可能构成侮辱罪或者诽谤罪等等在如今的网络时代我们的言论的传播速度是非常快的"
+    },
+    {
+      "wrong": "永烈",
+      "candidates": [
+        "容量"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:块高永烈的电->块高容量的电"
+    },
+    {
+      "wrong": "汉言",
+      "candidates": [
+        "汗颜"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:计算和合作交对，但是他请假结婚去，另一个同事走把他手里的工作临时接回来，加班熬夜，还干得不错，但是事情发展让人汉言，他不仅要完成手头上的客户对接，还要搞合作算成本费用，最狠的是那个同事->计算和合同交对但是他请假结婚去了另一个同事则把他手里的工作临时接了过来加班熬夜还干得不错但是事情发展让人汗颜他不仅要完成手头上的客户对接还要搞合同算成本费用最狠的是那个同事"
+    },
+    {
+      "wrong": "没假设",
+      "candidates": [
+        "美甲师"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 3,
+      "notes": "例:不断和你强调做到化妆师没假设的工资有多高多没有前景说只需要你学六个月学会了就可以选择留在公司不留在公司的话公司也可以给你安排工作然后就让你交钱学习几千到几万不等你没钱也没关系每个月从你工资里面扣不会让你吃亏之类的->不断和你强调做到化妆师美甲师的工资有多高没有前景说只需要你学六个月学会了就可以选择留在公司不留在公司的话公司也可以给你安排工作然后就让你交钱学习几千到几万不等你没钱也没关系每个月从你工资里面扣不会让你吃亏之类的"
+    },
+    {
+      "wrong": "河母之",
+      "candidates": [
+        "荷姆兹"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:还有河母之海峡->还有荷姆兹海峡"
+    },
+    {
+      "wrong": "河飞",
+      "candidates": [
+        "合肥"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:赛在河飞开梯->赛在合肥开梯"
+    },
+    {
+      "wrong": "波格莱",
+      "candidates": [
+        "多个来"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:稀土波格莱源表->稀土多个来源表"
+    },
+    {
+      "wrong": "流打结",
+      "candidates": [
+        "雷达截"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:的反流打结面机->的反雷达截面机"
+    },
+    {
+      "wrong": "浅仪",
+      "candidates": [
+        "潜移"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:就从那个方向去做的只是这么做会不会出现什么什么问题呢最后你说看来还是得进一步调整才行要不要试试这个方案呢四 温水煮青蛙浅仪默化不直接打破原有的局面或者是推翻别人而是一步一步营造->从那个方向去做的只是这么做会不会出现什么什么问题呢最后你说看来还是得进一步调整才行要不要试试这个方案呢四温水煮青蛙潜移默化不直接打破原有的局面或者是推翻别人而是一步一步"
+    },
+    {
+      "wrong": "浅萤末",
+      "candidates": [
+        "潜移默"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 3,
+      "notes": "例:多多少少会有些差别哪怕拿我自己来讲可能自己感觉我也用心了这个是我也用心了其实多多少少还是有一些差别的它是浅萤末化的不自觉的可能就会有一些影响当然这也是最真实最本质的一个人->多少少会有些差别哪怕拿我自己来讲可能自己感觉我也用心了这个事我也用心了其实多多少少还是有一些差别的它是潜移默化的不自觉的可能就会有一些影响当然这也是最真实最本质的一个人"
+    },
+    {
+      "wrong": "济货",
+      "candidates": [
+        "激活"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:货不对版直到济货才发现完了被骗了之前一位粉丝朋友就踩到坑了济货发现货不对版套餐跟鲜材修的不一样像加分他修鲜和被通货无权练习从他这样发的卡贵解责任大家也没有遇到过济贴->伙不对版 直到激活才发现 完了被骗吧 之前一位粉丝朋友就踩到坑了 激活发现货不对版 套餐跟仙材修的不一样"
+    },
+    {
+      "wrong": "浓缸",
+      "candidates": [
+        "农刚"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:他推行众文轻武的国策众文文臣文上科学大力发展文化教育造就了宋朝璀璨的文化盛世他整顿立志轻要保护鼓励浓缸让百姓摆脱战乱之苦社会经济->他推行中文轻武的国策中文文臣文上科觉大力发展文化教育造就了宋朝璀璨的文化盛世他整顿励志轻要薄腹鼓励农刚让百姓摆脱战乱之苦社会经常 | 例:他推行众文轻武的国策众文文臣文上科学大力发展文化教育造就了宋朝璀璨的文化盛世他整顿立志轻要保护鼓励浓缸让百姓摆脱战乱之苦社会经济->他推行中文轻武的国策中文文臣文上科觉大力发展文化教育造就了宋朝璀璨的文化盛世他整顿励志轻要薄腹鼓励农刚让百姓摆脱战乱之苦社会经常"
+    },
+    {
+      "wrong": "消贯",
+      "candidates": [
+        "销冠"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:我是谁我能给到什么我想得到什么你好 李总哎 李总我是双手金是咱公司负责市场营销这一块的在这已经五年的时间了之前的话在公司连续伍业的消贯您这边的话以后有什么事->我是谁我能给到什么我想得到什么你好 李总李总我是创行金是咱们公司负责市场营销这一块的在这已经五年的时间了之前的话在公司连续五个月的销灌您这边的话以后有什么"
+    },
+    {
+      "wrong": "深植",
+      "candidates": [
+        "升职"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:但是如果因为这些恐惧我们不敢去尝试去锻炼去失败我们也永远得不到成长你的演讲能力永远得不到提高你永远学不会怎么去有效的组织会议你眼睁睁的看着同事深植加薪却不敢争取->但是如果因为这些恐惧我们不敢去尝试去锻炼去失败我们也永远得不到成长你的演讲能力永远得不到提高你永远学不会怎么去有效的组织会议你眼睁睁地看着同事升职加薪却不敢争取"
+    },
+    {
+      "wrong": "清泽",
+      "candidates": [
+        "轻则"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:律师遗忘开庭和保全，是职业大忌。清泽被司法行政部门警告，罚款。众责还要承担当事人的巨额赔偿请求，可为一夜回到解放前。绿宝日历专为律师设计，不仅可以挂开。->律师遗忘开庭和保全是职业大计轻则被司法行政部门警告罚款重则还要承担当事人的巨额赔偿请求可谓一夜回到解放前绿保日历专为律师设计不仅可以灌烈"
+    },
+    {
+      "wrong": "湘宫",
+      "candidates": [
+        "相公"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:太子昭成为齐孝公使成后宋湘宫想继承齐环宫的霸业无辜兄长圈奏坚持要挑战十一历强大的南蛮楚国他先是举行路上汇蒙被楚国囚禁出来后仍不知收敛应称着发起宋楚宝->太子昭成为齐孝公事成后宋湘公想继承齐桓公的霸业无故兄长劝个坚持要挑战实力强大的南蛮楚国他先是举行路上会盟被楚国囚禁出来后仍不知收敛硬撑着发起宋楚侯"
+    },
+    {
+      "wrong": "溃发",
+      "candidates": [
+        "匮乏"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:他想 针对同一场活动的策划经验相对溃发的运营人可能完全聚焦于活动本身而经验丰富的运营人可能不仅仅聚焦于这场活动他可能还会考虑这个活动对于整个产品或者业务 长远会产生什么样的影响->针对同一场活动的策划经验相对匮乏的运营人可能完全聚焦于活动本身而经验丰富的运营人可能不仅仅聚焦于这一场活动他可能还会考虑这个活动对于整个产品或者业务长远会产生什么样的影响"
+    },
+    {
+      "wrong": "漫音",
+      "candidates": [
+        "卖淫"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:不正规的台球厅老板能怎会涉嫌组织漫音罪最近就是五年的有期徒刑台球厅里的其他部分人员则有可能会涉嫌到协助组织漫音罪最高五年有期徒刑所以打台球还要是去正规的程度->不正规的台球厅老板呢则会涉嫌组织卖淫罪最低就是五年的有期徒刑台球厅里的其他工作人员则有可能会涉嫌到协助组织卖淫罪最高五年有期徒刑所以啊打台球还要是去正规的城"
+    },
+    {
+      "wrong": "灵口",
+      "candidates": [
+        "领导"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:为什么灵口，我最近进入状态，手质不太好我想回思路，我修养一段视野想当年，你是如何一步一步的做到现在这个位置你不会不记得吧？我记得，我记得你能接苦分斗的劲儿呢？->那什么领导我最近精神状态手势不太好我想回思误我休养一段时间想当年你是如何一步一步地做到现在这个位置你不会不记得吧我记得我记得你那艰苦奋斗的劲呢"
+    },
+    {
+      "wrong": "烧烙",
+      "candidates": [
+        "骚扰"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:轰炸的处罚主要是具体情况而定如果行为人多次发送烧烙信息干扰他人正常生活情节教清可能只是受到治安管理处罚如罚款或者行政拘留->处罚主要是具体情况而定如果行为能多次发送骚扰信息干扰他人正常生活情节较轻可能只是受到治安管理处罚如罚款或者行政拘留"
+    },
+    {
+      "wrong": "牙拉",
+      "candidates": [
+        "哑巴"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:但是由于手机带有自动重启和不开机的现象阿卜主决定退回手机经过转转验机后客服充手机没有任何问题这一行为就是在欺骗消费者准备让我吃牙拉亏那所以我决定维权想知道想想->但是由于手机带有自动重启和不开机的现象那up主决定退回手机经过转转验机后客服冲手机没有任何问题这一行为就是在欺骗消费者准备让我吃牙八亏那所以我决定维权想知道想想"
+    },
+    {
+      "wrong": "物食",
+      "candidates": [
+        "务实"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:谢谢你帮我设计海报你的创意实在太浪费经验了敬望我一定要好好请你吃一顿即时刷美可以激发别人对你帮助的成就感下次你再找人帮忙也就容易多了而物食致谢是提现你致谢的实际价值背着那套葛滩请你吃饭之中西无飘满->谢谢你帮我设计海报你的创意实在太让人惊艳了今晚我一定要好好请你吃一顿即使赞美可以激发别人对你帮助的成就感下次你再找人帮忙也就容易多了而务实致谢是体现你致谢的实际价值背著那套隔天请你吃饭这种虚无飘满的"
+    },
+    {
+      "wrong": "猪杀志",
+      "candidates": [
+        "朱砂痣"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:那颗猪杀志但对->那颗朱砂痣但对"
+    },
+    {
+      "wrong": "王代",
+      "candidates": [
+        "网贷"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 3,
+      "notes": "例:前资料可能比较麻烦一点你们可能提交不了所以你可以尝试前两个驱弄好吧 也很简单协商缓催之后你只要正常接电话 会接电话也没有什么太多的电话但是你要注意点王代宇->会来填资料可能比较麻烦一点你们可能提交不了所以你可以尝试前两个去弄好吧也很简单协商缓吹之后你只要正常接电话会接电话也没有什么太多的电话但是你要注意点网贷与"
+    },
+    {
+      "wrong": "球门场",
+      "candidates": [
+        "全盘厂"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:积电球门场这么->积电全盘厂这么"
+    },
+    {
+      "wrong": "琴领",
+      "candidates": [
+        "秦岭"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:这款琴领X6->这款秦岭X6"
+    },
+    {
+      "wrong": "瓶进",
+      "candidates": [
+        "平静"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:情再瓶进眼神->情再平静眼神"
+    },
+    {
+      "wrong": "生起",
+      "candidates": [
+        "升级"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:代新生起了一->代新升级了一"
+    },
+    {
+      "wrong": "用剑",
+      "candidates": [
+        "邮件"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:找到自己的闪光点就做到不可替代那第四点的话就是做是留证据就比如说你跟同事说的一些工作就是你们的工作内容能够在微信上聊或者是用剑去聊就更好就是能够留下证据避免以后有麻烦有一句话就是说->找到自己的闪光点就做到不可替代那第四点的话就是做事留证据就比如说你跟同事说了一些工作就是你们的工作内容能够在微信上聊或者是邮件去聊就更好就是能够留下证据避免以后有麻烦有句话就是说"
+    },
+    {
+      "wrong": "甲汉哥",
+      "candidates": [
+        "假看歌"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:来说甲汉哥几乎->来说假看歌几乎"
+    },
+    {
+      "wrong": "男士雅",
+      "candidates": [
+        "蓝色假"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:要做男士雅发的->要做蓝色假发的"
+    },
+    {
+      "wrong": "界获",
+      "candidates": [
+        "见货"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:货眼界获主一->货眼见货主一"
+    },
+    {
+      "wrong": "疫并",
+      "candidates": [
+        "役病"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:通讯传输等技术支持或者提供广告推广支付结算能帮助情节严重的使三天以下有期徒刑或者拘疫并处或单处罚金我只是听说靠这个法子能赚到钱不知道后果之中->互联网接入 服务器托管 网络存储 通讯传输等技术支持或者提供广告推广 支付结算等帮助 情节严重的除三年以下有期徒刑或者拘役 并处或单处罚金我只是听说靠这个法子能赚到钱 不知道后果"
+    },
+    {
+      "wrong": "盖出",
+      "candidates": [
+        "概述"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:共同努力以实现商业模式就成本结构盖出实现商业模式所需的主要成本在撰写商业模式时请注意一下几点逻辑清晰确保商业模式各个部分之间的逻辑关系清晰详尽简洁->共同努力以实现商业模式就成本结构概述实现商业模式所需的主要成本在撰写商业模式时请注意以下几点逻辑清晰确保商业模式各个部分之间的逻辑关系清晰详尽简洁"
+    },
+    {
+      "wrong": "盖辆",
+      "candidates": [
+        "概量"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "盖梁概量音近，例证工程语境成立 | 例:你把盖辆和主->你把概量和主"
+    },
+    {
+      "wrong": "直扭",
+      "candidates": [
+        "执拗"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:做某一件事那 Urban Dictionary 对这个词的解释是to strive hard strong and voraciously towards the goalhard strong 它的意思是固执的直扭的voraciously 它指的是一种非常贪婪的状态那么连在一起Hasl这个词我们就可以把它理解为->做某一件事那urban dictionary对这个词的解释是to strive headstrongand voraciously towards a goalheadstrong它的意思是固执的执拗的voraciously它指的是一种非常贪婪的状态那么连在一起呢hustle这个词我们就可以把它理解"
+    },
+    {
+      "wrong": "相撒",
+      "candidates": [
+        "潇洒"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:根据线存的康熙潮袍推散康熙的身高仅仅只有160厘米左右而且由于康熙小时候是抹天花满脸马子所以就算长得不丑但至少也和英俊相撒搭不上边吧童牙技小蓝实际上->根据现存的康熙潮袍推算康熙的身高仅仅只有160厘米左右而且由于康熙小时候生过天花满脸麻子所以就算长得不丑但至少也和英俊潇洒搭不上边吧童牙纪小兰实际上"
+    },
+    {
+      "wrong": "相非",
+      "candidates": [
+        "香妃"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:15岁才受众正气清朝皇子的生活也没有轻功距离潇洒自在天没亮就要读书上午师叔礼仪下午齐宣武功根本没时间帮助相非私奔也没时间和情川若夕谈恋爱紫围叩见老博业老博业吉祥->十五岁才寿终正寝清朝皇子的生活远没有清宫剧里潇洒自在天没亮就要读书上午诗书礼仪下午齐炫武功根本没时间帮助香妃私奔也没时间和晴川若曦谈恋爱"
+    },
+    {
+      "wrong": "矩震",
+      "candidates": [
+        "矩阵"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:目前的话，AI的话，应该是没什么问题吧，因为官方主推这个流量我做矩震，不用讨论了，就是做矩震我比较好奇的是，你们19块9交付是吗？交付的话，因为我们这是新奇特的->目前的话 说ai的话 应该是没什么问题吧 因为官方主推这个流量 这个我做剧镇啊 这个不用不用讨论了 就是做剧镇 我比较好奇的就是你们19块9交付是吗啊 交付的话就是因为我们这是新奇特"
+    },
+    {
+      "wrong": "矿矿",
+      "candidates": [
+        "框框"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:天船教育法该法共七章六十五条将于今年十一月一日起执行一分钟待你了解它它的核心就一句话让法律从书本里的条条矿矿变成你我脑子里行走的避坑指南->宣传教育法该法供7章65条将于今年11月1日起施行一分钟带你了解它它的核心只有一句话让法律从书本里的条条框框变成你我脑子里行走的必坑指南"
+    },
+    {
+      "wrong": "砸火",
+      "candidates": [
+        "杂活"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:上手运营和店铺操作但是呢代理的运营基本上不会用心教你因为对他来说教会徒弟饿死师傅加上你说话又不好听端茶送水买烟样一样不会还总是抱怨运营让你干砸火那么你可能在这个公司->上手运营和店铺操作但是呢代理的运营基本上不会用心教你因为对他来说教会徒弟饿死死腐加上你说话又不好听端茶送水满烟样样不会还总是抱怨运营让你干杂活那么你可能在这个公司"
+    },
+    {
+      "wrong": "硬介",
+      "candidates": [
+        "应借"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:只要能面试进都可以像我们之前送了很多字节的同学之前完全临界验了送进去了他们进去就是AI产品经理稿没有任何问题不用担心硬介身你就抓紧的把澳洲机会赶紧转因为我见过太多的建筑人员->只要能面试镜都可以那像我们之前送了很多字节的同学之前完全领建业了送进去了他们进去就是AI产品经理稿没有任何问题 对吧不用担心应借身你就抓紧的把握住机会赶紧转好因为我见过太多的建筑师"
+    },
+    {
+      "wrong": "硬介身",
+      "candidates": [
+        "应届生"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 3,
+      "notes": "例:只要能面试进都可以像我们之前送了很多字节的同学之前完全临界验了送进去了他们进去就是AI产品经理稿没有任何问题不用担心硬介身你就抓紧的把澳洲机会赶紧转因为我见过太多的建筑人员->只要能面试镜都可以那像我们之前送了很多字节的同学之前完全领经验了送进去了他们进去就是AI产品经理稿没有任何问题对吧不用担心应届生你就抓紧的把握住机会赶紧转好因为我见过太多的建筑"
+    },
+    {
+      "wrong": "祝负",
+      "candidates": [
+        "住户"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:现金的日来相应的我的卡上会有一万元的存款同时在这个表中负债这一页对非金融机构及祝负负债中个人存款一来也会新增一万在这个表中资产跟负债总是相等的也就是说往下->现金的这一栏相应的我的卡上会有一万元的存款同时在这个表中负债这一页对非金融机构及住户负债中个人存款一栏也会新增一万在这个表中资产跟负债总是相等的也就是说往"
+    },
+    {
+      "wrong": "票议",
+      "candidates": [
+        "飘逸"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:然把票议要学->然把飘逸要学"
+    },
+    {
+      "wrong": "福战",
+      "candidates": [
+        "负债"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:关系了 你们信用卡是人家心态中心的事和心态没有任何关系所以说 福战其实没有你想象中的那么可怕气素也不像你想象中的那么早搞那么既然来说 气素之后->因为信用卡是人家形态中心的事 和形态没有任何关系所以说 负债其实没有你想象中的那么可怕起诉也不像你想象中的那么糟糕那么前来说 起诉之后"
+    },
+    {
+      "wrong": "私余",
+      "candidates": [
+        "私域"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:私余这种视频流量非常的大对然后以公寓做流量然后流到绿泡泡里面我知道这十九块九是直接挂车卖吗靠直播卖还是靠短视频卖不是不是他们到私余里面之后然后就去联系我们->思域这种视频流量非常的大对然后公寓做流量然后流到这个绿泡泡里面我知道这19块90是直接挂车卖吗靠直播卖还是靠短视频卖不是不是他们到思域里面之后然后就去联系我们"
+    },
+    {
+      "wrong": "秋季而",
+      "candidates": [
+        "邱吉尔"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:造了秋季而强迫->造了邱吉尔强迫"
+    },
+    {
+      "wrong": "稻茶",
+      "candidates": [
+        "倒查"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:至少还有一定的获胜的可能性我是大则律师专门办理PC稻茶以及撤销PC处罚的行动诉讼案件如果您有愿捐的需求可以后台私信我咱们下期再见->至少还有一定的获胜的可能性我是大字律师专门办理PC倒查以及撤销PC处罚的行政诉讼案件如果您有月券需求可以后台私信我咱们下期再见"
+    },
+    {
+      "wrong": "穴牌",
+      "candidates": [
+        "学派"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:然而他才著作中只使用过三次在他著名的著作看不见的手中只使用过一次国家的财富之术尽管如此这个概念本身还是成为了梅萨斯或哈耶克等经济学家的最爱甚至在非奥地利穴牌的经济领域也是如此->在一起然而他在著作中只使用过三字在他著名的著作看不见的手中只使用过一次国家的财富之书尽管如此这个概念本身还是成为了梅萨斯或哈耶克等经济学家的最爱甚至在非奥地利学派的经济领域也是如此"
+    },
+    {
+      "wrong": "简硬",
+      "candidates": [
+        "检印"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:快速生成的呢打开简硬在下方菜单点击减同款在减同款的上面有一行菜单点击第二个营销推广点击右上角营销成片这是减硬新更新的一个->快速生成的呢打开检印在下方菜单点击减同款在减同款的上面有一行菜单点击第二个营销推广点击右上角营销成片这是检印新更新的一个"
+    },
+    {
+      "wrong": "简积",
+      "candidates": [
+        "剪辑"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:也很少会用到PR这些专业的简积软件现实情况是很多做的比较好的博主在做号之前，它并不懂新媒体运营但是它们做出来的效果却比很多专业的新媒体运营要做的好得多换句话说，各行各业的人->也很少会用到PR这些专业的剪辑软件现实情况是很多做得比较好的播主在做号之前他并不懂新媒体运营但是他们做出来的效果却比很多专业的新媒体运营要做得好得多换句话说各行各业的人"
+    },
+    {
+      "wrong": "类母",
+      "candidates": [
+        "内幕"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:大于努力上位的什么意思就是靠不停的跳槽拿员工师当跳板来达到期望的职位今天在这个公司当运助理待了半年或一年了解该类母基本的运流程离职在下一代公司直接印扁->大于努力上位的什么意思就是靠不停的跳槽拿员工当跳板来达到期望的职位今天在这个公司当运营助理待了半年或一年了解该内幕基本运营流程离职在下一代公司直接应聘"
+    },
+    {
+      "wrong": "精点",
+      "candidates": [
+        "经典"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:精点的博弈论模型用来描述两个理性的个体在没有沟通的情况下各自追求自身最大利益时可能导致双方都获得较差结果的情况在航空公司的例子中两家公司都希望通过降低->经典的博弈论模型用来描述两个理性的个体在没有沟通的情况下各自追求自身最大利益时可能导致双方都获得较差结果的情况在航空公司的例子中两家公司都希望通过降低"
+    },
+    {
+      "wrong": "精送",
+      "candidates": [
+        "惊悚"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:这个比较这个精送的故事 是广东出现了骨灰房 这到底怎么回事呢 我今天给大家去分析一下背后的法律热点所谓骨灰房就来了 房子正常情况是给人住的 但是呢 有些人买了之后是放骨灰->这个比较这个惊悚的故事是广东出现了骨灰房这到底怎么回事呢我今天给大家去分析一下背后的法律热点所谓骨灰房买了房子正常情况是给人住的但是呢有些人买了之后是放骨灰 | 例:这个比较这个精送的故事 是广东出现了骨灰房 这到底怎么回事呢 我今天给大家去分析一下背后的法律热点所谓骨灰房就来了 房子正常情况是给人住的 但是呢 有些人买了之后是放骨灰->这个比较这个轻松的故事是广东出现了骨灰房这到底怎么回事呢我今天给大家去分析一下背后的法律热点所谓骨灰房就来了房子正常情况是给人住的但是呢有些人买了之后是放骨灰"
+    },
+    {
+      "wrong": "素送",
+      "candidates": [
+        "诉讼"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:素送和非素送素送方式及法院判决非素送方式包括人民调解行政调解当事人和解行政裁决行政富裕仲裁欠房等等多种形式->诉讼和非诉讼，诉讼方式及法院判决，非诉讼方式包括人民调解、行政调解、当事人和解、行政裁决、行政负义、仲裁、沁访等等多种形式。"
+    },
+    {
+      "wrong": "红高飞",
+      "candidates": [
+        "通告费"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 3,
+      "notes": "例:同伙觉得叮咚你帮我做然后红高飞给我不客气对可以邀请你一起我也可以不客气的进去->从你碰我觉得这个节目你帮我做然后通告费给我不客气对要求可以提我也可以不客气地订阅一生"
+    },
+    {
+      "wrong": "纯蓄",
+      "candidates": [
+        "程序"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:《最有情怀的判决书》判决书是赞写的本院认为婚姻关系的纯蓄是以夫妻感情为基础的原被告从同学至夫妻是一段美的历程祝你寻她千百度->最有情怀的判决书判决书是这样写的本院认为婚姻关系的程序是以夫妻感情为基础的原被告从同学至夫妻是一段美的历程祝你寻他千百度"
+    },
+    {
+      "wrong": "续含",
+      "candidates": [
+        "血汗"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:着续含焦虑->着血汗焦虑"
+    },
+    {
+      "wrong": "维发",
+      "candidates": [
+        "违法"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:必须粘满12周岁驾驶电动自行车必须粘满16周岁而且不得在道路上学习驾驶飞机动车啥也不说了维发的同学屈哥说吧第五个如果你还在读小学初中不用担心老师吓唬你说要开除你->必须年满12周岁驾驶电动自行车必须年满16周岁而且不得在道路上学习驾驶飞机动车啥也不说了违法的同学举个说吧第五个如果你还在读小学初中不用担心老师吓唬你说要开除你"
+    },
+    {
+      "wrong": "绿丝",
+      "candidates": [
+        "律师"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:这些年线呢，成绩时间呢，是2019年8月25日它的绿丝数量非常非常多啊那么除了这两个绿丝和绿锁进行的一个搜索以外呢我们看到在这里有一个地图搜索->成绩时间是2019年8月25日它的律师数量非常非常多那么除了这两个律师和律所进行的一个搜索以外我们看到在这里有一个地图搜索"
+    },
+    {
+      "wrong": "缅慢",
+      "candidates": [
+        "绵漫"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:靠缅慢水列->靠绵漫水列"
+    },
+    {
+      "wrong": "网场",
+      "candidates": [
+        "王朝"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:得到周网场的认可所以一直是无霸之中最具争议的一位第三位重生之靳文公靳文公 名崇尔靳国第二十二位国军这位靳文公可谓是吃得苦中苦方为人上人靳国当年保佑->得到周王朝的认可所以一直是五霸之中最具争议的一位第三位重生之晋文公晋文公名崇尔晋国第二十二位国君这位晋文公可谓是吃得苦中苦方为人上人晋国当年"
+    },
+    {
+      "wrong": "署份",
+      "candidates": [
+        "处分"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:学校署份重->学校处分重"
+    },
+    {
+      "wrong": "美昂斯",
+      "candidates": [
+        "每盎司"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 3,
+      "notes": "例:正如金本位置的名称所示在19世纪，人们可以走进银行用一场纸币换取黄金货币与美元挂钩，美元与黄金的比率是美昂斯35美元个人不再被允许用纸币兑换黄金->正如金本位置的名称所示在19世纪人们可以走进银行用一张纸币换取黄金货币与美元挂钩美元与黄金的比率是每盎司35美元个人不再被允许用纸币兑换黄金"
+    },
+    {
+      "wrong": "群分",
+      "candidates": [
+        "勤奋"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:客户在哪里 客户拒绝了怎么办客户赖帐了怎么办 客户投诉了怎么办这些问题每一个都会影响成交但每一个都要销售自己去面对销售上到的方式有很多有靠群分的 有靠机灵的->客户在哪里，客户拒绝了怎么办，客户赖了怎么办，客户投诉了怎么办这些问题每一个都会影响成交，但每一个都要销售自己去面对销售上到的方式有很多，有靠勤奋的，有靠机灵的"
+    },
+    {
+      "wrong": "群幕",
+      "candidates": [
+        "曲目"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:火的群幕也是->火的曲目也是"
+    },
+    {
+      "wrong": "翠绵树",
+      "candidates": [
+        "催眠术"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:运转翠绵树存在->运转催眠术存在"
+    },
+    {
+      "wrong": "考压",
+      "candidates": [
+        "烤鸭"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 3,
+      "notes": "例:价值区分 用举例对比让客户认同便宜没好话你可以这样说 我想请问你呢张总 10块钱一直的考压你敢吃吗50块钱的金银手是你敢买吗免费的旅行团你敢去吗->价值区分用举例对比让客户认同便宜没好话你可以这样说我想请问您呢张总10块钱一直的烤鸭您敢吃吗50块钱的金银手势您敢买吗免费的旅行团您敢去吗"
+    },
+    {
+      "wrong": "联中",
+      "candidates": [
+        "年终"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:你来上班干什么你不就是指望找点工资吗多发点联中奖嘛又想获取又不想自我去表现想要就要说出来做的好的该发邮件发邮件该发群发群产品经理一定要学会把自己的成果广而告知->你来上班干什么你不就是指望找点工资吗多发点年终奖吗又想获取又不想自我去表现想要就要说出来做得好的该发邮件发邮件该发群发群产品经理一定要学会把自己的成果广而告知"
+    },
+    {
+      "wrong": "聚皮",
+      "candidates": [
+        "俱疲"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:隐藏著深层的恐惧与自我责备你可以像安慰一位好朋友那样对自己说我知道你现在很恐惧反复重复让你身心聚皮没关系我们是最好的朋友我不会再为难你同时将手放在心脏的位置感受生命的跳动感受身体对你的->隐藏着深层的恐惧与自我责备你可以像安慰一位好朋友那样对自己说我知道你现在很恐惧反复重复让你身心俱疲没关系我们是最好的朋友我不会再为难你同时将手放在心脏的位置感受生命的跳动感受身体对你"
+    },
+    {
+      "wrong": "育言",
+      "candidates": [
+        "运营"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:小马哥我们已经帮上万名同学找到育言工作了这期视频风俗易懂又干货记得拿起来以后看1。用一个生活中的例子告诉你数据分析到底是什么我先问你一个问题你平时经常做饭吗做饭的扣1不做饭扣2扣1的勤俭持家小能手如果你平时->撞到小马哥我们已经帮上万名同学找到运营工作了这期视频风俗易懂又干货记得拿起来以后看一 用一个生活中的例子告诉你数据分析到底是什么我先问你一个问题你平时经常做饭吗做饭的扣一不做饭扣二扣一的勤俭持家小能手如果你平时"
+    },
+    {
+      "wrong": "胃筋",
+      "candidates": [
+        "未经"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:严重的会进去坐牢比如如果是出售胃筋检疫的走私猪肉 牛肉或姜丝肉不要觉得这样事情现在没有今年我们就接触了一家平台卖便宜走私牛肉的老板进去采封人机了最后再次强调本视频是为了让->而且严重的会进去坐牢比如如果是出售未经检疫的走私猪肉流肉或僵尸肉不要觉得这样的事情现在没有今年我们就接触了一家平台卖便宜走私流肉的老板进去采缝纫机了最后再次强调本视频是为了让小伙伴们"
+    },
+    {
+      "wrong": "胎侧",
+      "candidates": [
+        "猜测"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:小幅反弹 但油价下跌 美国政策和美联储人士变动 让市场又开始胎侧利率走向本周最重磅的是科技股财报alphabet amazon 内md 依兆尼普兰尺接连亮相->小幅反弹但油价下跌美国政策和美联储人事变动让市场又开始猜测利率走向本周最重磅的是科技股财报Alphabet Amazon AMDIsnipo Enter 接连亮相"
+    },
+    {
+      "wrong": "能怎",
+      "candidates": [
+        "呢则"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:老板能怎会涉嫌组织蔓延罪最低就是五年的有期徒刑台球厅里的其他工作人员则有可能会涉嫌到协助组织蔓延罪最高五年有期徒刑所以打台球还要是去正规的场所->老板呢则会涉嫌组织卖淫罪最低就是五年的有期徒刑台球厅里的其他工作人员则有可能会涉嫌到协助组织卖淫罪最高五年有期徒刑所以啊打台球还要是去正规的场所"
+    },
+    {
+      "wrong": "能长",
+      "candidates": [
+        "冷场"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:气氛能长又不->气氛冷场又不"
+    },
+    {
+      "wrong": "脚剑",
+      "candidates": [
+        "矫健"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:他以初演反派角色和功夫高手著称活跃于70-90年代的香港动作片中不仅伸手脚剑还担任过很多电影的动作指导《豪百村》1919-2020中华民国陆军一级上将政治人物他曾任参谋总长国防部部长和行政院院长他是著名的反独大将兼。->他以出演反派角色和功夫高手著称活跃于70-90年代的香港动作片中不仅身手矫健还担任过很多电影的动作指导郝百村1919-2020中华民国陆军一级上将政治人物他曾任参谋总长国防部部长和行政院院长他是著名的反毒大将"
+    },
+    {
+      "wrong": "腿背",
+      "candidates": [
+        "颓废"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:不是 吹就一般车在我眼前这么一晃油啊我就知道这怎么回事心里有数呢一下这款 虽然是商务车但它马力够一脚下去 是不是有腿背感对吧输入度也很好当然它好 价格就很好->不是吹就一般车在我眼前那么一晃一晃我就知道是怎么回事心里有数了你像这款虽然是商务车但它马力够一脚下去是不是有颓废感对吧速度也很好当然它好价格就很"
+    },
+    {
+      "wrong": "自治企",
+      "candidates": [
+        "之日起"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 3,
+      "notes": "例:违反自安管理行为，在6个月内，没有被公安机关发现的，不再处罚需要说明的是，6个月的计算期限，是从卖营嫖娼发生自治企计算的如果中间又继续…->违反治安管理行为在6个月内没有被公安机关发现的不再处罚需要说明的是6个月的计算期限是从卖营嫖娼发生之日起计算的如果中间又继续"
+    },
+    {
+      "wrong": "致见",
+      "candidates": [
+        "质检"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:官方致见还->官方质检还"
+    },
+    {
+      "wrong": "舌此",
+      "candidates": [
+        "奢侈"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:就使优质品价格被低估而退出市场交易结果只有劣质品成交 进而导致交易的停止因此 要从根本上解决打假问题关键是解决买卖双方的信息不对称问题舌此可能越打越低->就使优质品价格被低估而退出市场交易结果只有劣质品成交进而导致交易的停止因此要从根本上解决打假问题关键是解决买卖双方的信息不对称问题奢侈可能越打越低"
+    },
+    {
+      "wrong": "茶宴",
+      "candidates": [
+        "查验"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:若产品含有害成分 还可能射行销售者未尽进货茶宴义务 需连代赔偿同时面临监管处罚 消费者维权三步走仪式留存证据 保留产品包装->若产品含有害成分 还可能涉刑销售者未尽进货查验义务 需连带赔偿同时面临监管处罚消费者维权三步走仪式留存证据 保留产品包装"
+    },
+    {
+      "wrong": "荣冻",
+      "candidates": [
+        "溶洞"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:人约着去荣冻探险当地村民自高分永帮忙带路结果这个村民在荣冻里意外跌落身亡家属把七个人全告了所赔120万把愿最后怎么判断请问。->一人约着去溶洞探险当地村民自告奋勇帮忙带路结果这个村民在溶洞里意外跌落身亡家属把7个人全告了索赔120万法院最后怎么判呢村民"
+    },
+    {
+      "wrong": "获原",
+      "candidates": [
+        "货源"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:生怕获原不够->生怕货源不够"
+    },
+    {
+      "wrong": "营历",
+      "candidates": [
+        "盈利"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:这种一锤子买卖容易带来的不良后果式一些上市公司购买的资产营历能力逐年下滑流通股东亦以因此受损而大股东由于持有的为非流通股份并没有因此有直接的损失->这种一锤子买卖容易带来的不良后果是一些上市公司购买的资产盈利能力逐年下滑流通股东利益因此受损而大股东由于持有的为非流通股份并没有因此有直接的损失"
+    },
+    {
+      "wrong": "营汇",
+      "candidates": [
+        "淫秽"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:根据该规定多次发送、营汇、侮辱、恐吓短信或者其他信息干扰他人正常生活等将受到法律的制裁这里的多次通常只三次营业->根据该规定多次发送淫秽侮辱恐吓短信或者其他信息干扰他人正常生活的将受到法律的制裁这里的多次通常只三次以来"
+    },
+    {
+      "wrong": "萧吉",
+      "candidates": [
+        "消极"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:九上萧吉进攻->九上消极进攻"
+    },
+    {
+      "wrong": "蒸劫",
+      "candidates": [
+        "症结"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:现在人一言就看穿了蒸劫大宋虽有十四却多是点菜上菜的模式既贵又慢根本满足不了底层百姓解禅的心思你要要牙把鸡咱的盘铲全掏了出来决定开一家前所未有的自助火锅第二天一早你也要把鸡咱的盘铲拖了出来->越来的现代人一眼就看穿了正洁大宋虽有十四却多是点菜上菜的模式既贵又慢根本满足不了底层百姓解馋的心思你咬咬牙把积攒的盘缠全掏了出来决定开一家前所未有的自助火锅第二天一早"
+    },
+    {
+      "wrong": "行斥",
+      "candidates": [
+        "刑事"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "行政处罚对刑事，法律用语清晰 | 例:而非行斥忘->而非刑事忘"
+    },
+    {
+      "wrong": "衣他",
+      "candidates": [
+        "仪它"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:就像一种价格敏感度的测量衣他告诉我们价格变化时人们的购买欲望会有多大程度的波动如果一个商品的价格稍微移动大家的购买量就跟着大起大落那这个商品的购买->就像一种价格敏感度的测量仪它告诉我们价格变化时人们的购买欲望会有多大程度的波动如果一个商品的价格稍微移动大家的购买量就跟着大起大落那这个商品的"
+    },
+    {
+      "wrong": "衣就",
+      "candidates": [
+        "依旧"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:青山衣就在几->青山依旧在几"
+    },
+    {
+      "wrong": "补作",
+      "candidates": [
+        "不做"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:做的就是，什么都补作。之前发生的地震大家都知道，很多家属拒绝承认亲人罹难，因为他们害怕接受亲人离开的事实，他们的期盼是美好的，但也是这样的期盼，让他们困在原地，使生活不能更好的继续。->做的就是，什么都不做，之前发生的地震大家都知道，很多家属拒绝承认亲人罹难，因为他们害怕接受亲人离开的事实，他们的期盼是美好的，但也是这样的期盼，让他们困在原地，使生活不能更好的继续。"
+    },
+    {
+      "wrong": "补带",
+      "candidates": [
+        "古代"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:为什么补带城门都是朝离开就不怕敌军顺势而入吗可千万别小看了老祖宗的智慧第一个好处就是保密工程常用的手段是射箭和抛石头假如城门是向外开的守城的士兵关门就要出城会变成一个火把子往离开->为什么古代城门都是朝里开就不怕敌军顺势而入吗可千万别小看了老祖宗的智慧第一个好处就是保命工程常用的手段是射箭和抛石头假如城门是向外开的守城的士兵关门就要出城会变成一个火把子往里开"
+    },
+    {
+      "wrong": "西洋锤",
+      "candidates": [
+        "夕阳垂"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:万里西洋锤地大->万里夕阳垂地大"
+    },
+    {
+      "wrong": "规证",
+      "candidates": [
+        "归正"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:将被视为终了之日该日期的6个月内公安机关对多次嫖娼行为都会一并处罚法律设置追究使孝是为了让违法人在认识到自己的违法行为后改邪规证->将被视为终了之日该日期的六个月内公安机关对多次嫖娼行为都会一并处罚法律设置追究时效是为了让违法人在认识到自己的违法行为后改邪归正"
+    },
+    {
+      "wrong": "视架",
+      "candidates": [
+        "市价"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:如果柱子图成黑色那就是跌了上眼是开视架下眼是收视架有意思的是这一黑一白的设定其实是受到了天朝太极文化的起发白为阳黑为阴所以直到今天上掌的K线还叫->如果柱子涂成黑色那就是跌了上眼是开市价下眼是收市价有意思的是这一黑一白的设定其实是受到了天朝太极文化的启发白为阳黑为阴所以直到今天上涨的K线还叫"
+    },
+    {
+      "wrong": "警铁",
+      "candidates": [
+        "景点"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:蒋介石也必须关注他在这里我查破一个简求我上一次到指甲是出差自驾过他的山川河流但具体的警铁银石间的原业我指导过风雨龙金桥与动作的古楼其他警铁->蒋介石也必须关注他在这里我插播一个简求我上一次到芝加是出差自驾过他的山川河流但具体的景点因时间的原因我只到过风雨龙金桥与洞足的鼓楼其他景点"
+    },
+    {
+      "wrong": "计题",
+      "candidates": [
+        "机体"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:再利用大原格式基定义的和条件规则以及设定好的条件范围形成不同颜色计题、底色、不同档极提示图标的提醒效果其实这些提醒的->再利用单元格格式既定义的和条件规则以及设定好的条件范围形成不同颜色机体底色不同档极提示图标的提醒效果其实这些提醒"
+    },
+    {
+      "wrong": "请凶",
+      "candidates": [
+        "挺胸"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:是 治愈嘛紧张个毛啊自信一些 知道吧昂首请凶 知道吗用下巴看他哎 人呢 人呢 对吧用下巴看他 知道吗有的人说 赵老师那我怎么能够快速地提高自信我教你们怎么快速地提高自信->至于吗紧张个毛啊自信一些知道吧昂首挺胸知道吗用下巴看他哎 人呢 人呢对吧用下巴看他知道吗有的人说赵老师那我怎么能够快速地提高自信我教你们怎么快速地提高自信啊"
+    },
+    {
+      "wrong": "请续",
+      "candidates": [
+        "情绪"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:你会请续内耗->你会情绪内耗"
+    },
+    {
+      "wrong": "课还哭",
+      "candidates": [
+        "可害苦"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 3,
+      "notes": "例:要不得啊这下课还哭我了->要不得啊这下可害苦我了"
+    },
+    {
+      "wrong": "负义",
+      "candidates": [
+        "复议"
+      ],
+      "type": "double_char",
+      "evidence_count": 3,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:第一个人并不是卖家而是市场监督管理局你可以跟市场监督管理局的工作人员这么说既然对方不愿调解那么请对他们进行处罚如果你不对他们处罚我就要告你们市场监督管理局咱们先负义后诉讼->一个人并不是卖家而是市场监督管理局你可以跟市场监督管理局的工作人员这么说既然对方不愿调解那么请对他们进行处罚如果你不对他们处罚我就要告你们市场监督管理局咱们先复议后诉讼"
+    },
+    {
+      "wrong": "负价",
+      "candidates": [
+        "附加"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:发达国家鼓励发展中国家卖给他们资源但是并不鼓励他们卖一些高负价值的产品第二点 所有人都知道货币贬值的时候有利于出口->发达国家鼓励发展中国家卖给他们资源但是并不鼓励他们卖一些高附加值的产品第二点所有人都知道货币贬值的时候有利于出口"
+    },
+    {
+      "wrong": "负扬",
+      "candidates": [
+        "抚养"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:拖欠负扬费别->拖欠抚养费别"
+    },
+    {
+      "wrong": "质瑞",
+      "candidates": [
+        "智慧"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:一副质瑞数码->一副智慧数码"
+    },
+    {
+      "wrong": "质称",
+      "candidates": [
+        "支撑"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:需要的智能盈地设施其实都是科技在消费端的延伸第三板块新基础农业与交通的硬质称一个是农业一个是交通今天联播有一条155新图景一路通达串起经济版图息->需要的智能营地设施其实都是科技在消费端的延伸第三板块新基础农业与交通的硬支撑一个是农业一个是交通今天联播有一条155新图景一路通达串起经济版图形"
+    },
+    {
+      "wrong": "购注",
+      "candidates": [
+        "构筑"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:60购注国产->60构筑国产"
+    },
+    {
+      "wrong": "资群",
+      "candidates": [
+        "咨询"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:怎么获得免费法律资群三个办法第一拨打1234812348是属于政府设置的免费法律资群热钱资群人员大部分是职业律师->怎么获得免费法律咨询三个办法第一拨打1234812348是属于政府设置的免费法律咨询热情咨询人员大部分是职业律师"
+    },
+    {
+      "wrong": "赔信",
+      "candidates": [
+        "培训"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:不过相当于是一个保证机，你中途跑了就不退了，赔信完之后入籍一段时间大概了会退回给你。不过可能也需要签合同入籍需要满多久，企业嘛，也不是做磁线的，懂得都懂，所以大家->不过相当于是一个保证金你中途跑了就不退了培训完之后入籍一段时间大概了会退回给你不过可能也需要签合同入籍需要满多久企业嘛也不惜做慈善的懂得都懂所以大家"
+    },
+    {
+      "wrong": "赞当",
+      "candidates": [
+        "账单"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:责任条款所以这种情况下我们一定要学会向银行要自己的赞当构成确认自己的余期天数因为根据三列银行西雄卡监督管理办法的规定西雄卡赞助->所以这种情况下我们一定要学会向银行要自己的账单构成确认自己的逾期天数因为根据商业银行信用卡监督管理办法的规定"
+    },
+    {
+      "wrong": "赢意",
+      "candidates": [
+        "淫欲"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:一定要自己先有一个辨别能力不要人赢意云当然了你要是实在不知道怎么去提问律师的你可以看看我之前的视频我都有告诉你们怎么来选择律师的->一定要自己先有一个辨别能力不要人淫欲云当然了你要是实在不知道怎么去提问律师的你可以看看我之前的视频我都有告诉你们怎么来选择律师的"
+    },
+    {
+      "wrong": "越离",
+      "candidates": [
+        "阅历"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:未成年人由于社会越离不足法律意识淡薄容易被犯卡团伙拉拢利用同为犯罪工具人我们显先犯了大错未成年人应自觉尊归手机述地正确地交友观消费观发现身边有违法犯罪行为事件->未成年人由于社会阅历不足法律意识淡薄容易被犯卡同伙拉拢利用同为犯罪工具人我们险些犯了大错未成年人应自觉综规守纪树立正确的交友官消费官发现身边有违法犯罪行为"
+    },
+    {
+      "wrong": "跟闲崩",
+      "candidates": [
+        "根弦绷"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:像有跟闲崩着一->像有根弦绷着一"
+    },
+    {
+      "wrong": "转用机",
+      "candidates": [
+        "赚佣金"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 3,
+      "notes": "例:要是被拿去搞诈骗洗钱警察就会顺著这个流水就能找上门去年甚至有个大学生借卡转用机结果卡里面过流水就过了上百万直接吃牢饭对不对 起步可能就六个月->要是被拿去搞诈骗洗钱警察就会顺着这个流水就能找上门去年深圳有个大学生借卡赚佣金结果卡里面过流水就过了上百万直接吃饶饭起步可能就六个月"
+    },
+    {
+      "wrong": "辅训",
+      "candidates": [
+        "抚恤"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:三，请求发给辅训金四，请求几幅善养费、服养费、服养费五，请求确认劳动关系或者支付劳动报酬六，请求认定公民无民事行为能力或者限制->或者社会救助三 请求发给抚恤金四 请求给付赡养费 抚养费 抚养费五 请求确认劳动关系或者支付劳动报酬六 请求认定公民无民事行为能力或者限制"
+    },
+    {
+      "wrong": "辆车辆",
+      "candidates": [
+        "步"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:终一辆车辆->终一步"
+    },
+    {
+      "wrong": "辉提",
+      "candidates": [
+        "回题"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:上级部门已经规划好了两千亩土地但是他同时又提出了自己的新的条件而梁姿申也不是吃醋了宋一辉提的条件他本来马上就可以同意他这一步当面表态然后说要寝室领导再做决定故意把一个简单的事情复杂化这里面呢->上级部门已经规划好了2000亩土地但是他同时又提出了自己的新的条件而梁思生也不是吃醋的送一回题的条件他本来马上就可以同意他却不当面表态然后说了要请示领导再做决定故意把一个简单的事情复杂化这里面呢"
+    },
+    {
+      "wrong": "达七",
+      "candidates": [
+        "大气"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:因为现在维权成本太高很多消费者们只能吃哑巴亏电达七客积极常见平台不作为导致消费者权利受到侵害无处申诉希望这个视频能帮助到各位亲->因为现在维权成本太高，很多消费者们只能吃哑巴亏，电大气客极其常见，平台不作为，导致消费者权利受到侵害，无促森数。希望这个视频能够帮助到各位亲。"
+    },
+    {
+      "wrong": "达众",
+      "candidates": [
+        "大众"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:是律师职业证的序列号代码和深圳都一样的每个律师只有一个并且是唯一的通过这些我们是不是就能判断这个律师的基本信息了所以关注草达众多学点法少吃点亏->是律师职业证的序列号代码这个和身份证都一样的每个律师只有一个并且是唯一的那通过这些我们是不是就能判断这个律师的基本信息了所以呢关注草大传多谢点发少吃二亏"
+    },
+    {
+      "wrong": "达遍",
+      "candidates": [
+        "答辩"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:达遍意见 自质意见 证据等等这些综合的判断 不可能说通过这个起诉状就形成对原告有利的倾向 就算是有一点 那么随着这个输送进程的发展 包括这个证据的提交 自证辩论等等 那么有一点->答辩意见自证意见证据等等这些综合的判断不可能说通过这个起诉状就形成对原告有利的倾向就算是有一点那么随着这个诉讼进程的发展包括这个证据的提交自证辩论等等那么有一点"
+    },
+    {
+      "wrong": "近点",
+      "candidates": [
+        "经典"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:第一种 说一些让客户自己判断的话例如你猜猜最后发生了什么第二种 提一些刺激性的问题例如我能问你一个问题吗对方就会很好奇 你想问什么问题第三 只说一半或者说快消息例如最近点的你一定听懂->第一种说一些让客户自己判断的话例如你猜猜最后发生了什么那第二种提一些刺激性的问题例如我能问你一个问题吗对方就会很好奇啊你想问什么问题那第三只说一半或者说快消息例如最经典的你一定听"
+    },
+    {
+      "wrong": "远风",
+      "candidates": [
+        "原封"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:业务那边拿来的需求远风不动的给到开发尤其是我们做支持的产品经理很多需求来自于业务部门这个时候有一些新人同学就习惯性的直接把业务部门的需求拿到给开发你的工作是什么呢你的工作不是一个传话筒你需要去->业务那边拿来的需求原封不动的给到开发尤其是我们做支持的产品经理很多需求来自于业务部门这个时候有一些新人同学就习惯性的直接把业务部门的需求拿到给开发你的工作是什么呢你的工作不是一个传话筒你需要去"
+    },
+    {
+      "wrong": "适入",
+      "candidates": [
+        "是如"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:又是宋珮，一股股票迅速变成十股，100股乃至上千股，发财不适入爆米花一般容易吗？30全流通概念，由于历史原因，上海的老八股，除真空，这奉房，后来的贷贷。->又是宋佩一股股票迅速变成十股一百股乃至上千股发财不是如爆米花一般容易吗三是全流通概念由于历史原因上海的老八股除真空这凤凰后来的"
+    },
+    {
+      "wrong": "选拂",
+      "candidates": [
+        "悬浮"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:面板选拂式设->面板悬浮式设"
+    },
+    {
+      "wrong": "途井",
+      "candidates": [
+        "图景"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:开年以来保持的比较平稳两条经济数据放在一起看制造业和侵攻业一个偏上游，一个偏下游都给出了一个比较稳的态势第三条，十五五新途井距离未来产业引领->开年以来保持的比较平稳两条经济数据放在一起看制造业和轻工业一个偏上游一个偏下游都给出了一个比较稳的态势第三条155新图景距离未来产业引领"
+    },
+    {
+      "wrong": "遭废",
+      "candidates": [
+        "消费"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:对于目标人群来说 排球厅可比上K的性价比高多了不打一个消费相机说到这里 有想法的男同胞们赶紧打住刘律师提醒各位男同胞们在这种情况下 遭废者和美女助教->对于目标人群来说呢排球厅可比双K的性价比高多了不打一个消费降机说到这里有想法的男同胞们赶紧打住吕律师提醒各位男同胞们在这种情况下消费者和美女助教"
+    },
+    {
+      "wrong": "避缓",
+      "candidates": [
+        "闭环"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:其实很多案件还是存在比较大的问题的有的案件存在严重的程序违法还有的案件证据压根形成不了一个避缓的链条这种情况下我觉得去提起行政诉讼->其实很多案件的还是存在比较大的问题的有的案件的存在严重的程序违法还有的案件的证据压根形成不了一个闭环的链条这种情况下呀我觉得去提起行政诉讼"
+    },
+    {
+      "wrong": "避还",
+      "candidates": [
+        "闭环"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:把宝贵的前几个月的时间都花在兑气工具链做出还少但其实没有办法落地的单梦上却忽略了去升弯一个业务场景做事一个项目的完整数据避还这个是非常可惜的所以对于26年正在准备转行和求职挨产品挨取方案的小伙伴建议你们把重心->把宝贵的前几个月的时间都花在堆砌工具链做出花少但其实没有办法落地的demo上却忽略了去升完一个业务场景做时一个项目的完整数据闭环这个是非常可惜的所以对于26年正在准备转行和求职I产品I训续方案的小伙伴建议你们把重新"
+    },
+    {
+      "wrong": "邮寄密",
+      "candidates": [
+        "油气命"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:捏住邮寄密门海->捏住油气命门海"
+    },
+    {
+      "wrong": "都敢",
+      "candidates": [
+        "口感"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:都敢遗嘱13。在超市商场餐厅等地摔倒可以要求赔偿14。在餐厅吃饭吃出仓意可以要求商家退役->13。在超市、商场、餐厅等地摔倒，可以要求赔偿14。在餐厅吃饭吃出苍蝇，可以要求商家退一"
+    },
+    {
+      "wrong": "野链",
+      "candidates": [
+        "冶炼"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:说明数字经济，人工智能相关的硬件基础，增长比较明显。第二，有色金属野链和压颜加工业，增长了1。5倍。第三，咱们看所有制，私营企业的利润，增长了37。2%。->说明数字经济、人工智能相关的硬件基础增长比较明显第二，有色金属冶炼和压岩加工业增长了1。5倍第三，咱们看所有制、私营企业的利润增长了37。2%从这组数字经济上来"
+    },
+    {
+      "wrong": "长祝贫",
+      "candidates": [
+        "章若萍"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:徐长祝贫徐->徐章若萍徐"
+    },
+    {
+      "wrong": "陈静时",
+      "candidates": [
+        "沉浸式"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:陈静时唱歌->沉浸式唱歌"
+    },
+    {
+      "wrong": "陈静百",
+      "candidates": [
+        "纯净版"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:记格陈静百一键->记格纯净版一键"
+    },
+    {
+      "wrong": "限其一",
+      "candidates": [
+        "先七呢",
+        "先七"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:乐为限其一是以->乐为先七呢是以 | 例:乐为限其一是以->乐为先七是以"
+    },
+    {
+      "wrong": "除下",
+      "candidates": [
+        "出现"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:车机除下二维->车机出现二维"
+    },
+    {
+      "wrong": "陪讯",
+      "candidates": [
+        "培训"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:大多数是有猫腻的，不拍出有些确实稀稀在在的陪讯，一般了解好像下班时间之后就约你面试，然后在面试的时候再跟你说陪讯费的事情。如果你很近还好说，如果你大老远过去的，他们会抓住你。->大多数是有猫腻的不排除有些确实实实在在的培训一般了解好向下班时间之后就约你面试然后在面试的时候再跟你说培训费的事情如果你很近还好说如果你大老远过去的他们会找你"
+    },
+    {
+      "wrong": "隆段",
+      "candidates": [
+        "垄断"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:隆段市场形成的原因很多，最根本的一个原因，就是为了建立和维护一个合法的货经济的壁垒。从而阻止其他企业进入干市场，以便巩固隆段企业的隆段地位。->垄断市场形成的原因很多，最根本的一个原因就是为了建立和维护一个合法的货经济的壁垒，从而阻止其他企业进入该市场，以便巩固垄断企业的垄断地位。"
+    },
+    {
+      "wrong": "非守",
+      "candidates": [
+        "分手"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:哪怕非守了只->哪怕分手了只"
+    },
+    {
+      "wrong": "音器",
+      "candidates": [
+        "引起"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:能要助音器，避免冤魂纠缠，古代普通百姓一年收入也就极量炎子，折合现在大概3000~8000元。古代离婚非常难，女子离婚会被视为不真，男子休息也要严格符合七处条件，古代妃子事情留下来。->能要助引起避免冤魂纠缠古代普通百姓一年收入也就几两银子折合现在大概三千到八千元古代离婚非常难女子离婚会被视为不真男子休息也要严格符合起初条件古代妃子事情留意"
+    },
+    {
+      "wrong": "页报复",
+      "candidates": [
+        "夜暴富"
+      ],
+      "type": "short_phrase",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:有一页报复的幻->有一夜暴富的幻"
+    },
+    {
+      "wrong": "页物",
+      "candidates": [
+        "业务"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:页物变动 以及非常重要的是来年的战略布局比如每年备受关注的阿里或者京东的财报每次发布之后 各种媒体就会进行宣传的分析年报一般可以在企业的官网 或者在童话社的APP->业务变动以及非常重要的是来年的战略布局比如说每年备受关注的阿里或者京东的财报每次发布之后各种媒体就会进行宣传和分析年报一般可以在企业的官网或者在童话社APP"
+    },
+    {
+      "wrong": "领胜",
+      "candidates": [
+        "鼎盛"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:那便是西班牙双峰可以说是经常打架西班牙也是第一个日不落地国而这个英国就像一个养成游戏一般英国也马上迎来了他们的领胜时期->那便是西班牙双方可以说是经常打架西班牙也是第一个日不落地国而这个英国就像一个养成游戏一般英国也马上迎来了他们的鼎盛时期"
+    },
+    {
+      "wrong": "风茫",
+      "candidates": [
+        "锋芒"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "风茫为锋芒音近别字，可收 | 例:囊中风茫立->囊中锋芒立"
+    },
+    {
+      "wrong": "飘腔",
+      "candidates": [
+        "嫖娼"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:女性发现另一半飘腔的时候出于对另一半一时半会可能停不下的感情非常自然地会无意识认同自己也是工具会加一些阶段去比较自己作为工具和另一枚工具之间属优属业这些念头本身会让人产生自尊受损的感觉会不断质疑说我到底哪里不好如果这些痛苦感受缠绕着你->女性发现另一半嫖娼的时候出于对另一半一时半会儿可能停不下的感情非常自然的会无意识认同自己也是工具会在一些阶段去比较自己作为工具和另一枚工具之间数优数裂这些念头本身会让人产生自尊受损的感觉会不断质疑说我到底哪里不好如果这些痛苦感受缠绕着"
+    },
+    {
+      "wrong": "驻财",
+      "candidates": [
+        "仲裁"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:我方也不需要向公司退款十一万的经济补偿金双方调解监这里要替大家如果您已经委托了律师而驻财委法院对方公司绕开律师直接跟你联系要求您做决定的时候一定要保持警惕不要随便->我方也不需要向公司退华16万的经济补偿金双方调解解案这里要请大家如果您已经委托了律师而仲裁委法院对方公司绕开律师直接跟你联系要求您做决定的时候一定要保持警惕不要随便"
+    },
+    {
+      "wrong": "骂掌",
+      "candidates": [
+        "蚂蚱"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:其实普通合伙和特殊的普通合伙关键的区分点就在于怎么扛债务普通合伙大家都是一条绳上的骂掌如果律所需要赔钱的话债主是可以找到任何一个合伙人要求还债的特殊的普通合伙->其实啊 这个普通合伙和特殊的普通合伙 关键的区分点啊 就在于怎么扛债务那普通合伙呢 大家都是一条神上的蚂蚱 如果律所需要赔钱的话呢债主是可以找到任何一个合伙人要求还债的 那特殊的普通合伙呀"
+    },
+    {
+      "wrong": "骚废",
+      "candidates": [
+        "消费"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round3_20260331_formal_run_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:对于目标人群来说，排球厅可比上K的性价比高多了不打一个消费相机说到这里，有想法的男同胞们赶紧打住吕律师提醒各位男同胞们在这种情况下骚废者和美女助教都会学习->对于目标人群来说呢排球厅可比商K的性价比高多了不打一个消费降级说到这里有想法的男同胞们赶紧打住吕律师提醒各位男同胞们在这种情况下消费者和美女助教都会"
+    },
+    {
+      "wrong": "骤媒",
+      "candidates": [
+        "皱眉"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bili_500_speech_round2_20260331_formal_run_v3_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:修理提炼了一套非常实用的心理学方法论换卫斯责任心替客户说话换卫斯不是简单的设身处地而是要主动去观察客户的细微反应比如客户骤媒可能不是否定而是对价格民进->提炼了一套非常实用的心理学方法论换卫斯责任心替客户说话换卫斯不是简单的设身处地而是要主动去观察客户的细微反应比如客户皱眉可能不是否定而是对价格明显"
+    },
+    {
+      "wrong": "魔火",
+      "candidates": [
+        "活活"
+      ],
+      "type": "double_char",
+      "evidence_count": 2,
+      "sources": [
+        "bilibili_500_manual_review_v1"
+      ],
+      "requires_high_risk": true,
+      "max_edit_distance": 2,
+      "notes": "例:魔火打死->活活打死"
+    }
+  ]
+}

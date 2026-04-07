@@ -3,8 +3,10 @@ flask-cors==4.0.0
 requests==2.32.3
 pyyaml==6.0.1
 psutil==5.9.8
-torch==2.1.0; sys_platform != 'darwin' or platform_machine != 'arm64'
+# Keep consistent with Docker images (quality backend) and avoid multi-version installs.
+torch==2.3.1; sys_platform != 'darwin' or platform_machine != 'arm64'
 TTS==0.21.3
+kokoro-onnx==0.5.0
 transformers==4.38.1
 pydub==0.25.1
 sentencepiece==0.1.99

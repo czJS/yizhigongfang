@@ -17,6 +17,13 @@ export interface UiPrefs {
   defaultParams?: Record<string, number | string>;
   // Runtime switch to show/hide developer-only UI (for testing).
   devToolsEnabled?: boolean;
+  // Delivery: include optional diagnostics/reuse artifacts when saving to output dir.
+  // Default false for "认知减负" (only save minimal deliverables).
+  deliveryIncludeOptionals?: boolean;
+  // Workbench/Drawer: show/hide task logs UI (default hidden for "认知减负").
+  showTaskLogs?: boolean;
+  // Workbench: skip secondary confirmation when archiving completed batches.
+  skipArchiveConfirm?: boolean;
 }
 
 export function loadBatches(): BatchModel[] {

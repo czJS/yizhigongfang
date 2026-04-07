@@ -230,7 +230,7 @@ def main() -> None:
     ap = argparse.ArgumentParser(description="Lite mode evaluation flow (Round1/1.5/2) for short datasets")
     ap.add_argument("--segments", default="eval/e2e_quality/segments_short3.docker.jsonl", help="JSONL segments file")
     ap.add_argument("--dataset-name", default="short3", help="Name used in output paths")
-    ap.add_argument("--config", default="config/defaults.yaml", help="Base YAML (defaults.yaml)")
+    ap.add_argument("--config", default="configs/defaults.yaml", help="Base YAML (defaults.yaml)")
     ap.add_argument("--preset", default="normal", help="Preset key: normal/mid/high")
     ap.add_argument("--out-root", default="outputs/eval/e2e_lite_flow", help="Output root under repo")
     ap.add_argument("--bootstrap-iters", type=int, default=2000)

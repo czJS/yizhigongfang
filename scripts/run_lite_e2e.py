@@ -3,7 +3,9 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
+import shutil
 import subprocess
 import sys
 import time
@@ -11,6 +13,18 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import yaml
+
+
+BASE_REQUIRED_LITE_ARTIFACTS = ("audio.json", "chs.srt", "eng.srt")
+FULL_REQUIRED_LITE_ARTIFACTS = ("tts_plan.json", "tts_full.wav", "output_en.mp4", "output_en_sub.mp4")
+TIMEOUT_GRACE_FULL_MILESTONE_ARTIFACTS = ("tts_plan.json", "tts_full.wav", "output_en.mp4")
+TIMEOUT_COMPLETION_GRACE_S = 15
+LITE_DYNAMIC_TIMEOUT_RATIO = 4.3
+LITE_DYNAMIC_TIMEOUT_BUFFER_S = 15
+LITE_DEFAULT_TTS_PLAN_SAFETY_MARGIN = 0.02
+LITE_DEFAULT_SUBTITLE_MAX_CPS = 20.0
+LITE_DEFAULT_SUBTITLE_MAX_CHARS_PER_LINE = 42
+LITE_DEFAULT_SUBTITLE_MAX_LINES = 2
 
 
 def _load_yaml(p: Path) -> Dict[str, Any]:
@@ -28,6 +42,16 @@ def _resolve_path(repo_root: Path, p: str) -> str:
     return str((repo_root / pp).resolve())
 
 
+def _resolve_runtime_python_path(repo_root: Path, raw: str) -> Optional[Path]:
+    text = str(raw or "").strip()
+    if not text:
+        return None
+    candidate = Path(text)
+    if not candidate.is_absolute():
+        candidate = repo_root / candidate
+    return candidate if candidate.exists() else None
+
+
 def _pick_existing(*cands: str) -> str:
     for s in cands:
         if not s:
@@ -40,8 +64,90 @@ def _pick_existing(*cands: str) -> str:
     return str(cands[0]) if cands else ""
 
 
+def _hydrate_effective_runtime_paths(effective: Dict[str, Any], paths: Dict[str, Any]) -> Dict[str, Any]:
+    hydrated = dict(effective or {})
+    if bool(hydrated.get("vad_enable")) and not str(hydrated.get("vad_model") or "").strip():
+        vad_model = paths.get("vad_model")
+        if str(vad_model or "").strip():
+            hydrated["vad_model"] = str(vad_model)
+    return hydrated
+
+
 def _dash(s: str) -> str:
     return str(s).replace("_", "-")
+
+
+def _get_quality_gate(cfg: Dict[str, Any], key: str, default: Any) -> Any:
+    gates = (cfg or {}).get("quality_gates")
+    if not isinstance(gates, dict):
+        return default
+    return gates.get(key, default)
+
+
+def _probe_duration_seconds(path: Path) -> Optional[float]:
+    if not path.exists():
+        return None
+    ffprobe = shutil.which("ffprobe")
+    if not ffprobe:
+        return None
+    try:
+        proc = subprocess.run(
+            [ffprobe, "-v", "error", "-show_entries", "format=duration", "-of", "default=nw=1:nk=1", str(path)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            timeout=20,
+            check=False,
+        )
+        if proc.returncode != 0:
+            return None
+        raw = str(proc.stdout or "").strip()
+        return float(raw) if raw else None
+    except Exception:
+        return None
+
+
+def _compute_effective_timeout_s(requested_timeout_s: int, *, source_video: Path) -> tuple[int, Optional[float], str]:
+    requested = max(int(requested_timeout_s or 0), 0)
+    if requested <= 0:
+        return 0, None, "disabled"
+    source_duration_s = _probe_duration_seconds(source_video)
+    if source_duration_s is None or source_duration_s <= 0:
+        return requested, source_duration_s, "fixed"
+    dynamic_timeout = int(math.ceil(float(source_duration_s) * float(LITE_DYNAMIC_TIMEOUT_RATIO) + float(LITE_DYNAMIC_TIMEOUT_BUFFER_S)))
+    effective_timeout = max(requested, dynamic_timeout)
+    mode = "dynamic" if effective_timeout > requested else "fixed"
+    return effective_timeout, float(source_duration_s), mode
+
+
+def _align_lite_subtitle_policy(effective: Dict[str, Any], cfg: Dict[str, Any]) -> Dict[str, Any]:
+    aligned = dict(effective or {})
+    base_chars = int(aligned.get("subtitle_max_chars_per_line") or LITE_DEFAULT_SUBTITLE_MAX_CHARS_PER_LINE)
+    base_cps = float(aligned.get("subtitle_max_cps") or LITE_DEFAULT_SUBTITLE_MAX_CPS)
+    try:
+        gate_chars = int(_get_quality_gate(cfg, "max_chars_per_line", base_chars) or base_chars)
+    except Exception:
+        gate_chars = base_chars
+    try:
+        gate_cps = float(_get_quality_gate(cfg, "max_cps", base_cps) or base_cps)
+    except Exception:
+        gate_cps = base_cps
+    aligned["subtitle_max_chars_per_line"] = max(16, min(base_chars, gate_chars))
+    aligned["subtitle_max_cps"] = max(8.0, min(base_cps, gate_cps))
+    aligned["subtitle_wrap_max_lines"] = int(aligned.get("subtitle_wrap_max_lines") or LITE_DEFAULT_SUBTITLE_MAX_LINES)
+    aligned["tts_plan_safety_margin"] = float(aligned.get("tts_plan_safety_margin") or LITE_DEFAULT_TTS_PLAN_SAFETY_MARGIN)
+    return aligned
+
+
+def _expected_timeout_grace_artifacts(effective: Dict[str, Any]) -> List[str]:
+    required = list(BASE_REQUIRED_LITE_ARTIFACTS)
+    if not bool(effective.get("skip_tts", False)):
+        required.extend(TIMEOUT_GRACE_FULL_MILESTONE_ARTIFACTS)
+    return required
+
+
+def _has_timeout_grace_artifacts(out_dir: Path, effective: Dict[str, Any]) -> bool:
+    return all((out_dir / name).exists() for name in _expected_timeout_grace_artifacts(effective))
 
 
 def _to_cli_args(effective: Dict[str, Any], repo_root: Path) -> List[str]:
@@ -80,39 +186,38 @@ def _to_cli_args(effective: Dict[str, Any], repo_root: Path) -> List[str]:
     add_val("vad_threshold", "--vad-thold")
     add_val("vad_min_dur", "--vad-min-dur")
     add_val("whispercpp_threads", "--whispercpp-threads")
+    add_val("whispercpp_beam_size", "--whispercpp-beam-size")
 
     # --- ASR normalize
     add_bool("asr_normalize_enable", "--asr-normalize-enable")
     if effective.get("asr_normalize_dict"):
         args.extend(["--asr-normalize-dict", _resolve_path(repo_root, str(effective["asr_normalize_dict"]))])
-
-    # --- MT quality-lite options
-    add_bool("sentence_unit_enable", "--sentence-unit-enable")
-    add_val("sentence_unit_min_chars", "--sentence-unit-min-chars")
-    add_val("sentence_unit_max_chars", "--sentence-unit-max-chars")
-    add_val("sentence_unit_max_segs", "--sentence-unit-max-segs")
-    add_val("sentence_unit_max_gap_s", "--sentence-unit-max-gap-s")
-    add_val("sentence_unit_boundary_punct", "--sentence-unit-boundary-punct")
-    # list[str] or str
-    bw = effective.get("sentence_unit_break_words")
-    if isinstance(bw, list) and bw:
-        args.extend(["--sentence-unit-break-words", ",".join(str(x) for x in bw if str(x).strip())])
-    elif isinstance(bw, str) and bw.strip():
-        args.extend(["--sentence-unit-break-words", bw.strip()])
-
-    add_bool("entity_protect_enable", "--entity-protect-enable")
-    add_val("entity_protect_min_len", "--entity-protect-min-len")
-    add_val("entity_protect_max_len", "--entity-protect-max-len")
-    add_val("entity_protect_min_freq", "--entity-protect-min-freq")
-    add_val("entity_protect_max_items", "--entity-protect-max-items")
-
+    add_bool("asr_glossary_fix_enable", "--asr-glossary-fix-enable")
+    add_bool("asr_low_cost_clean_enable", "--asr-low-cost-clean-enable")
+    add_bool("asr_badline_detect_enable", "--asr-badline-detect-enable")
+    if effective.get("asr_same_pinyin_path"):
+        args.extend(["--asr-same-pinyin-path", _resolve_path(repo_root, str(effective["asr_same_pinyin_path"]))])
+    if effective.get("asr_same_stroke_path"):
+        args.extend(["--asr-same-stroke-path", _resolve_path(repo_root, str(effective["asr_same_stroke_path"]))])
+    if effective.get("asr_project_confusions_path"):
+        args.extend(["--asr-project-confusions-path", _resolve_path(repo_root, str(effective["asr_project_confusions_path"]))])
+    if effective.get("asr_lexicon_path"):
+        args.extend(["--asr-lexicon-path", _resolve_path(repo_root, str(effective["asr_lexicon_path"]))])
+    if effective.get("asr_proper_nouns_path"):
+        args.extend(["--asr-proper-nouns-path", _resolve_path(repo_root, str(effective["asr_proper_nouns_path"]))])
     # --- workflow / outputs
     add_bool("offline", "--offline")
+    add_bool("mt_batch_enable", "--mt-batch-enable")
+    add_val("mt_batch_size", "--mt-batch-size")
     add_bool("bilingual_srt", "--bilingual-srt")
     add_bool("skip_tts", "--skip-tts")
     add_val("min_sub_duration", "--min-sub-dur")
     add_val("tts_split_len", "--tts-split-len")
     add_val("tts_speed_max", "--tts-speed-max")
+    add_val("tts_plan_safety_margin", "--tts-plan-safety-margin")
+    add_val("subtitle_max_cps", "--subtitle-max-cps")
+    add_val("subtitle_max_chars_per_line", "--subtitle-max-chars-per-line")
+    add_val("subtitle_wrap_max_lines", "--subtitle-max-lines")
     add_val("resume_from", "--resume-from")
     if effective.get("chs_override_srt"):
         args.extend(["--chs-override-srt", _resolve_path(repo_root, str(effective["chs_override_srt"]))])
@@ -129,15 +234,21 @@ def _to_cli_args(effective: Dict[str, Any], repo_root: Path) -> List[str]:
         args.extend(["--replacements", _resolve_path(repo_root, str(effective["replacements"]))])
 
     # --- TTS backend
-    tts_backend = str(effective.get("tts_backend") or "piper").strip().lower()
-    if tts_backend not in {"piper", "coqui"}:
-        tts_backend = "piper"
+    tts_backend = str(effective.get("tts_backend") or "kokoro_onnx").strip().lower()
+    if tts_backend not in {"coqui", "kokoro_onnx"}:
+        tts_backend = "kokoro_onnx"
     args.extend(["--tts-backend", tts_backend])
-    if tts_backend == "piper":
-        if effective.get("piper_model"):
-            args.extend(["--piper-model", _resolve_path(repo_root, str(effective["piper_model"]))])
-        if effective.get("piper_bin"):
-            args.extend(["--piper-bin", str(effective["piper_bin"])])
+    if tts_backend == "kokoro_onnx":
+        if effective.get("kokoro_model"):
+            args.extend(["--kokoro-model", _resolve_path(repo_root, str(effective["kokoro_model"]))])
+        if effective.get("kokoro_voices"):
+            args.extend(["--kokoro-voices", _resolve_path(repo_root, str(effective["kokoro_voices"]))])
+        if effective.get("kokoro_voice"):
+            args.extend(["--kokoro-voice", str(effective["kokoro_voice"])])
+        if effective.get("kokoro_language"):
+            args.extend(["--kokoro-language", str(effective["kokoro_language"])])
+        if effective.get("kokoro_speed") is not None:
+            args.extend(["--kokoro-speed", str(effective["kokoro_speed"])])
     else:
         if effective.get("coqui_model"):
             args.extend(["--coqui-model", str(effective["coqui_model"])])
@@ -152,17 +263,36 @@ def _to_cli_args(effective: Dict[str, Any], repo_root: Path) -> List[str]:
 
 
 def _write_quality_report(*, mode: str, work_dir: Path, cfg: Dict[str, Any], source_video: Optional[Path], task_id: str) -> None:
+    repo_root = Path(__file__).resolve().parents[1]
+    backend_app = repo_root / "apps" / "backend"
+    for p in (str(repo_root), str(backend_app)):
+        if p not in sys.path:
+            sys.path.insert(0, p)
     from backend.quality_report import generate_quality_report, write_quality_report  # local import
 
     rep = generate_quality_report(task_id=task_id, mode=mode, work_dir=work_dir, source_video=source_video, cfg=cfg)
     write_quality_report(work_dir / "quality_report.json", rep)
 
 
+def _pick_runtime_python(repo_root: Path, cfg: Dict[str, Any], effective: Dict[str, Any]) -> str:
+    paths = cfg.get("paths") if isinstance(cfg.get("paths"), dict) else {}
+    raw = (
+        str(effective.get("lite_runtime_python") or "").strip()
+        or str(paths.get("lite_runtime_python") or "").strip()
+        or str(os.environ.get("YGF_LITE_RUNTIME_PYTHON") or "").strip()
+    )
+    if raw:
+        p = _resolve_runtime_python_path(repo_root, raw)
+        if p is not None:
+            return str(p)
+    return sys.executable
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description="Run one lite E2E (asr_translate_tts) and generate quality_report.json")
     ap.add_argument("--video", type=str, required=True, help="Input video file path")
     ap.add_argument("--output-dir", type=str, required=True, help="Work dir for this run")
-    ap.add_argument("--config", type=str, default="config/defaults.yaml", help="Base config YAML (defaults.yaml)")
+    ap.add_argument("--config", type=str, default="configs/defaults.yaml", help="Base config YAML (defaults.yaml)")
     ap.add_argument("--preset", type=str, default="normal", help="Preset key in config (normal/mid/high)")
     ap.add_argument("--mode", type=str, default="lite", choices=["lite"], help="Mode label written into report")
     ap.add_argument("--overrides-json", type=str, default="", help="Overrides as JSON dict (config-like keys)")
@@ -195,10 +325,14 @@ def main() -> None:
     effective.update(defaults or {})
     effective.update(preset_cfg or {})
     effective.update(overrides or {})
+    effective = _hydrate_effective_runtime_paths(effective, paths)
+    effective = _align_lite_subtitle_policy(effective, cfg)
 
     # Build core paths (best-effort, similar to backend TaskManager)
     whisper_bin = _pick_existing(
         _resolve_path(repo_root, str(effective.get("whispercpp_bin") or paths.get("whispercpp_bin") or "")),
+        "/usr/local/bin/whisper-cli",
+        "/opt/homebrew/bin/whisper-cli",
         str((repo_root / "bin" / "whisper-cli").resolve()),
         str((repo_root / "bin" / "main").resolve()),
         "/app/bin/whisper-cli",
@@ -222,22 +356,11 @@ def main() -> None:
     mt_cache_dir = str(effective.get("mt_cache_dir") or paths.get("hf_cache") or "assets/models/hf")
     mt_cache_dir = _resolve_path(repo_root, mt_cache_dir)
 
-    # Piper defaults
-    if not effective.get("piper_model"):
-        # repo includes a bundled ONNX under assets/models
-        if (repo_root / "assets" / "models" / "en_US-amy-low.onnx").exists():
-            effective["piper_model"] = "assets/models/en_US-amy-low.onnx"
-    if not effective.get("piper_bin"):
-        # In docker, the runnable piper is typically under /app/local_bin/piper/piper or available on PATH.
-        effective["piper_bin"] = _pick_existing(
-            "/app/local_bin/piper/piper",
-            "/app/bin/piper/piper",
-            "piper",
-        )
+    runtime_python = _pick_runtime_python(repo_root, cfg, effective)
 
     cmd: List[str] = [
-        sys.executable,
-        str((repo_root / "scripts" / "asr_translate_tts.py").resolve()),
+        runtime_python,
+        str((repo_root / "pipelines" / "lite_pipeline.py").resolve()),
         "--video",
         str(args.video),
         "--output-dir",
@@ -262,16 +385,35 @@ def main() -> None:
     (out_dir / "lite_effective_config.json").write_text(json.dumps(effective, ensure_ascii=False, indent=2), encoding="utf-8")
     (out_dir / "lite_cmd.txt").write_text(" ".join(cmd) + "\n", encoding="utf-8")
 
+    effective_timeout_s, source_duration_s, timeout_mode = _compute_effective_timeout_s(
+        int(args.max_runtime_s or 0),
+        source_video=Path(args.video),
+    )
+
     t0 = time.time()
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, env=os.environ.copy())
+    timed_out = False
+    timeout_grace_used_s = 0
     try:
-        if args.max_runtime_s and int(args.max_runtime_s) > 0:
-            proc.wait(timeout=int(args.max_runtime_s))
+        if effective_timeout_s > 0:
+            proc.wait(timeout=int(effective_timeout_s))
         else:
             proc.wait()
     except subprocess.TimeoutExpired:
-        proc.kill()
-        proc.wait(timeout=10)
+        if effective_timeout_s > 0 and _has_timeout_grace_artifacts(out_dir, effective):
+            try:
+                # If delivery artifacts are already complete, give the runner a short
+                # grace window to exit cleanly instead of failing at the finish line.
+                proc.wait(timeout=TIMEOUT_COMPLETION_GRACE_S)
+                timeout_grace_used_s = TIMEOUT_COMPLETION_GRACE_S
+            except subprocess.TimeoutExpired:
+                timed_out = True
+                proc.kill()
+                proc.wait(timeout=10)
+        else:
+            timed_out = True
+            proc.kill()
+            proc.wait(timeout=10)
     finally:
         # Best-effort drain output
         try:
@@ -289,7 +431,21 @@ def main() -> None:
 
     rc = int(proc.returncode or 0)
     (out_dir / "lite_run_meta.json").write_text(
-        json.dumps({"return_code": rc, "elapsed_s": round(time.time() - t0, 3)}, ensure_ascii=False, indent=2),
+        json.dumps(
+            {
+                "return_code": rc,
+                "elapsed_s": round(time.time() - t0, 3),
+                "timed_out": bool(timed_out),
+                "requested_max_runtime_s": int(args.max_runtime_s or 0),
+                "effective_timeout_s": int(effective_timeout_s or 0),
+                "timeout_mode": timeout_mode,
+                "source_video_duration_s": round(float(source_duration_s), 3) if source_duration_s else None,
+                "timeout_grace_used_s": int(timeout_grace_used_s),
+                "terminated_by_signal": abs(rc) if rc < 0 else None,
+            },
+            ensure_ascii=False,
+            indent=2,
+        ),
         encoding="utf-8",
     )
 

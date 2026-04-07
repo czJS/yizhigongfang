@@ -5,32 +5,36 @@
 __pycache__/
 *.pyc
 *.pyo
+.pycache/
 
 # Node / build artifacts
 node_modules
-frontend/node_modules
 dist
 dist_electron
 
 # Large模型/输出保持挂载方式提供，仍忽略 assets 和 outputs
 #
 # 但后端镜像构建依赖少量“离线包/二进制压缩包”，需要放行以下路径：
-# - assets/models/_incoming/archives/python_crfsuite-*.whl
-# - assets/models/_incoming/asr/whisper.cpp-1.8.2.zip
-# - assets/models/_incoming/tts/piper_linux_x86_64.tar.gz
-# - assets/models/_incoming/archives/ffmpeg-release-amd64-static.tar.xz
+# - assets/models/build_incoming/archives/python_crfsuite-*.whl
+# - assets/models/build_incoming/asr/whisper.cpp-1.8.2.zip
+# - assets/models/build_incoming/tts/piper_linux_x86_64.tar.gz
+# - assets/models/build_incoming/archives/ffmpeg-release-amd64-static.tar.xz
 assets
-!assets/models/_incoming/
-!assets/models/_incoming/archives/
-!assets/models/_incoming/archives/python_crfsuite-*.whl
-!assets/models/_incoming/archives/ffmpeg-release-amd64-static.tar.xz
-!assets/models/_incoming/asr/
-!assets/models/_incoming/asr/whisper.cpp-1.8.2.zip
-!assets/models/_incoming/tts/
-!assets/models/_incoming/tts/piper_linux_x86_64.tar.gz
-assets/models/_incoming/asr/whisper_src/
-assets/models/_incoming/asr/whisper_src/**
+!assets/models/build_incoming/
+!assets/models/build_incoming/archives/
+!assets/models/build_incoming/archives/python_crfsuite-*.whl
+!assets/models/build_incoming/archives/ffmpeg-release-amd64-static.tar.xz
+!assets/models/build_incoming/asr/
+!assets/models/build_incoming/asr/whisper.cpp-1.8.2.zip
+!assets/models/build_incoming/tts/
+!assets/models/build_incoming/tts/piper_linux_x86_64.tar.gz
+assets/models/build_incoming/asr/whisper_src/
+assets/models/build_incoming/asr/whisper_src/**
 outputs
+
+# Accidental local model caches (should NOT be in image context)
+apps/backend/backend/models--*/
+apps/backend/backend/whisper*/
 
 # OS/editor junk
 *.log

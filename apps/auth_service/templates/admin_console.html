@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>秒译出海授权管理台</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin_console.css') }}" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="hero card">
+        <div class="hero-brand">
+          <img
+            id="admin-logo"
+            class="admin-logo"
+            src="{{ url_for('static', filename='miaoyichuhai-logo.png') }}"
+            alt="秒译出海 Logo"
+          />
+          <div>
+            <p class="eyebrow">Web 管理后台</p>
+            <h1>秒译出海授权管理台</h1>
+            <p class="muted">
+              面向内部运营与客服使用，支持管理员登录、激活码生成、测试码验证、授权冻结恢复、设备解绑等操作。
+            </p>
+          </div>
+        </div>
+        <div class="hero-meta">
+          <span class="pill">管理接口地址</span>
+          <code id="api-base">{{ admin_host }}</code>
+        </div>
+      </header>
+
+      <section class="card">
+        <div class="section-title">
+          <div>
+            <h2>管理员登录</h2>
+            <p class="muted">使用管理员邮箱和密码登录后，可查看用户、激活码和设备，并执行后台操作。</p>
+          </div>
+          <div id="session-bar" class="session-bar hidden">
+            <span id="session-email" class="pill"></span>
+            <button id="logout-admin" class="button secondary">退出登录</button>
+          </div>
+        </div>
+        <div id="global-error" class="alert error hidden"></div>
+        <div id="global-success" class="alert success hidden"></div>
+        <div id="login-form" class="toolbar-grid compact login-grid">
+          <label class="field field-grow">
+            <span>管理员邮箱</span>
+            <input id="admin-email" type="email" placeholder="请输入管理员邮箱" autocomplete="username" />
+          </label>
+          <label class="field field-grow">
+            <span>登录密码</span>
+            <input id="admin-password" type="password" placeholder="请输入登录密码" autocomplete="current-password" />
+          </label>
+          <div class="field-actions">
+            <button id="login-admin" class="button primary">登录后台</button>
+          </div>
+        </div>
+      </section>
+
+      <div id="admin-app" class="hidden">
+        <section class="card">
+          <div class="section-title">
+            <div>
+              <h2>生成激活码</h2>
+              <p class="muted">支持批量生成标准码、月卡、试用码、续费码，以及兑换后 3 分钟到期的测试激活码。</p>
+            </div>
+            <button id="refresh-all" class="button secondary">刷新全部</button>
+          </div>
+          <div class="toolbar-grid compact">
+            <label class="field">
+              <span>生成数量</span>
+              <input id="create-count" type="number" min="1" max="200" value="10" />
+            </label>
+            <label class="field">
+              <span>激活码类型</span>
+              <select id="create-type">
+                <option value="standard">标准激活码</option>
+                <option value="monthly">月卡</option>
+                <option value="trial">试用码</option>
+                <option value="renewal">续费码</option>
+                <option value="test">测试激活码（3 分钟）</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>有效天数</span>
+              <input id="create-days" type="number" min="1" value="30" />
+            </label>
+            <label class="field">
+              <span>适用产品</span>
+              <select id="create-product-edition">
+                <option value="lite">轻量版</option>
+                <option value="quality">质量版</option>
+                <option value="universal">通用版</option>
+              </select>
+            </label>
+            <div class="field-actions align-end">
+              <button id="create-codes" class="button primary">立即生成</button>
+            </div>
+          </div>
+          <p id="create-duration-hint" class="muted form-hint"></p>
+          <div id="latest-created" class="result-box hidden"></div>
+        </section>
+
+        <section class="tabs card">
+          <div class="tab-list">
+            <button class="tab-button active" data-tab="users">用户与授权</button>
+            <button class="tab-button" data-tab="codes">激活码列表</button>
+            <button class="tab-button" data-tab="devices">设备列表</button>
+          </div>
+
+          <div id="tab-users" class="tab-panel active">
+            <div class="section-title">
+              <div>
+                <h2>用户与授权</h2>
+                <p class="muted">查看用户当前授权状态，并执行冻结、恢复和延期操作。</p>
+              </div>
+              <input id="user-keyword" class="search" placeholder="搜索邮箱 / 授权状态 / 激活类型 / 产品版型" />
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>邮箱</th>
+                    <th>授权状态</th>
+                    <th>激活类型</th>
+                    <th>产品版型</th>
+                    <th>到期时间</th>
+                    <th>设备数量</th>
+                    <th>最近登录</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody id="users-table"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div id="tab-codes" class="tab-panel">
+            <div class="section-title">
+              <div>
+                <h2>激活码列表</h2>
+                <p class="muted">支持查看、手动失效、编辑有效时间与删除未使用的激活码。</p>
+              </div>
+              <input id="code-keyword" class="search" placeholder="搜索激活码 / 类型 / 状态 / 产品 / 使用账号" />
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>激活码</th>
+                    <th>类型</th>
+                    <th>产品版型</th>
+                    <th>有效时长</th>
+                    <th>状态</th>
+                    <th>使用账号</th>
+                    <th>使用时间</th>
+                    <th>创建时间</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody id="codes-table"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div id="tab-devices" class="tab-panel">
+            <div class="section-title">
+              <div>
+                <h2>设备列表</h2>
+                <p class="muted">支持从列表解绑，也支持直接输入邮箱和设备 ID 做兜底解绑。</p>
+              </div>
+              <input id="device-keyword" class="search" placeholder="搜索邮箱 / 设备 ID / 设备名 / 平台" />
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>账号邮箱</th>
+                    <th>设备 ID</th>
+                    <th>设备名称</th>
+                    <th>平台</th>
+                    <th>设备状态</th>
+                    <th>授权状态</th>
+                    <th>产品版型</th>
+                    <th>最近活跃</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody id="devices-table"></tbody>
+              </table>
+            </div>
+
+            <div class="subcard">
+              <div class="section-title">
+                <div>
+                  <h3>手动解绑设备</h3>
+                  <p class="muted">当你已经拿到设备 ID，但不想从列表查找时，可以直接在这里解绑。</p>
+                </div>
+              </div>
+              <div class="toolbar-grid compact">
+                <label class="field">
+                  <span>账号邮箱</span>
+                  <input id="unbind-email" type="text" placeholder="user@example.com" />
+                </label>
+                <label class="field">
+                  <span>设备 ID</span>
+                  <input id="unbind-device-id" type="text" placeholder="设备唯一 ID" />
+                </label>
+                <div class="field-actions align-end">
+                  <button id="manual-unbind" class="button primary">解绑设备</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <div id="code-edit-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="code-edit-title">
+      <div class="modal-backdrop" data-close-code-edit="true"></div>
+      <div class="modal-card">
+        <div class="modal-head">
+          <div>
+            <h3 id="code-edit-title">编辑激活码</h3>
+            <p class="muted">可调整未使用激活码的类型、版型与有效时间。</p>
+          </div>
+          <button id="close-code-edit" class="button secondary" type="button">关闭</button>
+        </div>
+        <div class="toolbar-grid compact code-edit-grid">
+          <label class="field">
+            <span>激活码</span>
+            <input id="edit-code" type="text" placeholder="请先在列表中点“编辑”" readonly />
+          </label>
+          <label class="field">
+            <span>激活码类型</span>
+            <select id="edit-type">
+              <option value="standard">标准激活码</option>
+              <option value="monthly">月卡</option>
+              <option value="trial">试用码</option>
+              <option value="renewal">续费码</option>
+              <option value="test">测试激活码</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>适用产品</span>
+            <select id="edit-product-edition">
+              <option value="lite">轻量版</option>
+              <option value="quality">质量版</option>
+              <option value="universal">通用版</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>有效天数</span>
+            <input id="edit-days" type="number" min="0" value="30" />
+          </label>
+          <label class="field">
+            <span>有效分钟</span>
+            <input id="edit-minutes" type="number" min="0" value="0" />
+          </label>
+          <div class="field-actions align-end">
+            <button id="save-code-edit" class="button primary">保存修改</button>
+            <button id="clear-code-edit" class="button secondary" type="button">取消</button>
+          </div>
+        </div>
+        <p id="edit-duration-hint" class="muted form-hint"></p>
+      </div>
+    </div>
+
+    <script>
+      window.__ADMIN_CONSOLE__ = { adminHost: {{ admin_host|tojson }} };
+    </script>
+    <script src="{{ url_for('static', filename='admin_console.js') }}" defer></script>
+  </body>
+</html>

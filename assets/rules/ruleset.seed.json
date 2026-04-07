@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "updated_at": 0,
+  "asr_fixes": [
+    {
+      "id": "seed0001",
+      "src": "智床",
+      "tgt": "痔疮",
+      "note": "内置种子：高频且低争议的 ASR 同音误识别",
+      "scope": "global"
+    },
+    {
+      "id": "seed0002",
+      "src": "神龙百尾",
+      "tgt": "神龙摆尾",
+      "note": "内置种子：成语/固定招式类同音误识别",
+      "scope": "global"
+    },
+    {
+      "id": "seed0003",
+      "src": "点烟漆",
+      "tgt": "点烟器",
+      "note": "内置种子：常见设备名 ASR 误识别",
+      "scope": "global"
+    },
+    {
+      "id": "seed0004",
+      "src": "正面硬钢",
+      "tgt": "正面硬刚",
+      "note": "内置种子：口语固定说法的常见同音误识别",
+      "scope": "global"
+    }
+  ],
+  "en_fixes": [],
+  "settings": {}
+}

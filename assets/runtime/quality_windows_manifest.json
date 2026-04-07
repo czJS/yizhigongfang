@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "quality": {
+    "runtimeFiles": [
+      {
+        "key": "backendExe",
+        "label": "后端 EXE",
+        "relativePath": "backend_server.exe",
+        "type": "file"
+      },
+      {
+        "key": "qualityWorkerExe",
+        "label": "质量 Worker",
+        "relativePath": "quality_worker.exe",
+        "type": "file"
+      },
+      {
+        "key": "configQuality",
+        "label": "质量模式配置",
+        "relativePath": "configs/quality.yaml",
+        "type": "file"
+      },
+      {
+        "key": "ffmpeg",
+        "label": "FFmpeg",
+        "relativePath": "bin/ffmpeg.exe",
+        "type": "file"
+      },
+      {
+        "key": "whisperCli",
+        "label": "whisper-cli",
+        "relativePath": "bin/whisper-cli.exe",
+        "type": "file"
+      }
+    ],
+    "modelLayouts": {
+      "v2": [
+        {
+          "key": "whisperx",
+          "label": "WhisperX (large-v3-turbo)",
+          "relativePath": "quality_asr_whisperx/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo",
+          "type": "dir"
+        },
+        {
+          "key": "align",
+          "label": "对齐模型",
+          "relativePath": "quality_asr_whisperx/models--jonatasgrosman--wav2vec2-large-xlsr-53-chinese-zh-cn",
+          "type": "dir"
+        },
+        {
+          "key": "tts",
+          "label": "TTS (XTTS v2)",
+          "relativePath": "quality_tts_coqui/tts_models--multilingual--multi-dataset--xtts_v2/model.pth",
+          "type": "file",
+          "minBytes": 1048576
+        }
+      ],
+      "legacy": [
+        {
+          "key": "whisperx",
+          "label": "WhisperX (large-v3-turbo)",
+          "relativePath": "whisperx/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo",
+          "type": "dir"
+        },
+        {
+          "key": "align",
+          "label": "对齐模型",
+          "relativePath": "whisperx/models--jonatasgrosman--wav2vec2-large-xlsr-53-chinese-zh-cn",
+          "type": "dir"
+        },
+        {
+          "key": "tts",
+          "label": "TTS (XTTS v2)",
+          "relativePath": "tts/tts/tts_models--multilingual--multi-dataset--xtts_v2/model.pth",
+          "type": "file",
+          "minBytes": 1048576
+        }
+      ]
+    },
+    "ollama": {
+      "exeRelativePath": "ollama.exe",
+      "requiredModelConfigKeys": [
+        "llm_model",
+        "zh_phrase_llm_model"
+      ]
+    }
+  }
+}

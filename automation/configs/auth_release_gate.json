@@ -1,0 +1,11 @@
+{
+  "run_compileall": true,
+  "run_pytest": true,
+  "run_desktop_tests": true,
+  "run_live_healthcheck": true,
+  "run_live_node_probe": true,
+  "run_live_electron_probe": true,
+  "compat_base_urls": [
+    "https://8.149.245.13"
+  ]
+}

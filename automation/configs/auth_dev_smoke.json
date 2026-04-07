@@ -1,0 +1,6 @@
+{
+  "run_compileall": true,
+  "run_pytest": true,
+  "run_desktop_tests": true,
+  "run_live_healthcheck": false
+}
